@@ -1,0 +1,166 @@
+<title>charlymx Mockups v4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Syne:wght@500;700;800&family=Big+Shoulders+Display:wght@700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto v4: titular enorme en mayúsculas como protagonista, paleta casi monocromática con un solo acento, inicio con poca información y las secciones como navegación principal. I = lista de filas gigantes, J = contorno y pastillas, K = pantalla dividida */
+:root{
+  --bg:#F1F1F1;--surface:#FFFFFF;--fg:#0A0A0A;--muted:#5C5C5C;--line:#D4D4D4;--accent:#C8F000;--accent-ink:#0A0A0A;
+  --display:'Archivo',system-ui,sans-serif;--body:'Archivo',system-ui,sans-serif;--mono:'DM Mono',ui-monospace,monospace;
+  --bar-bg:#0A0A0A;--bar-fg:#F1F1F1;
+}
+:root[data-design="j"]{--bg:#FFFFFF;--surface:#F3F4FB;--fg:#0B0F2A;--muted:#5A5F7A;--line:#D9DBEA;--accent:#1F3BFF;--accent-ink:#FFFFFF;--display:'Syne',system-ui,sans-serif}
+:root[data-design="k"]{--bg:#ECEEEC;--surface:#FFFFFF;--fg:#101410;--muted:#586058;--line:#CDD2CD;--accent:#FF5A36;--accent-ink:#101410;--display:'Big Shoulders Display','Archivo',Impact,sans-serif}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){--bg:#0A0A0A;--surface:#161616;--fg:#F1F1F1;--muted:#9C9C9C;--line:#2E2E2E;--accent:#D4FF3A;--bar-bg:#F1F1F1;--bar-fg:#0A0A0A;color-scheme:dark}
+ :root:not([data-theme="light"])[data-design="j"]{--bg:#080B1E;--surface:#10143A;--fg:#F4F5FF;--muted:#9A9FC4;--line:#262B58;--accent:#6F86FF;--accent-ink:#080B1E}
+ :root:not([data-theme="light"])[data-design="k"]{--bg:#0F1210;--surface:#171B18;--fg:#EEF1EE;--muted:#9AA39A;--line:#2A312B;--accent:#FF6B48;--accent-ink:#0F1210}
+}
+:root[data-theme="dark"]{--bg:#0A0A0A;--surface:#161616;--fg:#F1F1F1;--muted:#9C9C9C;--line:#2E2E2E;--accent:#D4FF3A;--bar-bg:#F1F1F1;--bar-fg:#0A0A0A;color-scheme:dark}
+:root[data-theme="dark"][data-design="j"]{--bg:#080B1E;--surface:#10143A;--fg:#F4F5FF;--muted:#9A9FC4;--line:#262B58;--accent:#6F86FF;--accent-ink:#080B1E}
+:root[data-theme="dark"][data-design="k"]{--bg:#0F1210;--surface:#171B18;--fg:#EEF1EE;--muted:#9AA39A;--line:#2A312B;--accent:#FF6B48;--accent-ink:#0F1210}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--body);margin:0;padding-inline:16px;padding-block:0}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+h1,h2,h3,p{margin:0}
+.wrap{max-width:1240px;margin-inline:auto}
+.view{display:none;padding-block:22px 56px}
+:root[data-design="i"] #vi,:root[data-design="j"] #vj,:root[data-design="k"] #vk{display:block}
+.muted{color:var(--muted)}
+.mono{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bar-bg);color:var(--bar-fg);margin-inline:-16px;padding:10px 16px;font:500 13px var(--body)}
+.bar .wrap{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button,.themebtn{font:inherit;color:inherit;background:transparent;border:1px solid color-mix(in srgb,var(--bar-fg) 35%,transparent);border-radius:99px;padding:6px 14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--bar-fg);color:var(--bar-bg)}
+.note{font-size:12px;opacity:.75}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.top nav{display:flex;gap:20px;font-weight:600;font-size:15px;overflow-x:auto;max-width:100%}
+.top nav a{white-space:nowrap}.top nav a:hover{color:var(--accent)}
+.logo{font:900 22px/1 var(--display);letter-spacing:-.04em}
+
+/* ===== I · Monolito ===== */
+#vi .logo{font-stretch:125%}
+.i-h1{font:900 clamp(46px,11.6vw,184px)/.84 var(--display);font-stretch:125%;letter-spacing:-.06em;text-transform:uppercase;margin-block:44px 28px;text-wrap:balance}
+.i-h1 mark{background:var(--accent);color:var(--accent-ink);padding-inline:.06em}
+.i-info{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:2px solid var(--fg);padding-top:14px}
+.i-info p{max-width:44ch;font-size:18px}
+.i-list{margin-top:28px;border-top:2px solid var(--fg)}
+.i-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,260px) auto;gap:20px;align-items:center;padding:14px 8px;border-bottom:1px solid var(--line);transition:background .15s,padding .2s}
+.i-row:hover{background:var(--accent);color:var(--accent-ink);padding-inline:18px}
+.i-row h2{font:900 clamp(28px,5.4vw,72px)/1 var(--display);font-stretch:125%;letter-spacing:-.05em;text-transform:uppercase}
+.i-row span{color:var(--muted)}.i-row:hover span{color:inherit}
+.i-row b{font-size:clamp(24px,3vw,40px)}
+
+/* ===== J · Contorno ===== */
+.j-h1{font:800 clamp(46px,10.6vw,170px)/.88 var(--display);letter-spacing:-.05em;text-transform:uppercase;margin-block:52px 30px}
+.j-h1 .o{color:transparent;-webkit-text-stroke:2px var(--fg);display:block}
+.j-h1 .s{color:var(--accent);display:block}
+.j-info{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:26px}
+.j-info div{background:var(--surface);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.j-info b{font:700 18px var(--display)}
+.j-pills{display:flex;gap:12px;flex-wrap:wrap}
+.pill{display:flex;align-items:center;gap:12px;padding:14px 26px;border-radius:99px;border:2px solid var(--fg);font:700 clamp(18px,2.4vw,28px) var(--display);text-transform:uppercase;letter-spacing:-.02em;transition:background .15s,color .15s}
+.pill small{font:500 12px var(--mono);opacity:.65}
+.pill:hover{background:var(--fg);color:var(--bg)}
+.pill.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.pill.on:hover{filter:brightness(1.08)}
+
+/* ===== K · Dividido ===== */
+.k-main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:40px;align-items:end;margin-top:30px}
+.k-h1{font:900 clamp(64px,15vw,250px)/.8 var(--display);text-transform:uppercase;letter-spacing:-.01em}
+.k-h1 span{display:block}.k-h1 .a{color:var(--accent)}
+.k-panel{border:2px solid var(--fg);background:var(--surface);display:flex;flex-direction:column}
+.k-panel p{padding:18px 20px;border-bottom:2px solid var(--fg);font-size:16px}
+.k-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);transition:background .15s,color .15s}
+.k-item:last-child{border-bottom:0}
+.k-item h2{font:900 32px/1 var(--display);text-transform:uppercase;letter-spacing:.01em}
+.k-item span{font:500 12px var(--mono);color:var(--muted);text-transform:uppercase}
+.k-item:hover{background:var(--accent);color:var(--accent-ink)}.k-item:hover span{color:inherit}
+.k-foot{margin-top:28px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:2px solid var(--fg);padding-top:12px}
+
+@media (max-width:860px){
+ .i-row{grid-template-columns:minmax(0,1fr) auto}.i-row span{display:none}
+ .j-info{grid-template-columns:1fr}
+ .k-main{grid-template-columns:1fr;gap:28px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="bar"><div class="wrap">
+  <div class="tabs" role="group" aria-label="Opciones de diseño">
+    <button data-d="i" aria-pressed="true">I · Monolito</button>
+    <button data-d="j" aria-pressed="false">J · Contorno</button>
+    <button data-d="k" aria-pressed="false">K · Dividido</button>
+  </div>
+  <span class="note">Contenido de ejemplo</span>
+  <button class="themebtn" id="themebtn" type="button">Claro / Oscuro</button>
+</div></div>
+
+<div class="wrap">
+
+<!-- I -->
+<section class="view" id="vi" aria-label="Opción I">
+  <header class="top"><a class="logo" href="#">charlymx</a><span class="mono muted">Actualizado hoy · 04 oct 2026</span></header>
+  <h1 class="i-h1">Lo que vale <mark>la pena</mark> leer</h1>
+  <div class="i-info"><p>Mi portal personal. Noticias que dan gusto, notas y proyectos.</p><span class="mono muted">Escoge una sección ↓</span></div>
+  <nav class="i-list" aria-label="Secciones">
+    <a class="i-row" href="#"><h2>Buenas Noticias</h2><span>Lo positivo del día, verificado</span><b>→</b></a>
+    <a class="i-row" href="#"><h2>Blog</h2><span>Notas y reflexiones</span><b>→</b></a>
+    <a class="i-row" href="#"><h2>Proyectos</h2><span>Lo que construyo</span><b>→</b></a>
+    <a class="i-row" href="#"><h2>Sobre mí</h2><span>Quién soy</span><b>→</b></a>
+  </nav>
+</section>
+
+<!-- J -->
+<section class="view" id="vj" aria-label="Opción J">
+  <header class="top"><a class="logo" href="#">charlymx</a><nav aria-label="Secciones"><a href="#">Noticias</a><a href="#">Blog</a><a href="#">Proyectos</a><a href="#">Sobre mí</a></nav></header>
+  <h1 class="j-h1"><span class="o">Lo que vale</span><span class="s">la pena leer</span></h1>
+  <div class="j-info">
+    <div><span class="mono muted">Qué es</span><b>Portal personal</b></div>
+    <div><span class="mono muted">Contenido</span><b>Noticias, notas y proyectos</b></div>
+    <div><span class="mono muted">Actualizado</span><b>Hoy, 04 oct 2026</b></div>
+  </div>
+  <nav class="j-pills" aria-label="Secciones">
+    <a class="pill on" href="#">Buenas Noticias <small>Diario</small></a>
+    <a class="pill" href="#">Blog</a><a class="pill" href="#">Proyectos</a><a class="pill" href="#">Ideas</a><a class="pill" href="#">Sobre mí</a>
+  </nav>
+</section>
+
+<!-- K -->
+<section class="view" id="vk" aria-label="Opción K">
+  <header class="top"><a class="logo" href="#">charlymx</a><span class="mono muted">Portal personal</span></header>
+  <div class="k-main">
+    <h1 class="k-h1"><span>Lo que</span><span>vale</span><span class="a">la pena</span><span>leer</span></h1>
+    <div class="k-panel">
+      <p>Noticias que dan gusto, notas y proyectos, en un solo lugar.</p>
+      <nav aria-label="Secciones">
+        <a class="k-item" href="#"><h2>Buenas Noticias</h2><span>Diario →</span></a>
+        <a class="k-item" href="#"><h2>Blog</h2><span>Notas →</span></a>
+        <a class="k-item" href="#"><h2>Proyectos</h2><span>Ver →</span></a>
+        <a class="k-item" href="#"><h2>Sobre mí</h2><span>Hola →</span></a>
+      </nav>
+    </div>
+  </div>
+  <div class="k-foot mono muted"><span>charlymx.com</span><span>Actualizado hoy</span></div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var r=document.documentElement;
+  function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function setD(d){r.setAttribute('data-design',d);document.querySelectorAll('.tabs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.d===d)});save('cmx-d4',d)}
+  document.querySelectorAll('.tabs button').forEach(function(b){b.addEventListener('click',function(){setD(b.dataset.d)})});
+  document.getElementById('themebtn').addEventListener('click',function(){
+    var t=r.getAttribute('data-theme');
+    var dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme:dark)').matches);
+    r.setAttribute('data-theme',dark?'light':'dark');
+  });
+  var h=location.hash.replace('#','');setD(['i','j','k'].indexOf(h)>-1?h:(load('cmx-d4')||'i'));
+})();
+</script>
