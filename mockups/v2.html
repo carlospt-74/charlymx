@@ -1,0 +1,212 @@
+<title>charlymx Mockups v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Rethink+Sans:wght@400;500;700;800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto v2: tres direcciones inspiradas en patrones de 21st.dev (collage editorial, horizonte con brillo y rejilla, hero en dados). Se alternan con data-design en la raíz */
+:root{
+  --bg:#F3F4F6;--surface:#FFFFFF;--fg:#0E1116;--muted:#5A6270;--line:#DADDE3;--accent:#FF4D2E;--accent-ink:#FFFFFF;--glow:#8BF0CB;
+  --k1:#FFC9BD;--k2:#BFE3FF;--k3:#D6F5A8;--k4:#FFE08A;
+  --display:'Archivo',system-ui,sans-serif;--body:'Archivo',system-ui,sans-serif;--mono:'DM Mono',ui-monospace,monospace;
+  --bar-bg:#0E1116;--bar-fg:#F3F4F6;
+}
+:root[data-design="e"]{--bg:#F6FBF9;--surface:#FFFFFF;--fg:#0A1411;--muted:#566660;--line:#D5E4DE;--accent:#0FB57D;--accent-ink:#04120C;--glow:#8BF0CB;--display:'Geist',system-ui,sans-serif;--body:'Geist',system-ui,sans-serif;--mono:'Geist Mono',ui-monospace,monospace}
+:root[data-design="f"]{--bg:#FFFFFF;--surface:#FFFFFF;--fg:#0D0D0D;--muted:#5E5E5E;--line:#0D0D0D;--accent:#FF5A1F;--accent-ink:#0D0D0D;--display:'Rethink Sans',system-ui,sans-serif;--body:'Rethink Sans',system-ui,sans-serif;--mono:'DM Mono',ui-monospace,monospace}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){--bg:#0E1013;--surface:#171A1F;--fg:#F2F3F5;--muted:#9AA1AD;--line:#2A2E36;--accent:#FF6B4F;--k1:#5A2A20;--k2:#1E3A52;--k3:#3A4F1A;--k4:#5A4510;--bar-bg:#F3F4F6;--bar-fg:#0E1116;color-scheme:dark}
+ :root:not([data-theme="light"])[data-design="e"]{--bg:#070B0A;--surface:#0E1513;--fg:#E8F4EF;--muted:#86988F;--line:#1F2D28;--accent:#34E5A5;--glow:#0E7A5A}
+ :root:not([data-theme="light"])[data-design="f"]{--bg:#0D0D0D;--surface:#0D0D0D;--fg:#F4F4F4;--muted:#A8A8A8;--line:#4A4A4A;--accent:#FF6A33}
+}
+:root[data-theme="dark"]{--bg:#0E1013;--surface:#171A1F;--fg:#F2F3F5;--muted:#9AA1AD;--line:#2A2E36;--accent:#FF6B4F;--k1:#5A2A20;--k2:#1E3A52;--k3:#3A4F1A;--k4:#5A4510;--bar-bg:#F3F4F6;--bar-fg:#0E1116;color-scheme:dark}
+:root[data-theme="dark"][data-design="e"]{--bg:#070B0A;--surface:#0E1513;--fg:#E8F4EF;--muted:#86988F;--line:#1F2D28;--accent:#34E5A5;--glow:#0E7A5A}
+:root[data-theme="dark"][data-design="f"]{--bg:#0D0D0D;--surface:#0D0D0D;--fg:#F4F4F4;--muted:#A8A8A8;--line:#4A4A4A;--accent:#FF6A33}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--body);margin:0;padding-inline:16px;padding-block:0}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+h1,h2,h3,p{margin:0}
+.wrap{max-width:1180px;margin-inline:auto}
+.view{display:none;padding-block:24px 64px}
+:root[data-design="d"] #vd,:root[data-design="e"] #ve,:root[data-design="f"] #vf{display:block}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono)}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bar-bg);color:var(--bar-fg);margin-inline:-16px;padding:10px 16px;font:500 13px var(--body)}
+.bar .wrap{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button,.themebtn{font:inherit;color:inherit;background:transparent;border:1px solid color-mix(in srgb,var(--bar-fg) 35%,transparent);border-radius:99px;padding:6px 14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--bar-fg);color:var(--bar-bg)}
+.note{font-size:12px;opacity:.75}
+
+/* ===== D · Collage editorial ===== */
+.d-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:8px 28px}
+.d-logo{font:900 22px/1 var(--display);font-stretch:125%;letter-spacing:-.04em}
+.d-links{display:flex;gap:22px;font-weight:500;font-size:15px;overflow-x:auto}
+.d-links a{white-space:nowrap}.d-links a:hover{color:var(--accent)}
+.d-hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px}
+.d-hero h1{font:900 clamp(42px,9vw,128px)/.88 var(--display);font-stretch:125%;letter-spacing:-.055em;text-transform:uppercase;max-width:11ch;text-wrap:balance}
+.d-hero h1 span{color:var(--accent)}
+.d-hero p{max-width:46ch;font-size:18px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{padding:12px 22px;border-radius:99px;font-weight:700;border:2px solid var(--fg)}
+.btn.p{background:var(--fg);color:var(--bg)}
+.fan{display:flex;justify-content:center;margin-top:40px;padding-bottom:30px}
+.fan a{width:clamp(110px,19vw,220px);aspect-ratio:3/4;border-radius:20px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;margin-inline:calc(clamp(110px,19vw,220px)/-9);box-shadow:0 18px 40px -20px rgba(0,0,0,.45);transition:transform .25s;color:var(--fg);min-width:0}
+.fan a b{font:800 clamp(14px,2vw,22px)/1.05 var(--display);letter-spacing:-.03em}
+.fan a span{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+.fan a:nth-child(1){background:var(--k1);transform:rotate(-12deg) translateY(30px)}
+.fan a:nth-child(2){background:var(--k2);transform:rotate(-6deg) translateY(8px)}
+.fan a:nth-child(3){background:var(--k3);transform:translateY(-8px)}
+.fan a:nth-child(4){background:var(--k4);transform:rotate(6deg) translateY(8px)}
+.fan a:nth-child(5){background:var(--surface);border:1px solid var(--line);transform:rotate(12deg) translateY(30px)}
+.fan a:hover{transform:translateY(-22px) rotate(0)!important;z-index:2}
+.d-strip{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px;font:500 13px var(--mono);color:var(--muted)}
+
+/* ===== E · Horizonte ===== */
+#ve{position:relative}
+.e-bg{position:absolute;inset:0 -16px auto;height:640px;pointer-events:none;overflow:hidden;
+  background:radial-gradient(ellipse 70% 55% at 50% 105%,color-mix(in srgb,var(--glow) 55%,transparent),transparent 70%);}
+.e-bg::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 40%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse 70% 70% at 50% 40%,#000 20%,transparent 75%);opacity:.7}
+.e-bg::after{content:"";position:absolute;left:10%;right:10%;bottom:18%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.e-in{position:relative}
+.e-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;background:color-mix(in srgb,var(--surface) 80%,transparent);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 20px;backdrop-filter:blur(8px)}
+.e-logo{font:600 17px var(--display);letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.e-logo i{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.e-nav nav{display:flex;gap:20px;font-size:14px;color:var(--muted);overflow-x:auto}
+.e-nav nav a{white-space:nowrap}.e-nav nav a:hover{color:var(--fg)}
+.e-go{background:var(--accent);color:var(--accent-ink);padding:8px 16px;border-radius:99px;font-weight:600;font-size:14px;white-space:nowrap}
+.e-hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:22px;padding-block:90px 70px}
+.e-badge{font:500 12px var(--mono);border:1px solid var(--line);background:var(--surface);padding:6px 12px;border-radius:99px;color:var(--muted)}
+.e-badge b{color:var(--accent)}
+.e-hero h1{font:600 clamp(38px,7vw,84px)/1 var(--display);letter-spacing:-.05em;max-width:16ch;text-wrap:balance}
+.e-hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--fg));-webkit-background-clip:text;background-clip:text;color:transparent}
+.e-hero p{max-width:50ch;color:var(--muted);font-size:18px}
+.e-search{display:flex;align-items:center;gap:10px;width:min(520px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 16px;color:var(--muted);font-size:15px}
+.e-search kbd{margin-left:auto;font:500 12px var(--mono);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.e-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.e-chips a{border:1px solid var(--line);background:var(--surface);padding:6px 14px;border-radius:99px;font-size:14px}
+.e-chips a:first-child{border-color:var(--accent);color:var(--accent)}
+.e-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.e-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0;transition:border-color .2s}
+.e-card:hover{border-color:var(--accent)}
+.e-card .k{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.e-card h3{font:600 20px/1.2 var(--display);letter-spacing:-.02em}
+.e-card .m{margin-top:auto;font:400 12px var(--mono);color:var(--muted)}
+.e-h2{font:600 14px var(--mono);color:var(--muted);margin-bottom:14px;letter-spacing:.04em}
+
+/* ===== F · Dados ===== */
+.f-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:2px solid var(--fg)}
+.f-cell{padding:20px;border:1px solid var(--line);min-width:0;display:flex;flex-direction:column;gap:10px;min-height:170px;transition:background .15s,color .15s}
+a.f-cell:hover{background:var(--accent);color:var(--accent-ink)}
+.f-head{grid-column:span 4;flex-direction:row;align-items:center;justify-content:space-between;min-height:0;padding-block:14px;gap:12px;flex-wrap:wrap}
+.f-logo{font:800 20px var(--display);letter-spacing:-.04em}
+.f-head nav{display:flex;gap:18px;font:500 13px var(--mono);overflow-x:auto}
+.f-head nav a{white-space:nowrap;text-transform:uppercase}
+.f-title{grid-column:span 3;grid-row:span 2;justify-content:space-between;padding:28px}
+.f-title h1{font:800 clamp(38px,6.6vw,92px)/.92 var(--display);letter-spacing:-.05em;max-width:11ch}
+.f-title h1 span{background:var(--accent);color:var(--accent-ink);padding-inline:.12em}
+.f-tag{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+a.f-cell:hover .f-tag{color:inherit}
+.f-cell h3{font:800 22px/1.05 var(--display);letter-spacing:-.03em}
+.f-hot{background:var(--accent);color:var(--accent-ink)}.f-hot .f-tag{color:inherit;opacity:.7}
+.f-num{font:800 56px/1 var(--display);letter-spacing:-.05em}
+.f-wide{grid-column:span 2}
+.f-arrow{margin-top:auto;font:500 13px var(--mono)}
+
+@media (max-width:860px){
+ .e-grid{grid-template-columns:1fr}
+ .f-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .f-head,.f-title,.f-wide{grid-column:span 2}.f-title{grid-row:auto}
+ .e-nav nav{display:none}
+ .e-hero{padding-block:60px 50px}
+ .fan a{margin-inline:calc(clamp(60px,19vw,220px)/-5);width:clamp(84px,22vw,220px);padding:10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="bar"><div class="wrap">
+  <div class="tabs" role="group" aria-label="Opciones de diseño">
+    <button data-d="d" aria-pressed="true">D · Collage</button>
+    <button data-d="e" aria-pressed="false">E · Horizonte</button>
+    <button data-d="f" aria-pressed="false">F · Dados</button>
+  </div>
+  <span class="note">Contenido de ejemplo</span>
+  <button class="themebtn" id="themebtn" type="button">Claro / Oscuro</button>
+</div></div>
+
+<div class="wrap">
+
+<!-- D -->
+<section class="view" id="vd" aria-label="Opción D">
+  <header class="d-nav"><a class="d-logo" href="#">charlymx</a>
+    <nav class="d-links" aria-label="Secciones"><a href="#">Buenas Noticias</a><a href="#">Blog</a><a href="#">Proyectos</a><a href="#">Sobre mí</a></nav></header>
+  <div class="d-hero">
+    <h1>Lo que vale <span>la pena</span> leer</h1>
+    <p class="muted">Mi portal personal: noticias que dan gusto, notas y proyectos.</p>
+    <div class="btns"><a class="btn p" href="#">Leer Buenas Noticias</a><a class="btn" href="#">Ver el blog</a></div>
+  </div>
+  <div class="fan" aria-label="Secciones">
+    <a href="#"><span>Diario</span><b>Buenas Noticias</b></a>
+    <a href="#"><span>Notas</span><b>Blog</b></a>
+    <a href="#"><span>Hecho por mí</span><b>Proyectos</b></a>
+    <a href="#"><span>Suelto</span><b>Ideas</b></a>
+    <a href="#"><span>Hola</span><b>Sobre mí</b></a>
+  </div>
+  <div class="d-strip"><span>Se actualiza a diario</span><span>Español</span><span>Claro y oscuro</span></div>
+</section>
+
+<!-- E -->
+<section class="view" id="ve" aria-label="Opción E">
+  <div class="e-bg" aria-hidden="true"></div>
+  <div class="e-in">
+    <header class="e-nav"><a class="e-logo" href="#"><i></i>charlymx</a>
+      <nav aria-label="Secciones"><a href="#">Buenas Noticias</a><a href="#">Blog</a><a href="#">Proyectos</a><a href="#">Sobre mí</a></nav>
+      <a class="e-go" href="#">Suscribirme</a></header>
+    <div class="e-hero">
+      <span class="e-badge"><b>●</b> Hoy: 5 buenas noticias nuevas</span>
+      <h1>Un rincón en internet para <em>lo que importa.</em></h1>
+      <p>Noticias positivas verificadas, notas y proyectos, todo en un solo lugar.</p>
+      <div class="e-search"><span aria-hidden="true">⌕</span>Buscar en charlymx…<kbd>⌘K</kbd></div>
+      <div class="e-chips"><a href="#">Todo</a><a href="#">Buenas Noticias</a><a href="#">Blog</a><a href="#">Proyectos</a><a href="#">Ideas</a></div>
+    </div>
+    <h2 class="e-h2">LO ÚLTIMO</h2>
+    <div class="e-grid">
+      <a class="e-card" href="#"><span class="k">Buenas Noticias</span><h3>Titular de ejemplo de una noticia positiva del día</h3><span class="m">04 oct 2026 · 3 min</span></a>
+      <a class="e-card" href="#"><span class="k">Blog</span><h3>Título de una nota sobre tecnología</h3><span class="m">02 oct 2026 · 5 min</span></a>
+      <a class="e-card" href="#"><span class="k">Proyecto</span><h3>Nombre de un proyecto reciente</h3><span class="m">28 sep 2026</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- F -->
+<section class="view" id="vf" aria-label="Opción F">
+  <div class="f-grid">
+    <header class="f-cell f-head"><a class="f-logo" href="#">charlymx</a>
+      <nav aria-label="Secciones"><a href="#">Noticias</a><a href="#">Blog</a><a href="#">Proyectos</a><a href="#">Sobre mí</a></nav></header>
+    <div class="f-cell f-title"><span class="f-tag">Portal personal / 2026</span><h1>Cosas que <span>sí</span> valen la pena.</h1></div>
+    <a class="f-cell f-hot" href="#"><span class="f-tag">Destacado</span><h3>Buenas Noticias</h3><span class="f-arrow">Leer hoy →</span></a>
+    <a class="f-cell" href="#"><span class="f-tag">Blog</span><div class="f-num">09</div><span class="f-arrow">notas →</span></a>
+    <a class="f-cell f-wide" href="#"><span class="f-tag">Última nota</span><h3>Título de ejemplo de la nota más reciente del blog</h3><span class="f-arrow">Leer →</span></a>
+    <a class="f-cell" href="#"><span class="f-tag">Proyectos</span><div class="f-num">05</div><span class="f-arrow">ver →</span></a>
+    <a class="f-cell" href="#"><span class="f-tag">Sobre mí</span><h3>Hola, soy Charly</h3><span class="f-arrow">→</span></a>
+    <a class="f-cell f-wide" href="#"><span class="f-tag">Boletín</span><h3>Lo nuevo en tu correo, sin ruido</h3><span class="f-arrow">Suscribirme →</span></a>
+  </div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var r=document.documentElement;
+  function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function setD(d){r.setAttribute('data-design',d);document.querySelectorAll('.tabs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.d===d)});save('cmx-d2',d)}
+  document.querySelectorAll('.tabs button').forEach(function(b){b.addEventListener('click',function(){setD(b.dataset.d)})});
+  document.getElementById('themebtn').addEventListener('click',function(){
+    var t=r.getAttribute('data-theme');
+    var dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme:dark)').matches);
+    r.setAttribute('data-theme',dark?'light':'dark');
+  });
+  var h=location.hash.replace('#','');setD(['d','e','f'].indexOf(h)>-1?h:(load('cmx-d2')||'d'));
+})();
+</script>
