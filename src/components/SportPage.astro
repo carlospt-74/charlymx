@@ -6,7 +6,7 @@ const accDark = t.accentFg === '#14171f';
 const statsLabels = t.statLabels;
 ---
 <div class="wrap">
-  <section class="shero" style={`background:${t.bg}`} data-sport data-soccer={soccer ? '1' : ''} data-cut={t.cut} data-max={t.maxResults} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name}>
+  <section class="shero" style={`background:${t.bg}`} data-sport data-soccer={soccer ? '1' : ''} data-cut={t.cut} data-max={t.maxResults} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name} data-provider={t.provider} data-sport={t.sportId} data-leagueid={t.leagueId}>
     <div class="shero-pattern" style={`background:${t.pattern}`}></div>
     <div class="shero-body">
       <a href="/" class="shero-back" style={`color:${t.sub}`}>← Inicio · {t.league}</a>
@@ -38,43 +38,67 @@ const statsLabels = t.statLabels;
 </div>
 
 <script>
-  import { resolveTeam, schedule, standingsGroup, groupName, standing, sv, nv, fDay, fShort, fHour, esc } from '../lib/sports';
+  import { resolveTeam, schedule, standingsGroup, groupName, standing, sv, nv, fDay, fShort, fHour, esc, mlbTeam } from '../lib/sports';
+  import type { Game, Row } from '../lib/sports';
 
   const root = document.querySelector<HTMLElement>('[data-sport]');
   if (root) run(root);
 
   async function run(root: HTMLElement) {
-    const { path, espn, abbr, name } = root.dataset as Record<string, string>;
+    const { path, espn, abbr, name, provider, sport, leagueid } = root.dataset as Record<string, string>;
     const soccer = !!root.dataset.soccer;
     const cutAt = Number(root.dataset.cut || 0);
     const maxRes = Number(root.dataset.max || 0);
     const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
     const setStat = (i: number, v: string) => { const el = root.querySelector<HTMLElement>(`[data-stat="${i}"]`); if (el && v) el.textContent = v; };
     const res = (r: string) => `<span class="rb ${r}">${r}</span>`;
-    try {
-      const id = await resolveTeam(path, espn, abbr, name);
-      const { team: t, games } = await schedule(path, id, soccer);
-      const past = games.filter((g) => g.done);
-      const next = games.filter((g) => !g.done).slice(0, 4);
 
+    // Pintado compartido: sirve igual para ESPN y para la API de MLB
+    const paintNext = (next: Game[]) => {
       $('[data-next]').innerHTML = next.length ? next.map((g, i) => `
         <div class="snext ${i === 0 ? 'first' : ''}">
           <div><small>${!soccer && g.week ? 'SEM ' + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
           <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}</span>
           <em>${g.tbd ? 'Hora por<br>confirmar' : esc(fHour(g.date))}<br>${esc(g.tv || g.venue)}</em>
         </div>`).join('') : '<p class="snote">No hay partidos programados por ahora.</p>';
-
-      $('[data-results]').innerHTML = past.length ? past.slice().reverse().slice(0, maxRes || undefined).map((g) => `
+    };
+    const paintResults = (past: Game[]) => {
+      const list = past.slice().reverse().slice(0, maxRes || undefined);
+      $('[data-results]').innerHTML = list.length ? list.map((g) => `
         <div class="sres"><small>${!soccer && g.week ? 'S' + g.week : fShort(g.date)}</small>
-        <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}</span><b>${esc(g.us)}-${esc(g.them)}</b>${res(g.res)}</div>`).join('') : '<p class="snote">Aún no hay partidos jugados.</p>';
-
+        <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}${g.stage ? ` <small>· ${esc(g.stage)}</small>` : ''}</span><b>${esc(g.us)}-${esc(g.them)}</b>${res(g.res)}</div>`).join('') : '<p class="snote">Aún no hay partidos jugados.</p>';
       const streak = past.slice(-5).reverse().map((g) => g.res).join(' ');
+      $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';
+    };
+    const paintTable = (cols: string[], rows: Row[]) => {
+      $('[data-table]').innerHTML = `<div class="strow head"><span>#</span><span>Equipo</span>${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
+        rows.map((r, i) => {
+          const cut = cutAt && i === cutAt ? ' cut' : '';
+          const zone = cutAt && i < cutAt ? ' zone' : '';
+          return `<div class="strow${r.mine ? ' me' : ''}${cut}${zone}"><span>${i + 1}</span><span>${esc(r.name)}${r.mine ? ' <i>Mi equipo</i>' : ''}</span>${r.cells.map((v) => `<span>${esc(v)}</span>`).join('')}</div>`;
+        }).join('');
+    };
+
+    try {
+      if (provider === 'mlbstats') {
+        const d = await mlbTeam(espn, Number(sport), Number(leagueid));
+        paintNext(d.next.slice(0, 4));
+        paintResults(d.past);
+        d.stats.forEach((v, i) => setStat(i, v));
+        $('[data-table-title]').textContent = d.groupName;
+        if (!d.rows.length) throw new Error('standings');
+        paintTable(['G', 'P', '%'], d.rows);
+        return;
+      }
+
+      const id = await resolveTeam(path, espn, abbr, name);
+      const { team: t, games } = await schedule(path, id, soccer);
+      const past = games.filter((g) => g.done);
+      paintNext(games.filter((g) => !g.done).slice(0, 4));
+      paintResults(past);
       if (!soccer) {
         setStat(0, t.recordSummary || '');
         setStat(1, standing(t.standingSummary || ''));
-        $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';
-      } else {
-        $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';
       }
 
       const grp = await standingsGroup(path, t.id);
@@ -93,13 +117,9 @@ const statsLabels = t.statLabels;
 
       const cols = soccer ? ['PJ', 'DG', 'Pts'] : ['G', 'P', '%'];
       const vals = (e: any) => soccer ? [sv(e, 'gamesPlayed'), sv(e, 'pointDifferential'), sv(e, 'points')] : [sv(e, 'wins'), sv(e, 'losses'), sv(e, 'winPercent')];
-      $('[data-table]').innerHTML = `<div class="strow head"><span>#</span><span>Equipo</span>${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
-        entries.map((e, i) => {
-          const mine = e.team?.id === t.id;
-          const cut = cutAt && i === cutAt ? ' cut' : '';
-          const zone = cutAt && i < cutAt ? ' zone' : '';
-          return `<div class="strow${mine ? ' me' : ''}${cut}${zone}"><span>${i + 1}</span><span>${esc(e.team?.shortDisplayName || e.team?.displayName)}${mine ? ' <i>Mi equipo</i>' : ''}</span>${vals(e).map((v) => `<span>${esc(v)}</span>`).join('')}</div>`;
-        }).join('');
+      paintTable(cols, entries.map((e) => ({
+        mine: e.team?.id === t.id, name: e.team?.shortDisplayName || e.team?.displayName || '', cells: vals(e),
+      })));
     } catch (err) {
       console.error('[Mis equipos]', name, err);
       $('[data-table]').innerHTML = '<p class="snote" style="padding:12px 16px">No se pudieron cargar los datos ahora. Intenta más tarde.</p>';

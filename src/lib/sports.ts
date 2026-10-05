@@ -11,6 +11,8 @@ export const fHour = (d: Date) => new Intl.DateTimeFormat('en-US', { timeZone: T
 export interface Game {
   date: Date; done: boolean; home: boolean; opp: string; us: string; them: string;
   res: 'G' | 'P' | 'E' | ''; tv: string; venue: string; week?: number; tbd: boolean;
+  stage?: string;   // fase (solo MLB Stats API), p. ej. "Serie de Campeonato"
+  season?: string;
 }
 
 const sc = (s: any) => (s && typeof s === 'object' ? s.displayValue : s) ?? '';
@@ -100,3 +102,77 @@ export const groupName = (s = '') =>
 export const standing = (s = '') => groupName(s.replace(/(\d+)(st|nd|rd|th) in /, '$1° '));
 
 export const esc = (s: any) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+// ───────── API de estadísticas de MLB (statsapi.mlb.com): LMB y otras ligas de MiLB ─────────
+// Pública y sin llave. La usa MiLB.com para la Liga Mexicana de Béisbol (liga 125, categoría 23).
+const MLBSTATS = 'https://statsapi.mlb.com/api/v1';
+const ZONES: Record<string, string> = { '222': 'Zona Norte', '223': 'Zona Sur' };
+
+export interface Row { mine: boolean; name: string; cells: string[] }
+
+/** Convierte el calendario de statsapi en la misma lista de partidos que usa ESPN. */
+export function parseMlbSchedule(d: any, teamId: string): Game[] {
+  const byPk = new Map<number, any>();
+  for (const day of d?.dates || []) {
+    for (const g of day.games || []) {
+      const coded = g.status?.codedGameState;
+      // un juego pospuesto aparece dos veces (el pospuesto y el repuesto): solo queda el que sí se jugó
+      if (coded === 'D' || coded === 'C' || /Postponed|Cancel/i.test(g.status?.detailedState || '')) continue;
+      byPk.set(g.gamePk, g);
+    }
+  }
+  const games: Game[] = [];
+  for (const g of byPk.values()) {
+    const home = g.teams?.home, away = g.teams?.away;
+    const meHome = String(home?.team?.id) === String(teamId);
+    const us = meHome ? home : away, them = meHome ? away : home;
+    const done = g.status?.abstractGameState === 'Final';
+    const a = Number(us?.score), b = Number(them?.score);
+    games.push({
+      date: new Date(g.gameDate), done, home: meHome,
+      opp: them?.team?.name || '', us: sc(us?.score), them: sc(them?.score),
+      res: !done ? '' : a > b ? 'G' : a < b ? 'P' : 'E',
+      tv: '', venue: g.venue?.name || '', tbd: !!g.status?.startTimeTBD && !done,
+      stage: g.seriesDescription && g.seriesDescription !== 'Regular Season' ? g.seriesDescription : '',
+      season: String(g.season || ''),
+    });
+  }
+  return games.sort((x, y) => x.date.getTime() - y.date.getTime());
+}
+
+/** Busca la zona (división) del equipo en las posiciones y devuelve su tabla ya lista para pintar. */
+export function parseMlbStandings(d: any, teamId: string) {
+  const rec = (d?.records || []).find((r: any) => r.teamRecords?.some((t: any) => String(t.team?.id) === String(teamId)));
+  if (!rec) return null;
+  const sorted = rec.teamRecords.slice().sort((a: any, b: any) => Number(a.divisionRank) - Number(b.divisionRank));
+  const me = sorted.find((t: any) => String(t.team?.id) === String(teamId));
+  const groupName = ZONES[String(rec.division?.id)] || 'Tabla de posiciones';
+  const rows: Row[] = sorted.map((t: any) => ({
+    mine: String(t.team?.id) === String(teamId), name: t.team?.name || '',
+    cells: [String(t.wins), String(t.losses), String(t.winningPercentage)],
+  }));
+  return { groupName, rows, me };
+}
+
+/** Calendario, resultados y tabla de un equipo de la LMB (o de otra liga de MiLB). */
+export async function mlbTeam(teamId: string, sportId: number, leagueId: number) {
+  const day = 864e5, iso = (t: number) => new Date(t).toISOString().slice(0, 10);
+  const now = Date.now();
+  const sched = await getJSON(`${MLBSTATS}/schedule?sportId=${sportId}&teamId=${teamId}&startDate=${iso(now - 200 * day)}&endDate=${iso(now + 200 * day)}`);
+  const games = parseMlbSchedule(sched, teamId);
+  const past = games.filter((g) => g.done);
+  const next = games.filter((g) => !g.done);
+  const season = past.length ? past[past.length - 1].season! : String(new Date().getFullYear());
+  let meta = '', groupName = 'Tabla de posiciones', rows: Row[] = [], stats = ['', '', '', ''];
+  try {
+    const st = parseMlbStandings(await getJSON(`${MLBSTATS}/standings?leagueId=${leagueId}&season=${season}`), teamId);
+    if (st) {
+      groupName = st.groupName; rows = st.rows;
+      const me = st.me;
+      const rank = me ? `${me.divisionRank}° ${st.groupName}` : '';
+      meta = me ? [`Récord ${me.wins}-${me.losses}`, rank].join(' · ') : '';
+      stats = me ? [`${me.wins}-${me.losses}`, rank, String(me.runsScored ?? ''), String(me.runsAllowed ?? '')] : stats;
+    }
+  } catch {}
+  return { past, next, meta, groupName, rows, stats };
+}

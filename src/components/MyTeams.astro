@@ -7,7 +7,7 @@ const teams = getTeams();
   <div class="sec-head"><h2>Mis equipos</h2><span class="sub-note">Se actualiza solo · hora de Monterrey</span></div>
   <div class="teams-grid">
     {teams.map((t) => (
-      <a class="tcard" href={t.href} target={t.external ? '_blank' : undefined} rel={t.external ? 'noopener' : undefined} {...(t.live ? { 'data-tcard': '' } : {})} data-soccer={t.soccer ? '1' : ''} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name}
+      <a class="tcard" href={t.href} target={t.external ? '_blank' : undefined} rel={t.external ? 'noopener' : undefined} {...(t.live ? { 'data-tcard': '' } : {})} data-soccer={t.soccer ? '1' : ''} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name} data-provider={t.provider} data-sport={t.sportId} data-leagueid={t.leagueId}
          style={`--tc-bg:${t.bg};--tc-accent:${t.accent};--tc-accent-fg:${t.accentFg};--tc-sub:${t.sub};--tc-link:${t.link};--tc-strip:${t.strip}`}>
         <div class="tcard-strip"></div>
         <div class="tcard-body">
@@ -28,31 +28,40 @@ const teams = getTeams();
 </section>
 )}
 <script>
-  import { resolveTeam, schedule, standingsGroup, standing, sv, fDay, fHour, esc } from '../lib/sports';
+  import { resolveTeam, schedule, standingsGroup, standing, sv, fDay, fHour, esc, mlbTeam } from '../lib/sports';
+  import type { Game } from '../lib/sports';
 
   document.querySelectorAll<HTMLElement>('[data-tcard]').forEach(async (card) => {
-    const { path, espn, abbr, name } = card.dataset as Record<string, string>;
+    const { path, espn, abbr, name, provider, sport, leagueid } = card.dataset as Record<string, string>;
     const soccer = !!card.dataset.soccer;
     const q = (s: string) => card.querySelector<HTMLElement>(s)!;
     try {
-      const id = await resolveTeam(path, espn, abbr, name);
-      const { team: t, games } = await schedule(path, id, soccer);
-      const past = games.filter((g) => g.done);
-      const next = games.find((g) => !g.done);
-      if (soccer) {
-        try {
-          const grp = await standingsGroup(path, t.id);
-          const me = grp?.standings.entries.find((e: any) => e.team?.id === t.id);
-          if (me) q('[data-meta]').textContent = `${sv(me, 'rank')}° lugar · ${sv(me, 'points')} pts`;
-        } catch {}
+      let meta = '';
+      let last: Game | undefined;
+      let next: Game | undefined;
+      if (provider === 'mlbstats') {
+        const d = await mlbTeam(espn, Number(sport), Number(leagueid));
+        meta = d.meta; last = d.past[d.past.length - 1]; next = d.next[0];
       } else {
-        q('[data-meta]').textContent = [t.recordSummary && `Récord ${t.recordSummary}`, standing(t.standingSummary)].filter(Boolean).join(' · ');
+        const id = await resolveTeam(path, espn, abbr, name);
+        const { team: t, games } = await schedule(path, id, soccer);
+        last = games.filter((g) => g.done).slice(-1)[0];
+        next = games.find((g) => !g.done);
+        if (soccer) {
+          try {
+            const grp = await standingsGroup(path, t.id);
+            const me = grp?.standings.entries.find((e: any) => e.team?.id === t.id);
+            if (me) meta = `${sv(me, 'rank')}° lugar · ${sv(me, 'points')} pts`;
+          } catch {}
+        } else {
+          meta = [t.recordSummary && `Récord ${t.recordSummary}`, standing(t.standingSummary)].filter(Boolean).join(' · ');
+        }
       }
-      const last = past[past.length - 1];
+      if (meta) q('[data-meta]').textContent = meta;
       if (last) {
         const homeName = last.home ? name : last.opp, awayName = last.home ? last.opp : name;
         const hs = last.home ? last.us : last.them, as = last.home ? last.them : last.us;
-        const cap = soccer || !last.week ? `Último partido · ${fDay(last.date)} · Final` : `Semana ${last.week} · Final`;
+        const cap = soccer || !last.week ? `${last.stage ? last.stage + ' · ' : 'Último partido · '}${fDay(last.date)} · Final` : `Semana ${last.week} · Final`;
         q('[data-last]').innerHTML = `<div class="tcap">${esc(cap)}</div>
           <div class="tscore"><div class="${last.home ? 'us' : ''}"><small>${esc(homeName)}</small><b>${esc(hs)}</b></div>
           <em>${last.home ? 'en casa' : 'de visita'}</em>

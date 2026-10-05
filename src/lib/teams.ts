@@ -6,6 +6,8 @@ export interface League {
   live: boolean;          // false = solo tarjeta con enlace (sin datos en vivo ni página propia)
   maxResults: number;     // máximo de resultados en la página del equipo (0 = todos)
   statLabels: string[];   // etiquetas de las estadísticas de la franja superior
+  provider?: 'mlbstats';  // por defecto la API de ESPN; 'mlbstats' = statsapi.mlb.com (LMB)
+  sportId?: number; leagueId?: number;
 }
 
 export const LEAGUES: Record<string, League> = {
@@ -25,8 +27,10 @@ export const LEAGUES: Record<string, League> = {
     live: true, maxResults: 10, statLabels: ['Récord', 'División', 'Carreras a favor', 'En contra'],
   },
   'LMB': {
-    path: '', soccer: false, cut: 0, tableTitle: '', tableNote: '', calUrl: 'https://lmb.com.mx/',
-    live: false, maxResults: 0, statLabels: [],
+    path: '', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
+    tableNote: 'Los mejores de cada zona avanzan a playoffs.', calUrl: 'https://lmb.com.mx/posiciones',
+    live: true, maxResults: 10, statLabels: ['Récord', 'Zona', 'Carreras a favor', 'En contra'],
+    provider: 'mlbstats', sportId: 23, leagueId: 125,
   },
 };
 
@@ -43,6 +47,7 @@ export interface Team {
   key: string; league: string; name: string; abbr: string; espn: string; crest: string; slug: string; href: string;
   path: string; soccer: boolean; cut: number; tableTitle: string; tableNote: string; calUrl: string;
   live: boolean; maxResults: number; statLabels: string[]; external: boolean;
+  provider: string; sportId: number; leagueId: number;
   bg: string; accent: string; accentFg: string; sub: string; link: string; strip: string; pattern: string;
 }
 
@@ -67,6 +72,7 @@ export function getTeams(): Team[] {
         crest: t.crest || '', slug, href: L.live ? `/${slug}/` : (t.url || L.calUrl), external: !L.live,
         path: L.path, soccer: L.soccer, cut: L.cut, tableTitle: L.tableTitle, tableNote: L.tableNote, calUrl: L.calUrl,
         live: L.live, maxResults: L.maxResults, statLabels: L.statLabels,
+        provider: L.provider || 'espn', sportId: L.sportId || 0, leagueId: L.leagueId || 0,
         bg, accent, accentFg: onColor(accent), sub: 'rgba(255,255,255,.68)', link: accentIsLight ? '#9cc2ff' : contrast(accent, bg) >= 3 ? accent : '#ffffff',
         strip, pattern,
       };

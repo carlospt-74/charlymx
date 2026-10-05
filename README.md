@@ -36,10 +36,11 @@ Paleta "Tinta cálida": negro cálido y fotos con marco crema. La primera vez si
 - En el Inicio aparece una tarjeta por equipo, y cada uno tiene su página: `/nfl/` y `/liga-mx/`, o la dirección que le pongas.
 - Si agregas o cambias un equipo, Cloudflare vuelve a publicar el sitio y se crea su página.
 
-- **LMB (Liga Mexicana de Béisbol)** no tiene datos en vivo: su tarjeta solo abre el enlace oficial que pongas en el campo "Enlace oficial", y no crea página propia.
+- **LMB (Liga Mexicana de Béisbol)** usa la API pública de estadísticas de MLB (`statsapi.mlb.com`, la que alimenta a MiLB.com), no ESPN. El ID del equipo es su número en esa API (Sultanes = `562`; liga 125, categoría 23). Muestra resultados, próximos partidos (incluye playoffs) y la tabla de su zona.
 - **MLB** usa la misma API de ESPN (`baseball/mlb`); el ID es la abreviatura en minúsculas (Bravos = `atl`). En su página se muestran los últimos 10 resultados.
 
 ### De dónde salen los datos
+- **ESPN** (NFL, Liga MX, MLB) y **MLB Stats API** (LMB). Las dos son públicas, no oficiales y sin llave.
 Todos los datos vienen de la API pública de ESPN, la misma para la NFL y para la Liga MX. Se consultan desde el navegador y no requieren llave.
 - **Calendario y resultados:** `https://site.api.espn.com/apis/site/v2/sports/{liga}/teams/{equipo}/schedule`. En futbol, los próximos partidos se piden aparte con `?fixture=true`.
 - **Tablas:** `https://site.api.espn.com/apis/v2/sports/{liga}/standings`.
