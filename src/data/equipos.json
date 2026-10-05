@@ -1,117 +1,109 @@
 {
   "teams": [
     {
+      "visible": true,
       "league": "NFL",
+      "prefix": "Mis",
       "name": "Broncos",
       "abbr": "DEN",
       "espn_id": "den",
-      "crest": "",
       "color": "#0b1f3a",
       "accent": "#FB4F14",
       "pattern": "diagonal",
-      "slug": "nfl",
-      "url": "",
-      "visible": true,
-      "prefix": "Mis"
+      "featured": false,
+      "slug": "nfl"
     },
     {
+      "visible": true,
       "league": "Liga MX",
+      "prefix": "Mis",
       "name": "Rayados",
       "abbr": "MTY",
       "espn_id": "220",
-      "crest": "",
       "color": "#0b2c5f",
       "accent": "#ffffff",
       "pattern": "rayas",
-      "slug": "liga-mx",
-      "url": "",
-      "visible": true,
-      "prefix": "Mis"
+      "featured": false,
+      "slug": "liga-mx"
     },
     {
+      "visible": true,
       "league": "MLB",
+      "prefix": "Mis",
       "name": "Dodgers",
       "abbr": "LAD",
       "espn_id": "lad",
-      "crest": "",
       "color": "#005a9c",
       "accent": "#ffffff",
       "pattern": "diagonal",
-      "slug": "mlb",
-      "url": "",
-      "visible": true,
-      "prefix": "Mis"
+      "featured": false,
+      "slug": "mlb"
     },
     {
+      "visible": false,
       "league": "LMB",
+      "prefix": "Mis",
       "name": "Sultanes",
       "abbr": "SUL",
       "espn_id": "562",
-      "crest": "",
       "color": "#0c1f3f",
       "accent": "#b4b7c0",
       "pattern": "liso",
-      "slug": "lmb",
       "url": "https://www.sultanes.com.mx/",
-      "visible": false,
-      "prefix": "Mis"
+      "featured": false,
+      "slug": "lmb"
     },
     {
+      "visible": true,
       "league": "Tocho",
+      "prefix": "Mis",
       "name": "Búfalos",
       "abbr": "BUF",
       "espn_id": "bf28bd70-85fa-11f1-8585-0a2bbad5892d",
-      "crest": "",
       "color": "#0b2a5b",
       "accent": "#d62828",
       "pattern": "diagonal",
-      "slug": "tocho",
-      "url": "",
       "featured": true,
-      "visible": true,
-      "prefix": "Mis"
+      "slug": "tocho"
     },
     {
+      "visible": true,
       "league": "NBA",
+      "prefix": "Mis",
       "name": "Lakers",
       "abbr": "LAL",
       "espn_id": "lal",
-      "crest": "",
       "color": "#552583",
       "accent": "#fdb927",
       "pattern": "diagonal",
-      "slug": "nba",
-      "url": "",
-      "visible": true,
-      "prefix": "Mis"
+      "featured": false,
+      "slug": "nba"
     },
     {
+      "visible": true,
       "league": "La Liga",
+      "prefix": "Mi",
       "name": "Barça",
       "abbr": "BAR",
       "espn_id": "83",
-      "crest": "",
       "color": "#004d98",
       "accent": "#a50044",
       "pattern": "rayas",
-      "slug": "la-liga",
-      "url": "",
-      "visible": true,
-      "prefix": "Mi"
+      "featured": false,
+      "slug": "la-liga"
     },
     {
+      "visible": true,
       "league": "F1",
-      "name": "Checo",
+      "prefix": "Mi",
+      "name": " Checo",
       "abbr": "CHE",
       "espn_id": "perez",
-      "crest": "",
       "color": "#0f1b3d",
       "accent": "#e10600",
       "pattern": "diagonal",
-      "slug": "f1",
-      "url": "",
-      "visible": true,
-      "prefix": "Mi"
+      "featured": false,
+      "slug": "f1"
     }
   ]
 }
