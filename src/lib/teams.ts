@@ -6,6 +6,7 @@ export interface League {
   live: boolean;          // false = solo tarjeta con enlace (sin datos en vivo ni página propia)
   maxResults: number;     // máximo de resultados en la página del equipo (0 = todos)
   statLabels: string[];   // etiquetas de las estadísticas de la franja superior
+  calLabel?: string;      // texto del enlace "Ver más en …" (por defecto según la fuente)
   provider?: 'mlbstats' | 'sportwey';  // por defecto la API de ESPN; 'mlbstats' = statsapi.mlb.com (LMB)
   sportId?: number; leagueId?: number;
 }
@@ -40,7 +41,8 @@ export const LEAGUES: Record<string, League> = {
   },
   'Tocho': {
     path: '', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
-    tableNote: 'Tabla calculada con los resultados publicados en Sportwey.', calUrl: 'https://app.sportwey.com/tournament/bf28bd70-85fa-11f1-8585-0a2bbad5892d?tab=2',
+    tableNote: 'Tabla calculada con los resultados publicados en Sportwey.', calUrl: 'https://app.sportwey.com/explore?type=tournament&q=LTFN&latitude=25.75459291230476&longitude=-100.40383661021643',
+    calLabel: 'Liga LTFN',
     live: true, maxResults: 0, statLabels: ['Récord', 'Lugar', 'Puntos a favor', 'En contra'],
     provider: 'sportwey',
   },
@@ -58,7 +60,7 @@ const onColor = (hex: string) => (lum(hex) > 0.45 ? '#14171f' : '#ffffff');
 export interface Team {
   key: string; league: string; name: string; abbr: string; espn: string; crest: string; slug: string; href: string;
   path: string; soccer: boolean; cut: number; tableTitle: string; tableNote: string; calUrl: string;
-  live: boolean; maxResults: number; statLabels: string[]; external: boolean; featured: boolean;
+  live: boolean; maxResults: number; statLabels: string[]; external: boolean; featured: boolean; calLabel: string;
   provider: string; sportId: number; leagueId: number;
   bg: string; accent: string; accentFg: string; sub: string; link: string; strip: string; pattern: string;
 }
@@ -81,7 +83,7 @@ export function getTeams(): Team[] {
       return {
         key: `${slug}-${i}`, league: t.league, name: t.name, abbr: (t.abbr || '').toUpperCase(),
         espn: (t.espn_id || (L.soccer || L.provider ? '' : t.abbr) || '').toString().toLowerCase(),
-        crest: t.crest || '', slug, href: L.live ? `/${slug}/` : (t.url || L.calUrl), external: !L.live, featured: t.featured === true,
+        crest: t.crest || '', slug, href: L.live ? `/${slug}/` : (t.url || L.calUrl), external: !L.live, featured: t.featured === true, calLabel: L.calLabel || (L.provider === 'sportwey' ? 'Sportwey' : L.provider === 'mlbstats' ? 'MLB.com' : 'ESPN'),
         path: L.path, soccer: L.soccer, cut: L.cut, tableTitle: L.tableTitle, tableNote: L.tableNote, calUrl: L.calUrl,
         live: L.live, maxResults: L.maxResults, statLabels: L.statLabels,
         provider: L.provider || 'espn', sportId: L.sportId || 0, leagueId: L.leagueId || 0,
