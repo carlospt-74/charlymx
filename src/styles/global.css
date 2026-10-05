@@ -61,7 +61,7 @@ p{margin:0;text-wrap:pretty}
 .deck{position:relative;width:380px;height:585px;justify-self:center}
 .deck-card{position:absolute;inset:0;border-radius:28px;overflow:hidden;background:#fff;border:8px solid #fff;box-shadow:0 18px 40px rgba(20,23,31,.16);cursor:pointer;padding:0;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
 .deck-card img{width:100%;height:100%;object-fit:cover;border-radius:20px}
-.deck-sticker{position:absolute;left:-56px;bottom:70px;z-index:10;padding:14px 18px;border-radius:18px;background:var(--yellow);transform:rotate(-5deg);box-shadow:0 10px 24px rgba(20,23,31,.15);max-width:260px}
+.deck-sticker{color:#14171f;position:absolute;left:-56px;bottom:70px;z-index:10;padding:14px 18px;border-radius:18px;background:var(--yellow);transform:rotate(-5deg);box-shadow:0 10px 24px rgba(20,23,31,.15);max-width:260px}
 .deck-sticker b{display:block;font:800 28px/1 var(--fh)}.deck-sticker small{display:block;font:600 13px var(--fb);margin-top:4px}
 .deck-dots{position:absolute;left:0;right:0;bottom:-48px;display:flex;justify-content:center;gap:8px}
 .deck-dots button{width:8px;height:8px;border-radius:999px;border:0;padding:0;background:#c9d3ea;cursor:pointer;transition:all .3s}
@@ -175,6 +175,31 @@ p{margin:0;text-wrap:pretty}
 /* footer */
 .site-footer{border-top:1px solid rgba(20,23,31,.08)}
 .site-footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:28px;padding-bottom:28px;font-size:14px;color:var(--soft)}
+
+/* header actions + theme toggle */
+.header-actions{display:flex;align-items:center;gap:10px}
+.theme-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.theme-btn span{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink);background:linear-gradient(90deg,var(--ink) 50%,transparent 50%);transition:transform .4s}
+html[data-theme=dark] .theme-btn span{transform:rotate(180deg)}
+
+/* modo oscuro · Tinta cálida (5c) */
+html[data-theme=dark]{--bg:#15130f;--white:#1f1c17;--ink:#f5f1e8;--ink2:#e6e0d4;--muted:#b3ab9c;--soft:#8a8273;--line:rgba(255,255,255,.1);--blue:#6b93ff;--blue-d:#8aa9ff;--blue-s:#22283a;--navy:#13284a;color-scheme:dark}
+html[data-theme=dark] .site-header{background:rgba(21,19,15,.92)}
+html[data-theme=dark] .band,html[data-theme=dark] .site-footer{border-top-color:var(--line)}
+html[data-theme=dark] .menu-btn,html[data-theme=dark] .socials a,html[data-theme=dark] .chip,html[data-theme=dark] .pbig,html[data-theme=dark] .featured,html[data-theme=dark] .passion,html[data-theme=dark] .soc-list a{background:var(--white);border-color:var(--line)}
+html[data-theme=dark] .btn-line:hover{background:var(--white)}
+html[data-theme=dark] .btn-blue{color:#15130f}html[data-theme=dark] .btn-blue:hover{color:#15130f}
+html[data-theme=dark] .btn-dark,html[data-theme=dark] .btn-dark:hover{color:var(--bg)}
+html[data-theme=dark] .chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+html[data-theme=dark] .deck-card{background:#f5f1e8;border-color:#f5f1e8;box-shadow:0 18px 40px rgba(0,0,0,.55)}
+html[data-theme=dark] .deck-sticker{box-shadow:0 10px 24px rgba(0,0,0,.45)}
+html[data-theme=dark] .deck-dots button{background:#3a352c}html[data-theme=dark] .deck-dots button[aria-current]{background:var(--blue)}
+html[data-theme=dark] .pill-live{background:#1b2e1f;color:#7ddc9c}html[data-theme=dark] .pill-lab{background:#3a3015;color:#ffd666}
+html[data-theme=dark] .pcard.lab,html[data-theme=dark] .empty{background:#1c2030;border-color:rgba(255,255,255,.18)}
+html[data-theme=dark] .cover{background:repeating-linear-gradient(135deg,#22283a 0 10px,#1d2232 10px 20px)}
+html[data-theme=dark] .cta{background:var(--blue-s);color:var(--ink)}html[data-theme=dark] .cta p{color:var(--muted)}
+html[data-theme=dark] .mobile-menu nav{background:var(--white);border:1px solid var(--line)}
+html[data-theme=dark] .mobile-menu nav a{color:var(--ink)}html[data-theme=dark] .mobile-menu nav a[aria-current]{color:var(--yellow)}
 
 /* responsive */
 @media (max-width:1000px){

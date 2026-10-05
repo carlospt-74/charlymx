@@ -15,8 +15,11 @@ const links = [
     <nav class="nav" aria-label="Principal">
       {links.map((l) => <a href={l.href} aria-current={active === l.label ? 'page' : undefined}>{l.label}</a>)}
     </nav>
-    <a href="/contacto/" class="btn btn-dark header-cta">Escríbeme</a>
-    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false" data-menu-btn><span></span><span></span><span></span></button>
+    <div class="header-actions">
+      <button class="theme-btn" aria-label="Cambiar a modo oscuro" data-theme-btn><span></span></button>
+      <a href="/contacto/" class="btn btn-dark header-cta">Escríbeme</a>
+      <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false" data-menu-btn><span></span><span></span><span></span></button>
+    </div>
   </div>
 </header>
 <div class="mobile-menu" data-menu>
@@ -32,5 +35,14 @@ const links = [
     const open = document.body.classList.toggle('menu-open');
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  });
+  const tb = document.querySelector('[data-theme-btn]');
+  const label = () => tb?.setAttribute('aria-label', document.documentElement.dataset.theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+  label();
+  tb?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    label();
   });
 </script>

@@ -28,6 +28,9 @@ Sitio personal de Charly. Está hecho con **Astro**, se administra con **Pages C
 
 El archivo `src/content/blog/2026-10-05-ejemplo-borrador.md` es un borrador de ejemplo que no se publica. Puedes borrarlo cuando escribas tu primer artículo.
 
+## Modo oscuro
+Paleta "Tinta cálida": negro cálido y fotos con marco crema. La primera vez sigue la preferencia del celular o la computadora. El botón redondo del encabezado lo cambia, y la elección se recuerda. Los colores están en `src/styles/global.css`, en el bloque `html[data-theme=dark]`.
+
 ## Sección de los Broncos
 Los resultados y el calendario se cargan en vivo desde la API pública de ESPN, en hora de Monterrey. Si la API falla, la sección se oculta sola. Para seguir a otro equipo, cambia "Equipo NFL" en Ajustes (por ejemplo `kc`, `dal`).
 
