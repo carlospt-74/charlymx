@@ -3,10 +3,10 @@ import type { Team } from '../lib/teams';
 const { team: t } = Astro.props as { team: Team };
 const soccer = t.soccer;
 const accDark = t.accentFg === '#14171f';
-const statsLabels = soccer ? ['Lugar', 'Puntos', 'PJ', 'G-E-P', 'DG'] : ['Récord', 'División', 'Puntos a favor', 'En contra'];
+const statsLabels = t.statLabels;
 ---
 <div class="wrap">
-  <section class="shero" style={`background:${t.bg}`} data-sport data-soccer={soccer ? '1' : ''} data-cut={t.cut} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name}>
+  <section class="shero" style={`background:${t.bg}`} data-sport data-soccer={soccer ? '1' : ''} data-cut={t.cut} data-max={t.maxResults} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name}>
     <div class="shero-pattern" style={`background:${t.pattern}`}></div>
     <div class="shero-body">
       <a href="/" class="shero-back" style={`color:${t.sub}`}>← Inicio · {t.league}</a>
@@ -47,6 +47,7 @@ const statsLabels = soccer ? ['Lugar', 'Puntos', 'PJ', 'G-E-P', 'DG'] : ['Récor
     const { path, espn, abbr, name } = root.dataset as Record<string, string>;
     const soccer = !!root.dataset.soccer;
     const cutAt = Number(root.dataset.cut || 0);
+    const maxRes = Number(root.dataset.max || 0);
     const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
     const setStat = (i: number, v: string) => { const el = root.querySelector<HTMLElement>(`[data-stat="${i}"]`); if (el && v) el.textContent = v; };
     const res = (r: string) => `<span class="rb ${r}">${r}</span>`;
@@ -63,7 +64,7 @@ const statsLabels = soccer ? ['Lugar', 'Puntos', 'PJ', 'G-E-P', 'DG'] : ['Récor
           <em>${g.tbd ? 'Hora por<br>confirmar' : esc(fHour(g.date))}<br>${esc(g.tv || g.venue)}</em>
         </div>`).join('') : '<p class="snote">No hay partidos programados por ahora.</p>';
 
-      $('[data-results]').innerHTML = past.length ? past.slice().reverse().map((g) => `
+      $('[data-results]').innerHTML = past.length ? past.slice().reverse().slice(0, maxRes || undefined).map((g) => `
         <div class="sres"><small>${!soccer && g.week ? 'S' + g.week : fShort(g.date)}</small>
         <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}</span><b>${esc(g.us)}-${esc(g.them)}</b>${res(g.res)}</div>`).join('') : '<p class="snote">Aún no hay partidos jugados.</p>';
 
@@ -88,7 +89,7 @@ const statsLabels = soccer ? ['Lugar', 'Puntos', 'PJ', 'G-E-P', 'DG'] : ['Récor
         setStat(0, sv(me, 'rank') + '°'); setStat(1, sv(me, 'points')); setStat(2, sv(me, 'gamesPlayed'));
         setStat(3, `${sv(me, 'wins')}-${sv(me, 'ties')}-${sv(me, 'losses')}`); setStat(4, sv(me, 'pointDifferential'));
       }
-      if (!soccer && me) { setStat(2, sv(me, 'pointsFor')); setStat(3, sv(me, 'pointsAgainst')); }
+      if (!soccer && me) { setStat(2, sv(me, 'pointsFor', 'runsFor', 'RS')); setStat(3, sv(me, 'pointsAgainst', 'runsAgainst', 'RA')); }
 
       const cols = soccer ? ['PJ', 'DG', 'Pts'] : ['G', 'P', '%'];
       const vals = (e: any) => soccer ? [sv(e, 'gamesPlayed'), sv(e, 'pointDifferential'), sv(e, 'points')] : [sv(e, 'wins'), sv(e, 'losses'), sv(e, 'winPercent')];

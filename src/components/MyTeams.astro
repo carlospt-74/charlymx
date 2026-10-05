@@ -7,7 +7,7 @@ const teams = getTeams();
   <div class="sec-head"><h2>Mis equipos</h2><span class="sub-note">Se actualiza solo · hora de Monterrey</span></div>
   <div class="teams-grid">
     {teams.map((t) => (
-      <a class="tcard" href={t.href} data-tcard data-soccer={t.soccer ? '1' : ''} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name}
+      <a class="tcard" href={t.href} target={t.external ? '_blank' : undefined} rel={t.external ? 'noopener' : undefined} {...(t.live ? { 'data-tcard': '' } : {})} data-soccer={t.soccer ? '1' : ''} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name}
          style={`--tc-bg:${t.bg};--tc-accent:${t.accent};--tc-accent-fg:${t.accentFg};--tc-sub:${t.sub};--tc-link:${t.link};--tc-strip:${t.strip}`}>
         <div class="tcard-strip"></div>
         <div class="tcard-body">
@@ -18,9 +18,9 @@ const teams = getTeams();
             </div>
             <span class="tleague">{t.league}</span>
           </div>
-          <div class="tlast" data-last><div class="tcap">Cargando resultados…</div></div>
+          <div class="tlast" data-last><div class="tcap">{t.live ? 'Cargando resultados…' : 'Sin datos en vivo por ahora'}</div></div>
           <div class="tnext" data-next hidden></div>
-          <div class="tfoot"><span>{t.soccer ? 'Resultados y tabla general' : 'Calendario y tabla de división'}</span><b>Ver {t.league} →</b></div>
+          <div class="tfoot"><span>{!t.live ? 'Calendario y resultados en el sitio oficial' : t.soccer ? 'Resultados y tabla general' : 'Calendario y tabla de división'}</span><b>{t.live ? `Ver ${t.league} →` : `Ir a ${t.league} ↗`}</b></div>
         </div>
       </a>
     ))}

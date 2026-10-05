@@ -310,3 +310,4 @@ html[data-theme=dark] .mobile-menu nav a{color:var(--ink)}html[data-theme=dark] 
   .snext{grid-template-columns:72px 1fr auto;padding:14px}
   .strow{grid-template-columns:28px 1fr 40px 44px 44px;padding:10px 10px;font-size:14px}
 }
+.tnext[hidden]{display:none}

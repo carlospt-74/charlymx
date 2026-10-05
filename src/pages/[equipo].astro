@@ -4,7 +4,7 @@ import SportPage from '../components/SportPage.astro';
 import { getTeams } from '../lib/teams';
 
 export function getStaticPaths() {
-  return getTeams().map((team) => ({ params: { equipo: team.slug }, props: { team } }));
+  return getTeams().filter((team) => team.live).map((team) => ({ params: { equipo: team.slug }, props: { team } }));
 }
 const { team } = Astro.props;
 ---

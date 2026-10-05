@@ -9,7 +9,8 @@
       "color": "#0b1f3a",
       "accent": "#FB4F14",
       "pattern": "diagonal",
-      "slug": "nfl"
+      "slug": "nfl",
+      "url": ""
     },
     {
       "league": "Liga MX",
@@ -20,7 +21,32 @@
       "color": "#0b2c5f",
       "accent": "#ffffff",
       "pattern": "rayas",
-      "slug": "liga-mx"
+      "slug": "liga-mx",
+      "url": ""
+    },
+    {
+      "league": "MLB",
+      "name": "Bravos",
+      "abbr": "ATL",
+      "espn_id": "atl",
+      "crest": "",
+      "color": "#13274f",
+      "accent": "#ce1141",
+      "pattern": "diagonal",
+      "slug": "mlb",
+      "url": ""
+    },
+    {
+      "league": "LMB",
+      "name": "Sultanes",
+      "abbr": "SUL",
+      "espn_id": "",
+      "crest": "",
+      "color": "#7f1d1d",
+      "accent": "#ffffff",
+      "pattern": "liso",
+      "slug": "lmb",
+      "url": "https://lmb.com.mx/equipos/sultanes"
     }
   ]
 }

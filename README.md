@@ -32,16 +32,19 @@ El archivo `src/content/blog/2026-10-05-ejemplo-borrador.md` es un borrador de e
 Paleta "Tinta cálida": negro cálido y fotos con marco crema. La primera vez sigue la preferencia del celular o la computadora. El botón redondo del encabezado lo cambia, y la elección se recuerda. Los colores están en `src/styles/global.css`, en el bloque `html[data-theme=dark]`.
 
 ## Mis equipos (Broncos, Rayados y los que agregues)
-- Se editan en Pages CMS → **Mis equipos**. Cada equipo tiene liga (NFL o Liga MX), nombre, abreviatura, ID de ESPN (opcional), escudo, colores, diseño de la franja y dirección de su página.
+- Se editan en Pages CMS → **Mis equipos**. Cada equipo tiene liga (NFL, Liga MX, MLB o LMB), nombre, abreviatura, ID de ESPN (opcional), escudo, colores, diseño de la franja y dirección de su página.
 - En el Inicio aparece una tarjeta por equipo, y cada uno tiene su página: `/nfl/` y `/liga-mx/`, o la dirección que le pongas.
 - Si agregas o cambias un equipo, Cloudflare vuelve a publicar el sitio y se crea su página.
+
+- **LMB (Liga Mexicana de Béisbol)** no tiene datos en vivo: su tarjeta solo abre el enlace oficial que pongas en el campo "Enlace oficial", y no crea página propia.
+- **MLB** usa la misma API de ESPN (`baseball/mlb`); el ID es la abreviatura en minúsculas (Bravos = `atl`). En su página se muestran los últimos 10 resultados.
 
 ### De dónde salen los datos
 Todos los datos vienen de la API pública de ESPN, la misma para la NFL y para la Liga MX. Se consultan desde el navegador y no requieren llave.
 - **Calendario y resultados:** `https://site.api.espn.com/apis/site/v2/sports/{liga}/teams/{equipo}/schedule`. En futbol, los próximos partidos se piden aparte con `?fixture=true`.
 - **Tablas:** `https://site.api.espn.com/apis/v2/sports/{liga}/standings`.
 - **Lista de equipos** (para encontrar el ID): `https://site.api.espn.com/apis/site/v2/sports/{liga}/teams`.
-- **Liga:** `football/nfl` para la NFL y `soccer/mex.1` para la Liga MX.
+- **Liga:** `football/nfl` para la NFL, `soccer/mex.1` para la Liga MX y `baseball/mlb` para la MLB.
 - Si el ID de ESPN de un equipo de Liga MX se deja vacío, el sitio lo busca solo por la abreviatura (MTY) o el nombre.
 - Es una API pública pero no oficial: ESPN podría cambiar su formato. Si eso pasa, solo hay que ajustar `src/lib/sports.ts`. Mientras tanto, las tarjetas muestran un aviso y el resto del sitio sigue funcionando.
 

@@ -93,7 +93,9 @@ export const nv = (e: any, ...names: string[]) => Number(stat(e, ...names)?.valu
 
 export const groupName = (s = '') =>
   s.replace(/AFC West/, 'AFC Oeste').replace(/AFC East/, 'AFC Este').replace(/AFC North/, 'AFC Norte').replace(/AFC South/, 'AFC Sur')
-   .replace(/NFC West/, 'NFC Oeste').replace(/NFC East/, 'NFC Este').replace(/NFC North/, 'NFC Norte').replace(/NFC South/, 'NFC Sur');
+   .replace(/NFC West/, 'NFC Oeste').replace(/NFC East/, 'NFC Este').replace(/NFC North/, 'NFC Norte').replace(/NFC South/, 'NFC Sur')
+   .replace(/(?:National League|NL) East/, 'LN Este').replace(/(?:National League|NL) Central/, 'LN Central').replace(/(?:National League|NL) West/, 'LN Oeste')
+   .replace(/(?:American League|AL) East/, 'LA Este').replace(/(?:American League|AL) Central/, 'LA Central').replace(/(?:American League|AL) West/, 'LA Oeste');
 
 export const standing = (s = '') => groupName(s.replace(/(\d+)(st|nd|rd|th) in /, '$1° '));
 
