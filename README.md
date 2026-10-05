@@ -1,20 +1,21 @@
 # charlymx.com
 
-Sitio personal de Charly. Está hecho con **Astro**, se administra con **Pages CMS** y se publica en **Cloudflare Pages**.
+Sitio personal de Charly. Está hecho con **Astro**, se administra con **Pages CMS** y se publica en **Cloudflare**.
 
 ## 1. Subir a GitHub
 1. Crea un repositorio nuevo en GitHub (por ejemplo `charlymx-sitio`).
 2. Sube el contenido de esta carpeta a la raíz del repositorio. Desde GitHub web, usa "Add file → Upload files" y arrastra todo, incluidos `.pages.yml` y `.gitignore`.
 
-## 2. Publicar en Cloudflare Pages
-1. En Cloudflare, ve a **Workers & Pages → Create → Pages → Connect to Git** y elige el repositorio.
-2. Configura la compilación:
-   - Framework preset: **Astro**
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-   - Variable de entorno: `NODE_VERSION` = `20`
-3. Cuando termine, ve a **Custom domains** y agrega `charlymx.com` y `www.charlymx.com`. Como el dominio ya está en Cloudflare, el DNS se configura solo.
+## 2. Publicar en Cloudflare (Workers Builds)
+El sitio se publica como un Worker con archivos estáticos (`wrangler.jsonc`), conectado a este repositorio:
+1. En el proyecto de Cloudflare (**Workers & Pages → charlymx → Settings → Build**) deja:
+   - Git branch: `main`
+   - **Build command: `npm run build`** (Workers Builds no lee el `build` de `wrangler.jsonc`, hay que ponerlo aquí)
+   - Deploy command: `npx wrangler deploy`
+2. `wrangler.jsonc` apunta a la carpeta `dist` (resultado de la compilación) y usa `404.html` para las páginas que no existen. La versión de Node viene de `.node-version`.
+3. Los dominios `charlymx.com` y `www.charlymx.com` están en `routes` de `wrangler.jsonc`.
 4. `buenasnoticias.charlymx.com` no se toca: es otro proyecto.
+5. Vista previa en GitHub Pages (`.github/workflows/preview-github-pages.yml`): sirve para revisar cambios en https://carlospt-74.github.io/charlymx/ sin tocar charlymx.com.
 
 ## 3. Administrar con Pages CMS
 1. Entra a **https://app.pagescms.org**, inicia sesión con GitHub y abre el repositorio.
