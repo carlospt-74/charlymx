@@ -122,6 +122,7 @@ p{margin:0;text-wrap:pretty}
 .prose{max-width:680px;margin:0 auto;padding:56px 0;font-size:20px;line-height:1.7;color:var(--ink2)}
 .prose>*+*{margin-top:24px}
 .prose h2{font-size:32px;margin-top:44px}.prose h3{font-size:24px;margin-top:36px}
+.prose table{width:100%;border-collapse:collapse;font-size:17px;line-height:1.4}.prose th,.prose td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line)}.prose th{font:700 13px var(--fb);letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}.prose td:last-child,.prose th:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .prose blockquote{margin:32px 0;padding:8px 0 8px 28px;border-left:4px solid var(--yellow);font:600 28px/1.35 var(--fh);color:var(--ink)}
 .prose img{border-radius:18px}.prose ul,.prose ol{padding-left:1.2em}
 .share{max-width:680px;margin:0 auto 72px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
