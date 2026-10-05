@@ -32,7 +32,7 @@ const statsLabels = t.statLabels;
       <h2 class="scol-h" data-table-title>{t.tableTitle}</h2>
       <div class="stable" data-table style={`--me:${t.bg}`}><p class="snote" style="padding:12px 16px">Cargando…</p></div>
       <p class="snote">{t.tableNote}</p>
-      <a class="snote-link" href={t.calUrl} target="_blank" rel="noopener">Ver más en ESPN ↗</a>
+      <a class="snote-link" href={t.calUrl} target="_blank" rel="noopener">Ver más en {t.provider === 'sportwey' ? 'Sportwey' : t.provider === 'mlbstats' ? 'MLB.com' : 'ESPN'} ↗</a>
     </div>
   </div>
 </div>

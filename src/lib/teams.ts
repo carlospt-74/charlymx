@@ -40,7 +40,7 @@ export const LEAGUES: Record<string, League> = {
   },
   'Tocho': {
     path: '', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
-    tableNote: 'Tabla calculada con los resultados publicados en Sportwey.', calUrl: 'https://app.sportwey.com',
+    tableNote: 'Tabla calculada con los resultados publicados en Sportwey.', calUrl: 'https://app.sportwey.com/tournament/bf28bd70-85fa-11f1-8585-0a2bbad5892d?tab=2',
     live: true, maxResults: 0, statLabels: ['Récord', 'Lugar', 'Puntos a favor', 'En contra'],
     provider: 'sportwey',
   },
