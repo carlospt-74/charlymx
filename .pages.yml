@@ -1,0 +1,110 @@
+# Pages CMS · charlymx.com
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: blog
+    label: Blog
+    type: collection
+    path: src/content/blog
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      fields: [title, category, date, draft]
+      primary: title
+      sort: [date, title]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: Título, type: string, required: true }
+      - { name: summary, label: Resumen, type: text, description: "1 o 2 líneas para tarjetas y redes" }
+      - name: category
+        label: Categoría
+        type: select
+        required: true
+        options: { values: [Mi fé, IA, NFL, Flag football, Fútbol] }
+      - { name: tags, label: Etiquetas, type: string, list: true }
+      - { name: date, label: Fecha, type: date, required: true }
+      - { name: cover, label: Imagen de portada, type: image }
+      - { name: featured, label: Destacado, type: boolean, default: false }
+      - { name: draft, label: Borrador (no se publica), type: boolean, default: true }
+      - { name: body, label: Contenido, type: rich-text }
+
+  - name: proyectos
+    label: Proyectos
+    type: collection
+    path: src/content/proyectos
+    view:
+      fields: [name, status, order]
+      primary: name
+      sort: [order]
+    fields:
+      - { name: name, label: Nombre, type: string, required: true }
+      - { name: description, label: Descripción, type: text, required: true }
+      - name: status
+        label: Estado
+        type: select
+        required: true
+        options: { values: [En vivo, Recién lanzado, Prototipo, Idea] }
+      - { name: url, label: Enlace, type: string, description: "Vacío si aún no está en línea" }
+      - { name: image, label: Imagen o logo, type: image }
+      - { name: image_bg, label: Color de fondo del logo, type: string, description: "Opcional, ej. #eef6f3" }
+      - { name: featured, label: Mostrar en Inicio, type: boolean, default: true }
+      - { name: order, label: Orden, type: number }
+
+  - name: inicio
+    label: Inicio
+    type: file
+    path: src/data/inicio.json
+    format: json
+    fields:
+      - { name: tag, label: Etiqueta superior, type: string }
+      - { name: headline, label: Titular, type: string }
+      - { name: highlight, label: Palabra en azul del titular, type: string }
+      - { name: intro, label: Presentación, type: text }
+      - name: photos
+        label: Mazo de fotos
+        type: object
+        list: { min: 1, max: 6 }
+        fields:
+          - { name: image, label: Foto, type: image }
+          - { name: position, label: Encuadre, type: string, description: "Ej. 50% 30% (horizontal vertical)" }
+          - { name: title, label: Etiqueta grande, type: string }
+          - { name: caption, label: Pie de foto, type: string }
+      - { name: show_nfl, label: Mostrar sección de los Broncos, type: boolean }
+
+  - name: sobre-mi
+    label: Sobre mí
+    type: file
+    path: src/data/sobre-mi.json
+    format: json
+    fields:
+      - { name: headline, label: Titular, type: string }
+      - { name: bio, label: Biografía, type: rich-text }
+      - { name: photos, label: Fotos del encabezado, type: image, list: { max: 2 } }
+      - name: passions
+        label: Lo que me mueve
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Título, type: string }
+          - { name: text, label: Texto, type: text }
+          - { name: image, label: Imagen, type: image }
+          - { name: position, label: Encuadre, type: string }
+          - { name: big, label: Tarjeta alta, type: boolean }
+
+  - name: ajustes
+    label: Ajustes del sitio
+    type: file
+    path: src/data/ajustes.json
+    format: json
+    fields:
+      - { name: site_title, label: Nombre del sitio, type: string }
+      - { name: description, label: Descripción para Google, type: text }
+      - { name: whatsapp, label: WhatsApp (formato wa.me), type: string, description: "Sin + ni espacios, ej. 528115537660" }
+      - { name: whatsapp_display, label: WhatsApp (como se muestra), type: string }
+      - { name: whatsapp_message, label: Mensaje inicial de WhatsApp, type: string }
+      - { name: facebook, label: Facebook (URL), type: string }
+      - { name: instagram, label: Instagram (URL), type: string }
+      - { name: x, label: X (URL), type: string }
+      - { name: linkedin, label: LinkedIn (URL), type: string }
+      - { name: nfl_team, label: Equipo NFL (abreviatura ESPN), type: string, description: "den = Broncos" }
