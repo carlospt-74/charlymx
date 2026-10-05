@@ -71,11 +71,11 @@ const statsLabels = t.statLabels;
       $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';
     };
     const paintTable = (cols: string[], rows: Row[]) => {
-      $('[data-table]').innerHTML = `<div class="strow head"><span>#</span><span>Equipo</span>${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
+      $('[data-table]').innerHTML = `<div class="strow head c${cols.length}"><span>#</span><span>Equipo</span>${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
         rows.map((r, i) => {
           const cut = cutAt && i === cutAt ? ' cut' : '';
           const zone = cutAt && i < cutAt ? ' zone' : '';
-          return `<div class="strow${r.mine ? ' me' : ''}${cut}${zone}"><span>${i + 1}</span><span>${esc(r.name)}${r.mine ? ' <i>Mi equipo</i>' : ''}</span>${r.cells.map((v) => `<span>${esc(v)}</span>`).join('')}</div>`;
+          return `<div class="strow c${cols.length}${r.mine ? ' me' : ''}${cut}${zone}"><span>${i + 1}</span><span>${esc(r.name)}${r.mine ? ' <i>Mi equipo</i>' : ''}</span>${r.cells.map((v) => `<span>${esc(v)}</span>`).join('')}</div>`;
         }).join('');
     };
 
@@ -87,7 +87,7 @@ const statsLabels = t.statLabels;
         d.stats.forEach((v, i) => setStat(i, v));
         $('[data-table-title]').textContent = d.groupName;
         if (!d.rows.length) throw new Error('standings');
-        paintTable(provider === 'jolpica' ? ['Vic', 'Pts'] : ['G', 'P', '%'], d.rows);
+        paintTable(provider === 'jolpica' ? ['Vic', 'Pts'] : provider === 'sportwey' ? ['G', 'E', 'P', 'Pts'] : ['G', 'P', '%'], d.rows);
         return;
       }
 

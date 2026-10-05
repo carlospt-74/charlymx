@@ -244,6 +244,7 @@ p{margin:0;text-wrap:pretty}
 .strow span:first-child{font-weight:700}
 .strow.zone span:first-child{color:var(--blue)}
 .strow.cut{border-top:2px dashed var(--blue)!important}
+.strow.c4{grid-template-columns:40px 1fr repeat(4,48px)}
 .strow.head{font:600 12px var(--fb);letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}.strow.head span{color:var(--soft)!important;font-weight:600!important}
 .strow.me{background:var(--me);color:#fff;border-radius:12px}.strow.me span{color:#fff!important}
 .strow.me + .strow{border-top:0}
@@ -316,6 +317,6 @@ html[data-theme=dark] .mobile-menu nav a{color:var(--ink)}html[data-theme=dark] 
   .sstats div{min-width:0;flex:1 1 40%;padding:10px 14px}.sstats b{font-size:21px}
   .sgrid{grid-template-columns:1fr;gap:36px;padding:32px 0 48px}.scol-h{font-size:24px}
   .snext{grid-template-columns:72px 1fr auto;padding:14px}
-  .strow{grid-template-columns:28px 1fr 40px 44px 44px;padding:10px 10px;font-size:14px}
+  .strow{grid-template-columns:28px 1fr 40px 44px 44px;padding:10px 10px;font-size:14px}.strow.c4{grid-template-columns:28px 1fr repeat(4,34px)}
 }
 .tnext[hidden]{display:none}

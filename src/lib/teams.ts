@@ -57,7 +57,7 @@ export const LEAGUES: Record<string, League> = {
   },
   'Tocho': {
     path: '', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
-    tableNote: 'Tabla calculada con los resultados publicados en Sportwey.', calUrl: 'https://app.sportwey.com/explore?type=tournament&q=LTFN&latitude=25.75459291230476&longitude=-100.40383661021643',
+    tableNote: 'Tabla calculada con los resultados publicados en Sportwey (2 puntos por victoria).', calUrl: 'https://app.sportwey.com/explore?type=tournament&q=LTFN&latitude=25.75459291230476&longitude=-100.40383661021643',
     calLabel: 'Liga LTFN',
     live: true, maxResults: 0, statLabels: ['Récord', 'Lugar', 'Puntos a favor', 'En contra'],
     provider: 'sportwey',

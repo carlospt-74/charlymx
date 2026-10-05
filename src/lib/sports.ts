@@ -216,12 +216,8 @@ function sportweyDate(date = '', time = ''): Date | null {
 
 /** Resultados, próximos partidos y tabla (calculada con los resultados) de un equipo en un torneo de Sportwey. */
 export async function sportweyTeam(tournamentId: string, name: string) {
-  const [scoresRes, upcomingRes] = await Promise.allSettled([
-    getJSON(`${SPORTWEY}/matches_content_score/${tournamentId}/0`),
-    getJSON(`${SPORTWEY}/matches_content/${tournamentId}/0`),
-  ]);
-  if (scoresRes.status === 'rejected') throw scoresRes.reason;
-  // la lista de próximos no está verificada: se buscan arreglos con partidos en cualquier parte de la respuesta
+  // la lista de partidos viene paginada (20 por página): se piden páginas hasta que ya no traigan partidos nuevos
+  // los partidos se buscan en cualquier parte de la respuesta (arreglos con local_name y visit_name)
   const collect = (d: any): any[] => {
     const out: any[] = [];
     const walk = (n: any) => {
@@ -231,8 +227,20 @@ export async function sportweyTeam(tournamentId: string, name: string) {
     walk(d);
     return out;
   };
+  const gid = (g: any) => g.id ?? `${g.date}${g.time}${g.local_name}${g.visit_name}`;
   const raw = new Map<string, any>();
-  for (const r of [scoresRes, upcomingRes]) if (r.status === 'fulfilled') for (const g of collect(r.value)) raw.set(g.id ?? `${g.date}${g.time}${g.local_name}${g.visit_name}`, { ...raw.get(g.id), ...g });
+  const fetchAll = async (kind: string, required: boolean) => {
+    for (let page = 0; page < 12; page++) {
+      let d: any;
+      try { d = await getJSON(`${SPORTWEY}/${kind}/${tournamentId}/${page}`); }
+      catch (e) { if (page === 0 && required) throw e; break; }
+      const found = collect(d);
+      let added = 0;
+      for (const g of found) { const k = gid(g); if (!raw.has(k)) added++; raw.set(k, { ...raw.get(k), ...g }); }
+      if (!found.length || !added) break;
+    }
+  };
+  await Promise.all([fetchAll('matches_content_score', true), fetchAll('matches_content', false)]);
 
   const key = plain(name);
   const all = [...raw.values()].map((g) => {
@@ -241,9 +249,6 @@ export async function sportweyTeam(tournamentId: string, name: string) {
     return { g, date: sportweyDate(g.date, g.time), played, a: Number(ls), b: Number(vs) };
   }).filter((x) => x.date);
 
-  // la API numera por semana del torneo (5 a 10); la jornada cuenta desde la primera semana con partidos (1 a 6)
-  const weeks = [...new Set(all.map((x) => Number(x.g.week)).filter(Boolean))].sort((p, q) => p - q);
-  const jornada = (w: any) => (weeks.indexOf(Number(w)) >= 0 ? weeks.indexOf(Number(w)) + 1 : undefined);
   // el nombre de la tarjeta puede ser más largo que el de Sportwey (p. ej. "Búfalos Flag" vs "Bufalos"): se acepta en cualquier sentido
   const mine = (n: string) => { const a = plain(n); return !!a && (a.includes(key) || key.includes(a)); };
   const games: Game[] = all.filter((x) => mine(x.g.local_name) || mine(x.g.visit_name)).map((x) => {
@@ -253,22 +258,31 @@ export async function sportweyTeam(tournamentId: string, name: string) {
       date: x.date!, done: x.played, home, opp: home ? x.g.visit_name : x.g.local_name,
       us: x.played ? String(us) : '', them: x.played ? String(them) : '',
       res: !x.played ? '' : us > them ? 'G' : us < them ? 'P' : 'E',
-      tv: '', venue: x.g.field || '', week: jornada(x.g.week), tbd: false, unit: 'Jornada',
+      tv: '', venue: x.g.field || '', tbd: false, unit: 'Jornada',
     } as Game;
   }).sort((p, q) => p.date.getTime() - q.date.getTime());
+  // la jornada es el número de partido del equipo (J1, J2, ...) en orden de fecha
+  games.forEach((g, i) => { g.week = i + 1; });
   const past = games.filter((g) => g.done);
   const next = games.filter((g) => !g.done && g.date.getTime() > Date.now() - 36e5);
 
-  // tabla: se calcula con todos los resultados del torneo
-  const t = new Map<string, { n: string; w: number; l: number; e: number; pf: number; pa: number }>();
-  const add = (n: string, f: number, a: number) => {
-    const r = t.get(n) || { n, w: 0, l: 0, e: 0, pf: 0, pa: 0 };
-    r.pf += f; r.pa += a; f > a ? r.w++ : f < a ? r.l++ : r.e++; t.set(n, r);
+  // tabla: se calcula con todos los resultados del torneo. Como en Sportwey: 2 puntos por victoria (el empate no suma)
+  type T = { n: string; w: number; l: number; e: number; pf: number; pa: number; beat: Map<string, number> };
+  const t = new Map<string, T>();
+  const add = (n: string, o: string, f: number, a: number) => {
+    const r = t.get(n) || { n, w: 0, l: 0, e: 0, pf: 0, pa: 0, beat: new Map() };
+    r.pf += f; r.pa += a;
+    if (f > a) { r.w++; r.beat.set(o, (r.beat.get(o) || 0) + 1); } else if (f < a) r.l++; else r.e++;
+    t.set(n, r);
   };
-  for (const x of all) if (x.played) { add(x.g.local_name, x.a, x.b); add(x.g.visit_name, x.b, x.a); }
-  const pct = (r: { w: number; l: number; e: number }) => (r.w + r.l + r.e ? (r.w + r.e / 2) / (r.w + r.l + r.e) : 0);
-  const sorted = [...t.values()].sort((p, q) => pct(q) - pct(p) || (q.pf - q.pa) - (p.pf - p.pa));
-  const rows: Row[] = sorted.map((r) => ({ mine: mine(r.n), name: r.n, cells: [String(r.w), String(r.l), pct(r).toFixed(3)] }));
+  for (const x of all) if (x.played) { add(x.g.local_name, x.g.visit_name, x.a, x.b); add(x.g.visit_name, x.g.local_name, x.b, x.a); }
+  const gp = (r: T) => r.w + r.l + r.e;
+  const pts = (r: T) => r.w * 2;
+  const pct = (r: T) => (gp(r) ? r.w / gp(r) : 0);
+  // desempate: puntos, % de victorias, enfrentamiento directo y diferencial
+  const sorted = [...t.values()].sort((p, q) =>
+    pts(q) - pts(p) || pct(q) - pct(p) || (q.beat.get(p.n) || 0) - (p.beat.get(q.n) || 0) || (q.pf - q.pa) - (p.pf - p.pa));
+  const rows: Row[] = sorted.map((r) => ({ mine: mine(r.n), name: r.n, cells: [String(r.w), String(r.e), String(r.l), String(pts(r))] }));
   const idx = sorted.findIndex((r) => mine(r.n));
   const me = sorted[idx];
   const stats = me ? [`${me.w}-${me.l}${me.e ? '-' + me.e : ''}`, `${idx + 1}° lugar`, String(me.pf), String(me.pa)] : ['', '', '', ''];
