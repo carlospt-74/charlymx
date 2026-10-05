@@ -13,7 +13,7 @@ export interface Game {
   res: 'G' | 'P' | 'E' | ''; tv: string; venue: string; week?: number; tbd: boolean;
   stage?: string;   // fase (solo MLB Stats API), p. ej. "Serie de Campeonato"
   season?: string;
-  unit?: 'Jornada';  // por defecto la jornada se llama "Semana" (NFL, MLB); en ligas amateur es "Jornada"
+  unit?: 'Jornada' | 'Carrera'; race?: boolean;  // por defecto la jornada se llama "Semana" (NFL, MLB); en ligas amateur es "Jornada"
 }
 
 const sc = (s: any) => (s && typeof s === 'object' ? s.displayValue : s) ?? '';
@@ -272,4 +272,46 @@ export async function sportweyTeam(tournamentId: string, name: string) {
   const me = sorted[idx];
   const stats = me ? [`${me.w}-${me.l}${me.e ? '-' + me.e : ''}`, `${idx + 1}° lugar`, String(me.pf), String(me.pa)] : ['', '', '', ''];
   return { past, next, meta: me ? `Récord ${stats[0]} · ${stats[1]}` : '', groupName: 'Tabla de posiciones', rows, stats };
+}
+
+// ───────── Fórmula 1 (Jolpica, sucesora de Ergast): api.jolpi.ca ─────────
+// Pública y sin llave. El ID del piloto es su driverId (Checo Pérez = "perez").
+const JOLPICA = 'https://api.jolpi.ca/ergast/f1';
+
+/** Calendario, resultados y tabla de pilotos de la temporada actual. Devuelve la misma forma que los demás proveedores. */
+export async function f1Driver(driverId: string) {
+  const [stRes, calRes, resRes] = await Promise.all([
+    getJSON(`${JOLPICA}/current/driverstandings/`),
+    getJSON(`${JOLPICA}/current/?limit=100`),
+    getJSON(`${JOLPICA}/current/drivers/${driverId}/results/?limit=100`),
+  ]);
+  const list = stRes?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+  const me = list.find((s: any) => s.Driver?.driverId === driverId);
+  if (!me) throw new Error('driver not found');
+  const when = (r: any) => new Date(`${r.date}T${(r.time || '12:00:00Z').replace(/Z?$/, 'Z').replace('ZZ', 'Z')}`);
+  const place = (r: any) => (/^\d+$/.test(r.positionText) ? `P${r.position}` : 'No terminó');
+
+  const done = new Map<string, any>();
+  for (const r of resRes?.MRData?.RaceTable?.Races || []) done.set(String(r.round), r);
+  const races: any[] = calRes?.MRData?.RaceTable?.Races || [];
+  const past: Game[] = [], next: Game[] = [];
+  for (const r of races) {
+    const d = done.get(String(r.round));
+    const g: Game = {
+      date: when(r), done: !!d, home: false, race: true,
+      opp: r.raceName, us: d ? place(d.Results?.[0] || {}) + (d.Results?.[0]?.points ? ` · ${Number(d.Results[0].points)} pts` : '') : '', them: '',
+      res: '', tv: '', venue: r.Circuit?.Location?.locality || r.Circuit?.circuitName || '', week: Number(r.round) || undefined, tbd: false, unit: 'Carrera',
+    };
+    if (d) past.push(g); else if (g.date.getTime() > Date.now() - 3 * 36e5) next.push(g);
+  }
+  const rows: Row[] = list.map((s: any) => ({
+    mine: s.Driver?.driverId === driverId,
+    name: `${s.Driver?.familyName}${s.Constructors?.[0]?.name ? ' · ' + s.Constructors[0].name : ''}`,
+    cells: [String(s.wins), String(s.points)],
+  }));
+  const team = me.Constructors?.[0]?.name || '';
+  return {
+    past, next, meta: `${me.position}° en el campeonato · ${me.points} pts`, groupName: 'Campeonato de pilotos', rows,
+    stats: [`${me.position}°`, String(me.points), String(me.wins), team],
+  };
 }

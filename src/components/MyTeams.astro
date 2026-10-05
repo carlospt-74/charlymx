@@ -15,7 +15,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
           <div class="tcard-head">
             <div class="tcard-team">
               <div class="tbadge" style={`background:${t.accent};color:${t.accentFg}`}>{t.crest ? <img src={t.crest} alt="" width="32" height="32" loading="lazy" /> : t.abbr}</div>
-              <div><h3>Mis {t.name}</h3><div class="tsub" data-meta>{t.league}</div></div>
+              <div><h3>{t.prefix} {t.name}</h3><div class="tsub" data-meta>{t.league}</div></div>
             </div>
             <span class="tleague">{t.league}</span>
           </div>
@@ -29,7 +29,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
 </section>
 )}
 <script>
-  import { sportweyTeam, resolveTeam, schedule, standingsGroup, standing, sv, fDay, fHour, esc, mlbTeam } from '../lib/sports';
+  import { f1Driver, sportweyTeam, resolveTeam, schedule, standingsGroup, standing, sv, fDay, fHour, esc, mlbTeam } from '../lib/sports';
   import type { Game } from '../lib/sports';
 
   document.querySelectorAll<HTMLElement>('[data-tcard]').forEach(async (card) => {
@@ -40,8 +40,8 @@ const teams = getTeams().filter((t) => t.featured === featured);
       let meta = '';
       let last: Game | undefined;
       let next: Game | undefined;
-      if (provider === 'mlbstats' || provider === 'sportwey') {
-        const d = (provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
+      if (provider === 'mlbstats' || provider === 'sportwey' || provider === 'jolpica') {
+        const d = (provider === 'jolpica' ? await f1Driver(espn) : provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
         meta = d.meta; last = d.past[d.past.length - 1]; next = d.next[0];
       } else {
         const id = await resolveTeam(path, espn, abbr, name);
@@ -59,7 +59,10 @@ const teams = getTeams().filter((t) => t.featured === featured);
         }
       }
       if (meta) q('[data-meta]').textContent = meta;
-      if (last) {
+      if (last?.race) {
+        q('[data-last]').innerHTML = `<div class="tcap">${esc(`Última carrera · ${fDay(last.date)}`)}</div>
+          <div class="tscore" style="grid-template-columns:1fr auto"><div class="us"><small>${esc(last.opp)}</small><b style="font-size:34px">${esc(last.us)}</b></div></div>`;
+      } else if (last) {
         const homeName = last.home ? name : last.opp, awayName = last.home ? last.opp : name;
         const hs = last.home ? last.us : last.them, as = last.home ? last.them : last.us;
         const cap = soccer || !last.week ? `${last.stage ? last.stage + ' · ' : 'Último partido · '}${fDay(last.date)} · Final` : `${last.unit || 'Semana'} ${last.week} · Final`;
@@ -70,7 +73,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
       } else q('[data-last]').innerHTML = '<div class="tcap">Aún no hay partidos jugados</div>';
       if (next) {
         const nx = q('[data-next]');
-        nx.innerHTML = `<div><div class="tcap2">PRÓXIMO${next.week && !soccer ? (next.unit ? ' · JORNADA ' : ' · SEM ') + next.week : ''}</div><div class="ttxt">${esc(fDay(next.date))} · ${next.home ? 'vs' : 'en'} ${esc(next.opp)}</div></div>
+        nx.innerHTML = `<div><div class="tcap2">PRÓXIMO${next.week && !soccer ? (next.unit === 'Carrera' ? ' · CARRERA ' : next.unit ? ' · JORNADA ' : ' · SEM ') + next.week : ''}</div><div class="ttxt">${esc(fDay(next.date))} · ${next.race ? '' : next.home ? 'vs ' : 'en '}${esc(next.opp)}</div></div>
           <div class="ttime">${next.tbd ? 'Por confirmar' : esc(fHour(next.date))}<br>${esc(next.tv || next.venue)}</div>`;
         nx.hidden = false;
       }

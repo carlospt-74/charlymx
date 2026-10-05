@@ -11,7 +11,8 @@
       "pattern": "diagonal",
       "slug": "nfl",
       "url": "",
-      "visible": true
+      "visible": true,
+      "prefix": "Mis"
     },
     {
       "league": "Liga MX",
@@ -24,7 +25,8 @@
       "pattern": "rayas",
       "slug": "liga-mx",
       "url": "",
-      "visible": true
+      "visible": true,
+      "prefix": "Mis"
     },
     {
       "league": "MLB",
@@ -37,7 +39,8 @@
       "pattern": "diagonal",
       "slug": "mlb",
       "url": "",
-      "visible": true
+      "visible": true,
+      "prefix": "Mis"
     },
     {
       "league": "LMB",
@@ -50,7 +53,8 @@
       "pattern": "liso",
       "slug": "lmb",
       "url": "https://www.sultanes.com.mx/",
-      "visible": false
+      "visible": false,
+      "prefix": "Mis"
     },
     {
       "league": "Tocho",
@@ -64,7 +68,8 @@
       "slug": "tocho",
       "url": "",
       "featured": true,
-      "visible": true
+      "visible": true,
+      "prefix": "Mis"
     },
     {
       "league": "NBA",
@@ -77,20 +82,36 @@
       "pattern": "diagonal",
       "slug": "nba",
       "url": "",
-      "visible": true
+      "visible": true,
+      "prefix": "Mis"
     },
     {
       "league": "La Liga",
-      "name": "Barcelona",
+      "name": "Barça",
       "abbr": "BAR",
-      "espn_id": "",
+      "espn_id": "83",
       "crest": "",
       "color": "#004d98",
       "accent": "#a50044",
       "pattern": "rayas",
       "slug": "la-liga",
       "url": "",
-      "visible": true
+      "visible": true,
+      "prefix": "Mi"
+    },
+    {
+      "league": "F1",
+      "name": "Checo",
+      "abbr": "CHE",
+      "espn_id": "perez",
+      "crest": "",
+      "color": "#0f1b3d",
+      "accent": "#e10600",
+      "pattern": "diagonal",
+      "slug": "f1",
+      "url": "",
+      "visible": true,
+      "prefix": "Mi"
     }
   ]
 }

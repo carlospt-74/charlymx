@@ -7,7 +7,7 @@ export interface League {
   maxResults: number;     // máximo de resultados en la página del equipo (0 = todos)
   statLabels: string[];   // etiquetas de las estadísticas de la franja superior
   calLabel?: string;      // texto del enlace "Ver más en …" (por defecto según la fuente)
-  provider?: 'mlbstats' | 'sportwey';  // por defecto la API de ESPN; 'mlbstats' = statsapi.mlb.com (LMB)
+  provider?: 'mlbstats' | 'sportwey' | 'jolpica';  // por defecto la API de ESPN; 'mlbstats' = statsapi.mlb.com (LMB)
   sportId?: number; leagueId?: number;
 }
 
@@ -36,6 +36,12 @@ export const LEAGUES: Record<string, League> = {
     path: 'soccer/esp.1', soccer: true, cut: 4, tableTitle: 'Tabla general',
     tableNote: 'Los primeros 4 clasifican a la Champions League (línea punteada).', calUrl: 'https://www.espn.com/soccer/standings/_/league/esp.1',
     live: true, maxResults: 0, statLabels: ['Lugar', 'Puntos', 'PJ', 'G-E-P', 'DG'],
+  },
+  'F1': {
+    path: '', soccer: false, cut: 0, tableTitle: 'Campeonato de pilotos',
+    tableNote: 'Puntos acumulados en la temporada actual.', calUrl: 'https://www.formula1.com/en/racing', calLabel: 'Formula1.com',
+    live: true, maxResults: 0, statLabels: ['Posición', 'Puntos', 'Victorias', 'Escudería'],
+    provider: 'jolpica',
   },
   'LMB': {
     path: '', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
@@ -70,7 +76,7 @@ const onColor = (hex: string) => (lum(hex) > 0.45 ? '#14171f' : '#ffffff');
 export interface Team {
   key: string; league: string; name: string; abbr: string; espn: string; crest: string; slug: string; href: string;
   path: string; soccer: boolean; cut: number; tableTitle: string; tableNote: string; calUrl: string;
-  live: boolean; maxResults: number; statLabels: string[]; external: boolean; featured: boolean; calLabel: string;
+  live: boolean; maxResults: number; statLabels: string[]; external: boolean; featured: boolean; prefix: string; calLabel: string;
   provider: string; sportId: number; leagueId: number;
   bg: string; accent: string; accentFg: string; sub: string; link: string; strip: string; pattern: string;
 }
@@ -93,7 +99,7 @@ export function getTeams(): Team[] {
       return {
         key: `${slug}-${i}`, league: t.league, name: t.name, abbr: (t.abbr || '').toUpperCase(),
         espn: (t.espn_id || (L.soccer || L.provider ? '' : t.abbr) || '').toString().toLowerCase(),
-        crest: t.crest || '', slug, href: L.live ? `/${slug}/` : (t.url || L.calUrl), external: !L.live, featured: t.featured === true, calLabel: L.calLabel || (L.provider === 'sportwey' ? 'Sportwey' : L.provider === 'mlbstats' ? 'MLB.com' : 'ESPN'),
+        crest: t.crest || '', slug, href: L.live ? `/${slug}/` : (t.url || L.calUrl), external: !L.live, featured: t.featured === true, prefix: t.prefix === 'Mi' ? 'Mi' : 'Mis', calLabel: L.calLabel || (L.provider === 'sportwey' ? 'Sportwey' : L.provider === 'mlbstats' ? 'MLB.com' : 'ESPN'),
         path: L.path, soccer: L.soccer, cut: L.cut, tableTitle: L.tableTitle, tableNote: L.tableNote, calUrl: L.calUrl,
         live: L.live, maxResults: L.maxResults, statLabels: L.statLabels,
         provider: L.provider || 'espn', sportId: L.sportId || 0, leagueId: L.leagueId || 0,

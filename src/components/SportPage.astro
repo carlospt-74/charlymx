@@ -10,7 +10,7 @@ const statsLabels = t.statLabels;
     <div class="shero-pattern" style={`background:${t.pattern}`}></div>
     <div class="shero-body">
       <a href="/" class="shero-back" style={`color:${t.sub}`}>← Inicio · {t.league}</a>
-      <div class="shero-title"><div class="tbadge lg" style={`background:${t.accent};color:${t.accentFg}`}>{t.crest ? <img src={t.crest} alt="" width="44" height="44" /> : t.abbr}</div><h1>Mis {t.name}</h1></div>
+      <div class="shero-title"><div class="tbadge lg" style={`background:${t.accent};color:${t.accentFg}`}>{t.crest ? <img src={t.crest} alt="" width="44" height="44" /> : t.abbr}</div><h1>{t.prefix} {t.name}</h1></div>
       <div class="sstats">{statsLabels.map((l, i) => <div><small style={`color:${t.sub}`}>{l}</small><b data-stat={i}>—</b></div>)}</div>
       <span class="shero-note" style={`color:${t.sub}`} data-note></span>
     </div>
@@ -38,7 +38,7 @@ const statsLabels = t.statLabels;
 </div>
 
 <script>
-  import { sportweyTeam, resolveTeam, schedule, standingsGroup, groupName, standing, sv, nv, fDay, fShort, fHour, esc, mlbTeam } from '../lib/sports';
+  import { f1Driver, sportweyTeam, resolveTeam, schedule, standingsGroup, groupName, standing, sv, nv, fDay, fShort, fHour, esc, mlbTeam } from '../lib/sports';
   import type { Game, Row } from '../lib/sports';
 
   const root = document.querySelector<HTMLElement>('[data-sport]');
@@ -57,16 +57,16 @@ const statsLabels = t.statLabels;
     const paintNext = (next: Game[]) => {
       $('[data-next]').innerHTML = next.length ? next.map((g, i) => `
         <div class="snext ${i === 0 ? 'first' : ''}">
-          <div><small>${!soccer && g.week ? (g.unit ? 'JORNADA ' : 'SEM ') + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
-          <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}</span>
+          <div><small>${!soccer && g.week ? (g.unit === 'Carrera' ? 'CARRERA ' : g.unit ? 'JORNADA ' : 'SEM ') + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
+          <span>${g.race ? '' : g.home ? 'vs ' : 'en '}${esc(g.opp)}</span>
           <em>${g.tbd ? 'Hora por<br>confirmar' : esc(fHour(g.date))}<br>${esc(g.tv || g.venue)}</em>
         </div>`).join('') : '<p class="snote">No hay partidos programados por ahora.</p>';
     };
     const paintResults = (past: Game[]) => {
       const list = past.slice().reverse().slice(0, maxRes || undefined);
       $('[data-results]').innerHTML = list.length ? list.map((g) => `
-        <div class="sres"><small>${!soccer && g.week ? (g.unit ? 'J' : 'S') + g.week : fShort(g.date)}</small>
-        <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}${g.stage ? ` <small>· ${esc(g.stage)}</small>` : ''}</span><b>${esc(g.us)}-${esc(g.them)}</b>${res(g.res)}</div>`).join('') : '<p class="snote">Aún no hay partidos jugados.</p>';
+        <div class="sres"><small>${!soccer && g.week ? (g.unit === 'Carrera' ? 'R' : g.unit ? 'J' : 'S') + g.week : fShort(g.date)}</small>
+        <span>${g.race ? '' : g.home ? 'vs ' : 'en '}${esc(g.opp)}${g.stage ? ` <small>· ${esc(g.stage)}</small>` : ''}</span><b>${g.race ? esc(g.us) : esc(g.us) + '-' + esc(g.them)}</b>${g.res ? res(g.res) : '<i></i>'}</div>`).join('') : '<p class="snote">Aún no hay partidos jugados.</p>';
       const streak = past.slice(-5).reverse().map((g) => g.res).join(' ');
       $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';
     };
@@ -80,14 +80,14 @@ const statsLabels = t.statLabels;
     };
 
     try {
-      if (provider === 'mlbstats' || provider === 'sportwey') {
-        const d = (provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
+      if (provider === 'mlbstats' || provider === 'sportwey' || provider === 'jolpica') {
+        const d = (provider === 'jolpica' ? await f1Driver(espn) : provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
         paintNext(d.next.slice(0, 4));
         paintResults(d.past);
         d.stats.forEach((v, i) => setStat(i, v));
         $('[data-table-title]').textContent = d.groupName;
         if (!d.rows.length) throw new Error('standings');
-        paintTable(['G', 'P', '%'], d.rows);
+        paintTable(provider === 'jolpica' ? ['Vic', 'Pts'] : ['G', 'P', '%'], d.rows);
         return;
       }
 

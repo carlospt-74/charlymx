@@ -62,3 +62,4 @@ npm run build    # genera /dist
 ```
 
 - **Tocho (Sportwey)** usa `api.sportwey.com` (la que alimenta app.sportwey.com). En el campo "ID del equipo" va el ID del torneo; la tabla se calcula con los resultados publicados.
+- **F1** usa Jolpica (`api.jolpi.ca/ergast/f1`, sucesora de Ergast): sin llave. El ID es el driverId del piloto (Checo Pérez = `perez`). Muestra posición, puntos, última y próxima carrera, y el campeonato de pilotos.
