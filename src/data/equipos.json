@@ -47,6 +47,18 @@
       "pattern": "diagonal",
       "slug": "lmp",
       "url": "https://www.naranjeros.com.mx/"
+    },
+    {
+      "league": "Tocho",
+      "name": "Búfalos",
+      "abbr": "BUF",
+      "espn_id": "bf28bd70-85fa-11f1-8585-0a2bbad5892d",
+      "crest": "",
+      "color": "#0b2a5b",
+      "accent": "#d62828",
+      "pattern": "diagonal",
+      "slug": "tocho",
+      "url": ""
     }
   ]
 }

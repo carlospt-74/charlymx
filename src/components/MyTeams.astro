@@ -28,7 +28,7 @@ const teams = getTeams();
 </section>
 )}
 <script>
-  import { resolveTeam, schedule, standingsGroup, standing, sv, fDay, fHour, esc, mlbTeam } from '../lib/sports';
+  import { sportweyTeam, resolveTeam, schedule, standingsGroup, standing, sv, fDay, fHour, esc, mlbTeam } from '../lib/sports';
   import type { Game } from '../lib/sports';
 
   document.querySelectorAll<HTMLElement>('[data-tcard]').forEach(async (card) => {
@@ -39,8 +39,8 @@ const teams = getTeams();
       let meta = '';
       let last: Game | undefined;
       let next: Game | undefined;
-      if (provider === 'mlbstats') {
-        const d = await mlbTeam(espn, Number(sport), Number(leagueid), name);
+      if (provider === 'mlbstats' || provider === 'sportwey') {
+        const d = (provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
         meta = d.meta; last = d.past[d.past.length - 1]; next = d.next[0];
       } else {
         const id = await resolveTeam(path, espn, abbr, name);

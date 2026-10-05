@@ -6,7 +6,7 @@ export interface League {
   live: boolean;          // false = solo tarjeta con enlace (sin datos en vivo ni página propia)
   maxResults: number;     // máximo de resultados en la página del equipo (0 = todos)
   statLabels: string[];   // etiquetas de las estadísticas de la franja superior
-  provider?: 'mlbstats';  // por defecto la API de ESPN; 'mlbstats' = statsapi.mlb.com (LMB)
+  provider?: 'mlbstats' | 'sportwey';  // por defecto la API de ESPN; 'mlbstats' = statsapi.mlb.com (LMB)
   sportId?: number; leagueId?: number;
 }
 
@@ -37,6 +37,12 @@ export const LEAGUES: Record<string, League> = {
     tableNote: 'Los mejores de la tabla avanzan a playoffs.', calUrl: 'https://www.mlb.com/es/ligas-invernales/liga-mexicana',
     live: true, maxResults: 10, statLabels: ['Récord', 'Lugar', 'Carreras a favor', 'En contra'],
     provider: 'mlbstats', sportId: 17, leagueId: 132,
+  },
+  'Tocho': {
+    path: '', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
+    tableNote: 'Tabla calculada con los resultados publicados en Sportwey.', calUrl: 'https://app.sportwey.com',
+    live: true, maxResults: 0, statLabels: ['Récord', 'Lugar', 'Puntos a favor', 'En contra'],
+    provider: 'sportwey',
   },
 };
 

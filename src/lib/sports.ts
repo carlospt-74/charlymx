@@ -188,3 +188,81 @@ export async function mlbTeam(teamId: string, sportId: number, leagueId: number,
   } catch {}
   return { past, next, meta, groupName, rows, stats };
 }
+
+// ───────── Sportwey (ligas amateur, p. ej. tocho): api.sportwey.com ─────────
+// API pública sin llave que usa app.sportwey.com. El ID del torneo va en el campo "ID del equipo".
+const SPORTWEY = 'https://api.sportwey.com/v5';
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const plain = (x = '') => x.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+/** "Domingo 27 de Septiembre" + "10:00 AM" → Date (hora de Monterrey, UTC-6). La API no trae el año: se toma el más cercano a hoy. */
+function sportweyDate(date = '', time = ''): Date | null {
+  const m = plain(date).match(/(\d{1,2}) de ([a-z]+)/);
+  const t = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+  const mon = m ? MESES.indexOf(m[2]) : -1;
+  if (!m || mon < 0) return null;
+  let h = t ? Number(t[1]) % 12 + (/pm/i.test(t[3] || '') ? 12 : 0) : 12;
+  const mk = (y: number) => new Date(`${y}-${String(mon + 1).padStart(2, '0')}-${m[1].padStart(2, '0')}T${String(h).padStart(2, '0')}:${t ? t[2] : '00'}:00-06:00`);
+  const now = Date.now(), y = new Date().getFullYear();
+  let d = mk(y);
+  if (d.getTime() - now > 200 * 864e5) d = mk(y - 1);
+  else if (now - d.getTime() > 200 * 864e5) d = mk(y + 1);
+  return d;
+}
+
+/** Resultados, próximos partidos y tabla (calculada con los resultados) de un equipo en un torneo de Sportwey. */
+export async function sportweyTeam(tournamentId: string, name: string) {
+  const [scoresRes, upcomingRes] = await Promise.allSettled([
+    getJSON(`${SPORTWEY}/matches_content_score/${tournamentId}/0`),
+    getJSON(`${SPORTWEY}/matches_content/${tournamentId}/0`),
+  ]);
+  if (scoresRes.status === 'rejected') throw scoresRes.reason;
+  // la lista de próximos no está verificada: se buscan arreglos con partidos en cualquier parte de la respuesta
+  const collect = (d: any): any[] => {
+    const out: any[] = [];
+    const walk = (n: any) => {
+      if (Array.isArray(n)) n.forEach(walk);
+      else if (n && typeof n === 'object') { if ('local_name' in n && 'visit_name' in n) out.push(n); else Object.values(n).forEach(walk); }
+    };
+    walk(d);
+    return out;
+  };
+  const raw = new Map<string, any>();
+  for (const r of [scoresRes, upcomingRes]) if (r.status === 'fulfilled') for (const g of collect(r.value)) raw.set(g.id ?? `${g.date}${g.time}${g.local_name}${g.visit_name}`, { ...raw.get(g.id), ...g });
+
+  const key = plain(name);
+  const all = [...raw.values()].map((g) => {
+    const ls = g.local_score, vs = g.visit_score;
+    const played = ls !== null && ls !== undefined && ls !== '' && vs !== null && vs !== undefined && vs !== '';
+    return { g, date: sportweyDate(g.date, g.time), played, a: Number(ls), b: Number(vs) };
+  }).filter((x) => x.date);
+
+  const mine = (n: string) => plain(n).includes(key);
+  const games: Game[] = all.filter((x) => mine(x.g.local_name) || mine(x.g.visit_name)).map((x) => {
+    const home = mine(x.g.local_name);
+    const us = home ? x.a : x.b, them = home ? x.b : x.a;
+    return {
+      date: x.date!, done: x.played, home, opp: home ? x.g.visit_name : x.g.local_name,
+      us: x.played ? String(us) : '', them: x.played ? String(them) : '',
+      res: !x.played ? '' : us > them ? 'G' : us < them ? 'P' : 'E',
+      tv: '', venue: x.g.field || '', week: Number(x.g.week) || undefined, tbd: false,
+    } as Game;
+  }).sort((p, q) => p.date.getTime() - q.date.getTime());
+  const past = games.filter((g) => g.done);
+  const next = games.filter((g) => !g.done && g.date.getTime() > Date.now() - 36e5);
+
+  // tabla: se calcula con todos los resultados del torneo
+  const t = new Map<string, { n: string; w: number; l: number; e: number; pf: number; pa: number }>();
+  const add = (n: string, f: number, a: number) => {
+    const r = t.get(n) || { n, w: 0, l: 0, e: 0, pf: 0, pa: 0 };
+    r.pf += f; r.pa += a; f > a ? r.w++ : f < a ? r.l++ : r.e++; t.set(n, r);
+  };
+  for (const x of all) if (x.played) { add(x.g.local_name, x.a, x.b); add(x.g.visit_name, x.b, x.a); }
+  const pct = (r: { w: number; l: number; e: number }) => (r.w + r.l + r.e ? (r.w + r.e / 2) / (r.w + r.l + r.e) : 0);
+  const sorted = [...t.values()].sort((p, q) => pct(q) - pct(p) || (q.pf - q.pa) - (p.pf - p.pa));
+  const rows: Row[] = sorted.map((r) => ({ mine: mine(r.n), name: r.n, cells: [String(r.w), String(r.l), pct(r).toFixed(3)] }));
+  const idx = sorted.findIndex((r) => mine(r.n));
+  const me = sorted[idx];
+  const stats = me ? [`${me.w}-${me.l}${me.e ? '-' + me.e : ''}`, `${idx + 1}° lugar`, String(me.pf), String(me.pa)] : ['', '', '', ''];
+  return { past, next, meta: me ? `Récord ${stats[0]} · ${stats[1]}` : '', groupName: 'Tabla de posiciones', rows, stats };
+}

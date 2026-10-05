@@ -38,7 +38,7 @@ const statsLabels = t.statLabels;
 </div>
 
 <script>
-  import { resolveTeam, schedule, standingsGroup, groupName, standing, sv, nv, fDay, fShort, fHour, esc, mlbTeam } from '../lib/sports';
+  import { sportweyTeam, resolveTeam, schedule, standingsGroup, groupName, standing, sv, nv, fDay, fShort, fHour, esc, mlbTeam } from '../lib/sports';
   import type { Game, Row } from '../lib/sports';
 
   const root = document.querySelector<HTMLElement>('[data-sport]');
@@ -80,8 +80,8 @@ const statsLabels = t.statLabels;
     };
 
     try {
-      if (provider === 'mlbstats') {
-        const d = await mlbTeam(espn, Number(sport), Number(leagueid), name);
+      if (provider === 'mlbstats' || provider === 'sportwey') {
+        const d = (provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
         paintNext(d.next.slice(0, 4));
         paintResults(d.past);
         d.stats.forEach((v, i) => setStat(i, v));
