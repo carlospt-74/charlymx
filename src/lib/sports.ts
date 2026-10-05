@@ -13,6 +13,7 @@ export interface Game {
   res: 'G' | 'P' | 'E' | ''; tv: string; venue: string; week?: number; tbd: boolean;
   stage?: string;   // fase (solo MLB Stats API), p. ej. "Serie de Campeonato"
   season?: string;
+  unit?: 'Jornada';  // por defecto la jornada se llama "Semana" (NFL, MLB); en ligas amateur es "Jornada"
 }
 
 const sc = (s: any) => (s && typeof s === 'object' ? s.displayValue : s) ?? '';
@@ -237,6 +238,9 @@ export async function sportweyTeam(tournamentId: string, name: string) {
     return { g, date: sportweyDate(g.date, g.time), played, a: Number(ls), b: Number(vs) };
   }).filter((x) => x.date);
 
+  // la API numera por semana del torneo (5 a 10); la jornada cuenta desde la primera semana con partidos (1 a 6)
+  const weeks = [...new Set(all.map((x) => Number(x.g.week)).filter(Boolean))].sort((p, q) => p - q);
+  const jornada = (w: any) => (weeks.indexOf(Number(w)) >= 0 ? weeks.indexOf(Number(w)) + 1 : undefined);
   const mine = (n: string) => plain(n).includes(key);
   const games: Game[] = all.filter((x) => mine(x.g.local_name) || mine(x.g.visit_name)).map((x) => {
     const home = mine(x.g.local_name);
@@ -245,7 +249,7 @@ export async function sportweyTeam(tournamentId: string, name: string) {
       date: x.date!, done: x.played, home, opp: home ? x.g.visit_name : x.g.local_name,
       us: x.played ? String(us) : '', them: x.played ? String(them) : '',
       res: !x.played ? '' : us > them ? 'G' : us < them ? 'P' : 'E',
-      tv: '', venue: x.g.field || '', week: Number(x.g.week) || undefined, tbd: false,
+      tv: '', venue: x.g.field || '', week: jornada(x.g.week), tbd: false, unit: 'Jornada',
     } as Game;
   }).sort((p, q) => p.date.getTime() - q.date.getTime());
   const past = games.filter((g) => g.done);

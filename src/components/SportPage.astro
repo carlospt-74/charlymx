@@ -57,7 +57,7 @@ const statsLabels = t.statLabels;
     const paintNext = (next: Game[]) => {
       $('[data-next]').innerHTML = next.length ? next.map((g, i) => `
         <div class="snext ${i === 0 ? 'first' : ''}">
-          <div><small>${!soccer && g.week ? 'SEM ' + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
+          <div><small>${!soccer && g.week ? (g.unit ? 'JORNADA ' : 'SEM ') + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
           <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}</span>
           <em>${g.tbd ? 'Hora por<br>confirmar' : esc(fHour(g.date))}<br>${esc(g.tv || g.venue)}</em>
         </div>`).join('') : '<p class="snote">No hay partidos programados por ahora.</p>';
@@ -65,7 +65,7 @@ const statsLabels = t.statLabels;
     const paintResults = (past: Game[]) => {
       const list = past.slice().reverse().slice(0, maxRes || undefined);
       $('[data-results]').innerHTML = list.length ? list.map((g) => `
-        <div class="sres"><small>${!soccer && g.week ? 'S' + g.week : fShort(g.date)}</small>
+        <div class="sres"><small>${!soccer && g.week ? (g.unit ? 'J' : 'S') + g.week : fShort(g.date)}</small>
         <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}${g.stage ? ` <small>· ${esc(g.stage)}</small>` : ''}</span><b>${esc(g.us)}-${esc(g.them)}</b>${res(g.res)}</div>`).join('') : '<p class="snote">Aún no hay partidos jugados.</p>';
       const streak = past.slice(-5).reverse().map((g) => g.res).join(' ');
       $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';

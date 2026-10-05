@@ -62,7 +62,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
       if (last) {
         const homeName = last.home ? name : last.opp, awayName = last.home ? last.opp : name;
         const hs = last.home ? last.us : last.them, as = last.home ? last.them : last.us;
-        const cap = soccer || !last.week ? `${last.stage ? last.stage + ' · ' : 'Último partido · '}${fDay(last.date)} · Final` : `Semana ${last.week} · Final`;
+        const cap = soccer || !last.week ? `${last.stage ? last.stage + ' · ' : 'Último partido · '}${fDay(last.date)} · Final` : `${last.unit || 'Semana'} ${last.week} · Final`;
         q('[data-last]').innerHTML = `<div class="tcap">${esc(cap)}</div>
           <div class="tscore"><div class="${last.home ? 'us' : ''}"><small>${esc(homeName)}</small><b>${esc(hs)}</b></div>
           <em>${last.home ? 'en casa' : 'de visita'}</em>
@@ -70,7 +70,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
       } else q('[data-last]').innerHTML = '<div class="tcap">Aún no hay partidos jugados</div>';
       if (next) {
         const nx = q('[data-next]');
-        nx.innerHTML = `<div><div class="tcap2">PRÓXIMO${next.week && !soccer ? ' · SEM ' + next.week : ''}</div><div class="ttxt">${esc(fDay(next.date))} · ${next.home ? 'vs' : 'en'} ${esc(next.opp)}</div></div>
+        nx.innerHTML = `<div><div class="tcap2">PRÓXIMO${next.week && !soccer ? (next.unit ? ' · JORNADA ' : ' · SEM ') + next.week : ''}</div><div class="ttxt">${esc(fDay(next.date))} · ${next.home ? 'vs' : 'en'} ${esc(next.opp)}</div></div>
           <div class="ttime">${next.tbd ? 'Por confirmar' : esc(fHour(next.date))}<br>${esc(next.tv || next.venue)}</div>`;
         nx.hidden = false;
       }
