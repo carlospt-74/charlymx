@@ -64,7 +64,8 @@ const teams = getTeams();
           <div class="ttime">${next.tbd ? 'Por confirmar' : esc(fHour(next.date))}<br>${esc(next.tv || next.venue)}</div>`;
         nx.hidden = false;
       }
-    } catch {
+    } catch (err) {
+      console.error('[Mis equipos]', name, err);
       q('[data-last]').innerHTML = '<div class="tcap">No se pudieron cargar los datos ahora</div>';
     }
   });

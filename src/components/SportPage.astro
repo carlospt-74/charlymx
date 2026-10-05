@@ -99,7 +99,8 @@ const statsLabels = soccer ? ['Lugar', 'Puntos', 'PJ', 'G-E-P', 'DG'] : ['Récor
           const zone = cutAt && i < cutAt ? ' zone' : '';
           return `<div class="strow${mine ? ' me' : ''}${cut}${zone}"><span>${i + 1}</span><span>${esc(e.team?.shortDisplayName || e.team?.displayName)}${mine ? ' <i>Mi equipo</i>' : ''}</span>${vals(e).map((v) => `<span>${esc(v)}</span>`).join('')}</div>`;
         }).join('');
-    } catch {
+    } catch (err) {
+      console.error('[Mis equipos]', name, err);
       $('[data-table]').innerHTML = '<p class="snote" style="padding:12px 16px">No se pudieron cargar los datos ahora. Intenta más tarde.</p>';
       const r = $('[data-results]'); if (r.textContent?.includes('Cargando')) r.innerHTML = '';
       const n = $('[data-next]'); if (n.textContent?.includes('Cargando')) n.innerHTML = '';
