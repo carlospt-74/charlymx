@@ -40,7 +40,7 @@ Paleta "Tinta cálida": negro cálido y fotos con marco crema. La primera vez si
 - **MLB** usa la misma API de ESPN (`baseball/mlb`); el ID es la abreviatura en minúsculas (Bravos = `atl`). En su página se muestran los últimos 10 resultados.
 
 ### De dónde salen los datos
-- **ESPN** (NFL, Liga MX, MLB) y **MLB Stats API** (LMB). Las dos son públicas, no oficiales y sin llave.
+- **ESPN** (NFL, Liga MX, MLB) y **MLB Stats API** (LMB y LMP). Las dos son públicas, no oficiales y sin llave.
 Todos los datos vienen de la API pública de ESPN, la misma para la NFL y para la Liga MX. Se consultan desde el navegador y no requieren llave.
 - **Calendario y resultados:** `https://site.api.espn.com/apis/site/v2/sports/{liga}/teams/{equipo}/schedule`. En futbol, los próximos partidos se piden aparte con `?fixture=true`.
 - **Tablas:** `https://site.api.espn.com/apis/v2/sports/{liga}/standings`.

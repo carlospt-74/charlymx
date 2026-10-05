@@ -40,7 +40,7 @@ const teams = getTeams();
       let last: Game | undefined;
       let next: Game | undefined;
       if (provider === 'mlbstats') {
-        const d = await mlbTeam(espn, Number(sport), Number(leagueid));
+        const d = await mlbTeam(espn, Number(sport), Number(leagueid), name);
         meta = d.meta; last = d.past[d.past.length - 1]; next = d.next[0];
       } else {
         const id = await resolveTeam(path, espn, abbr, name);

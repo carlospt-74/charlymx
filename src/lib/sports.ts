@@ -155,7 +155,19 @@ export function parseMlbStandings(d: any, teamId: string) {
 }
 
 /** Calendario, resultados y tabla de un equipo de la LMB (o de otra liga de MiLB). */
-export async function mlbTeam(teamId: string, sportId: number, leagueId: number) {
+export async function mlbTeam(teamId: string, sportId: number, leagueId: number, name = '') {
+  if (!/^\d+$/.test(teamId)) {
+    const norm = (x = '') => x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const y = new Date().getFullYear();
+    let hit: any;
+    for (const season of [y, y - 1]) {
+      const d = await getJSON(`${MLBSTATS}/teams?sportId=${sportId}&leagueIds=${leagueId}&season=${season}`);
+      hit = (d.teams || []).find((t: any) => [t.name, t.teamName, t.clubName, t.shortName].some((n: string) => n && norm(n).includes(norm(name))));
+      if (hit) break;
+    }
+    if (!hit) throw new Error('team not found');
+    teamId = String(hit.id);
+  }
   const day = 864e5, iso = (t: number) => new Date(t).toISOString().slice(0, 10);
   const now = Date.now();
   const sched = await getJSON(`${MLBSTATS}/schedule?sportId=${sportId}&teamId=${teamId}&startDate=${iso(now - 200 * day)}&endDate=${iso(now + 200 * day)}`);

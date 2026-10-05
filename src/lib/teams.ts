@@ -33,9 +33,10 @@ export const LEAGUES: Record<string, League> = {
     provider: 'mlbstats', sportId: 23, leagueId: 125,
   },
   'LMP': {
-    path: 'baseball/mexican-winter-league', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
-    tableNote: 'Los mejores de la tabla avanzan a playoffs.', calUrl: 'https://www.lmp.mx',
+    path: '', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
+    tableNote: 'Los mejores de la tabla avanzan a playoffs.', calUrl: 'https://www.mlb.com/es/ligas-invernales/liga-mexicana',
     live: true, maxResults: 10, statLabels: ['Récord', 'Lugar', 'Carreras a favor', 'En contra'],
+    provider: 'mlbstats', sportId: 17, leagueId: 132,
   },
 };
 
@@ -73,7 +74,7 @@ export function getTeams(): Team[] {
       const slug = (t.slug || t.league).toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       return {
         key: `${slug}-${i}`, league: t.league, name: t.name, abbr: (t.abbr || '').toUpperCase(),
-        espn: (t.espn_id || (L.soccer || L.path.includes('winter') ? '' : t.abbr) || '').toString().toLowerCase(),
+        espn: (t.espn_id || (L.soccer || L.provider ? '' : t.abbr) || '').toString().toLowerCase(),
         crest: t.crest || '', slug, href: L.live ? `/${slug}/` : (t.url || L.calUrl), external: !L.live,
         path: L.path, soccer: L.soccer, cut: L.cut, tableTitle: L.tableTitle, tableNote: L.tableNote, calUrl: L.calUrl,
         live: L.live, maxResults: L.maxResults, statLabels: L.statLabels,

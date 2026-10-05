@@ -81,7 +81,7 @@ const statsLabels = t.statLabels;
 
     try {
       if (provider === 'mlbstats') {
-        const d = await mlbTeam(espn, Number(sport), Number(leagueid));
+        const d = await mlbTeam(espn, Number(sport), Number(leagueid), name);
         paintNext(d.next.slice(0, 4));
         paintResults(d.past);
         d.stats.forEach((v, i) => setStat(i, v));
