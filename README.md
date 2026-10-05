@@ -8,4 +8,4 @@ Portal personal de CharlyMx, publicado en https://charlymx.com con Cloudflare Wo
 
 ## Despliegue
 
-Cada push a la rama configurada en Cloudflare (Settings → Builds → Branch control) construye y publica el sitio con Workers Builds. El build usa el token `charlymx build token`.
+Cada push a la rama `main` (Cloudflare: Settings → Builds → Branch control) construye y publica el sitio con Workers Builds. El build usa el token `charlymx build token`.
