@@ -26,12 +26,12 @@
     },
     {
       "league": "MLB",
-      "name": "Bravos",
-      "abbr": "ATL",
-      "espn_id": "atl",
+      "name": "Dodgers",
+      "abbr": "LAD",
+      "espn_id": "lad",
       "crest": "",
-      "color": "#13274f",
-      "accent": "#ce1141",
+      "color": "#005a9c",
+      "accent": "#ffffff",
       "pattern": "diagonal",
       "slug": "mlb",
       "url": ""
