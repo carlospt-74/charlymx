@@ -176,6 +176,73 @@ p{margin:0;text-wrap:pretty}
 .site-footer{border-top:1px solid rgba(20,23,31,.08)}
 .site-footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:28px;padding-bottom:28px;font-size:14px;color:var(--soft)}
 
+/* mis equipos (inicio) */
+.teams{margin:0 0 72px}
+.sub-note{font-size:14px;color:var(--muted)}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.tcard{border-radius:26px;overflow:hidden;background:var(--tc-bg);color:#fff;display:flex;flex-direction:column;transition:transform .2s}
+.tcard:hover{color:#fff;transform:translateY(-3px)}
+.tcard-strip{height:8px;background:var(--tc-strip)}
+.tcard-body{padding:28px 30px;display:flex;flex-direction:column;gap:20px;flex:1}
+.tcard-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tcard-team{display:flex;align-items:center;gap:12px}
+.tbadge{flex:none;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font:800 15px var(--fh)}
+.tbadge.lg{width:64px;height:64px;border-radius:16px;font-size:21px}
+.tbadge img{width:72%;height:72%;object-fit:contain}
+.tcard h3{font-size:24px;font-weight:700}
+.tsub{font-size:13px;font-weight:500;color:var(--tc-sub)}
+.tleague{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);font:600 12px var(--fb);color:var(--tc-sub)}
+.tlast{padding:18px 20px;border-radius:16px;background:rgba(255,255,255,.07)}
+.tcap{font:600 11px var(--fb);letter-spacing:.08em;text-transform:uppercase;color:var(--tc-sub)}
+.tscore{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-top:10px}
+.tscore small{display:block;font:600 14px var(--fb);color:var(--tc-sub)}
+.tscore b{display:block;font:800 46px/1 var(--fh)}
+.tscore .us b{color:var(--tc-link)}
+.tscore .r{text-align:right}
+.tscore em{font-style:normal;font-size:13px;color:var(--tc-sub)}
+.tnext{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:var(--tc-accent);color:var(--tc-accent-fg)}
+.tcap2{font:600 11px var(--fb);opacity:.8}.ttxt{font:700 17px var(--fh)}.ttime{font:600 14px var(--fb);text-align:right}
+.tfoot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;font:600 15px var(--fb)}
+.tfoot span{color:var(--tc-sub)}.tfoot b{color:var(--tc-link)}
+
+/* páginas deportivas */
+.shero{position:relative;margin-top:8px;border-radius:32px;overflow:hidden;color:#fff}
+.shero-pattern{position:absolute;right:0;top:0;bottom:0;width:240px;opacity:.9}
+.shero-body{position:relative;padding:44px 48px;max-width:860px;display:flex;flex-direction:column;gap:18px}
+.shero-back{font:600 14px var(--fb)}.shero-back:hover{color:#fff}
+.shero-title{display:flex;align-items:center;gap:16px}.shero h1{font-size:64px;line-height:1;letter-spacing:-.03em}
+.sstats{display:flex;flex-wrap:wrap;gap:12px}
+.sstats div{padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.08);min-width:96px}
+.sstats small{display:block;font:600 11px var(--fb);letter-spacing:.06em;text-transform:uppercase}
+.sstats b{display:block;font:800 26px var(--fh)}
+.shero-note{font-size:14px;font-weight:500}
+.sgrid{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;padding:48px 0 72px}
+.scol{display:flex;flex-direction:column;gap:40px}
+.scol-h{font-size:28px;margin-bottom:16px}
+.slist{display:flex;flex-direction:column;gap:10px}
+.snext{display:grid;grid-template-columns:84px 1fr auto;gap:14px;align-items:center;padding:16px 18px;border-radius:16px;background:var(--white);border:1px solid var(--line)}
+.snext.first{background:var(--acc);border-color:var(--acc);color:var(--acc-fg)}
+.snext small{display:block;font:600 11px var(--fb);opacity:.7;text-transform:uppercase}.snext b{font:700 16px var(--fh)}
+.snext span{font:600 16px var(--fb)}.snext em{font-style:normal;font-size:13px;text-align:right;opacity:.8}
+.sres{display:grid;grid-template-columns:64px 1fr auto auto;gap:14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.sres:last-child{border-bottom:1px solid var(--line)}
+.sres small{font:600 13px var(--fb);color:var(--soft)}.sres span{font:600 16px var(--fb)}.sres b{font:700 17px var(--fh)}
+.rb{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font:700 12px var(--fb);color:#fff}
+.rb.G{background:#1f9d55}.rb.P{background:#c2412d}.rb.E{background:#6b7280}
+.stable{border-radius:24px;background:var(--white);border:1px solid var(--line);padding:10px 8px}
+.strow{display:grid;grid-template-columns:40px 1fr 60px 60px 64px;gap:8px;align-items:center;padding:11px 16px;font:500 15px var(--fb)}
+.strow+.strow:not(.me){border-top:1px solid var(--line)}
+.strow span:nth-child(n+3){text-align:center;color:var(--muted)}.strow span:last-child{font-weight:700;color:var(--ink)}
+.strow span:first-child{font-weight:700}
+.strow.zone span:first-child{color:var(--blue)}
+.strow.cut{border-top:2px dashed var(--blue)!important}
+.strow.head{font:600 12px var(--fb);letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}.strow.head span{color:var(--soft)!important;font-weight:600!important}
+.strow.me{background:var(--me);color:#fff;border-radius:12px}.strow.me span{color:#fff!important}
+.strow.me + .strow{border-top:0}
+.strow i{font:600 11px var(--fb);font-style:normal;padding:3px 8px;border-radius:999px;background:#fff;color:var(--me);margin-left:6px}
+.snote{margin:10px 4px 0;font-size:13px;color:var(--soft)}
+.snote-link{display:inline-block;margin:8px 4px 0;font-size:14px;font-weight:600}
+
 /* header actions + theme toggle */
 .header-actions{display:flex;align-items:center;gap:10px}
 .theme-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
@@ -236,4 +303,10 @@ html[data-theme=dark] .mobile-menu nav a{color:var(--ink)}html[data-theme=dark] 
   .nfl{grid-template-columns:1fr;padding:24px 20px;gap:28px;margin-bottom:44px}.nfl-score b{font-size:40px}
   .nfl-next{grid-template-columns:60px 1fr auto}
   .empty{padding:32px 20px}
+  .teams{margin-bottom:44px}.teams-grid{grid-template-columns:1fr;gap:16px}.tcard-body{padding:22px 20px}.tscore b{font-size:38px}
+  .shero-body{padding:28px 22px}.shero h1{font-size:38px}.shero-pattern{width:70px}.tbadge.lg{width:48px;height:48px;font-size:16px}
+  .sstats div{min-width:0;flex:1 1 40%;padding:10px 14px}.sstats b{font-size:21px}
+  .sgrid{grid-template-columns:1fr;gap:36px;padding:32px 0 48px}.scol-h{font-size:24px}
+  .snext{grid-template-columns:72px 1fr auto;padding:14px}
+  .strow{grid-template-columns:28px 1fr 40px 44px 44px;padding:10px 10px;font-size:14px}
 }

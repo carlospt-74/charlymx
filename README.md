@@ -31,8 +31,24 @@ El archivo `src/content/blog/2026-10-05-ejemplo-borrador.md` es un borrador de e
 ## Modo oscuro
 Paleta "Tinta cálida": negro cálido y fotos con marco crema. La primera vez sigue la preferencia del celular o la computadora. El botón redondo del encabezado lo cambia, y la elección se recuerda. Los colores están en `src/styles/global.css`, en el bloque `html[data-theme=dark]`.
 
-## Sección de los Broncos
-Los resultados y el calendario se cargan en vivo desde la API pública de ESPN, en hora de Monterrey. Si la API falla, la sección se oculta sola. Para seguir a otro equipo, cambia "Equipo NFL" en Ajustes (por ejemplo `kc`, `dal`).
+## Mis equipos (Broncos, Rayados y los que agregues)
+- Se editan en Pages CMS → **Mis equipos**. Cada equipo tiene liga (NFL o Liga MX), nombre, abreviatura, ID de ESPN (opcional), escudo, colores, diseño de la franja y dirección de su página.
+- En el Inicio aparece una tarjeta por equipo, y cada uno tiene su página: `/nfl/` y `/liga-mx/`, o la dirección que le pongas.
+- Si agregas o cambias un equipo, Cloudflare vuelve a publicar el sitio y se crea su página.
+
+### De dónde salen los datos
+Todos los datos vienen de la API pública de ESPN, la misma para la NFL y para la Liga MX. Se consultan desde el navegador y no requieren llave.
+- **Calendario y resultados:** `https://site.api.espn.com/apis/site/v2/sports/{liga}/teams/{equipo}/schedule`. En futbol, los próximos partidos se piden aparte con `?fixture=true`.
+- **Tablas:** `https://site.api.espn.com/apis/v2/sports/{liga}/standings`.
+- **Lista de equipos** (para encontrar el ID): `https://site.api.espn.com/apis/site/v2/sports/{liga}/teams`.
+- **Liga:** `football/nfl` para la NFL y `soccer/mex.1` para la Liga MX.
+- Si el ID de ESPN de un equipo de Liga MX se deja vacío, el sitio lo busca solo por la abreviatura (MTY) o el nombre.
+- Es una API pública pero no oficial: ESPN podría cambiar su formato. Si eso pasa, solo hay que ajustar `src/lib/sports.ts`. Mientras tanto, las tarjetas muestran un aviso y el resto del sitio sigue funcionando.
+
+## Imágenes ligeras
+- Las fotos del sitio ya están en **WebP**: pasaron de unos 1.7 MB en total a unos 160 KB.
+- Para fotos nuevas, usa **WebP** de máximo 1200–1600 px de ancho (puedes convertirlas gratis en squoosh.app). Para logos y escudos, usa **SVG** o un WebP cuadrado de menos de 50 KB.
+- Pages CMS muestra este recordatorio en cada campo de imagen.
 
 ## Trabajar en tu computadora (opcional)
 ```

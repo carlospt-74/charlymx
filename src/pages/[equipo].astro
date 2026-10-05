@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import SportPage from '../components/SportPage.astro';
+import { getTeams } from '../lib/teams';
+
+export function getStaticPaths() {
+  return getTeams().map((team) => ({ params: { equipo: team.slug }, props: { team } }));
+}
+const { team } = Astro.props;
+---
+<Base title={`${team.league} · ${team.name}`} description={`Resultados, próximos partidos y tabla de ${team.name} en ${team.league}.`}>
+  <SportPage team={team} />
+</Base>

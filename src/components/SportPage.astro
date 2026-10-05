@@ -1,0 +1,108 @@
+---
+import type { Team } from '../lib/teams';
+const { team: t } = Astro.props as { team: Team };
+const soccer = t.soccer;
+const accDark = t.accentFg === '#14171f';
+const statsLabels = soccer ? ['Lugar', 'Puntos', 'PJ', 'G-E-P', 'DG'] : ['Récord', 'División', 'Puntos a favor', 'En contra'];
+---
+<div class="wrap">
+  <section class="shero" style={`background:${t.bg}`} data-sport data-soccer={soccer ? '1' : ''} data-cut={t.cut} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name}>
+    <div class="shero-pattern" style={`background:${t.pattern}`}></div>
+    <div class="shero-body">
+      <a href="/" class="shero-back" style={`color:${t.sub}`}>← Inicio · {t.league}</a>
+      <div class="shero-title"><div class="tbadge lg" style={`background:${t.accent};color:${t.accentFg}`}>{t.crest ? <img src={t.crest} alt="" width="44" height="44" /> : t.abbr}</div><h1>Mis {t.name}</h1></div>
+      <div class="sstats">{statsLabels.map((l, i) => <div><small style={`color:${t.sub}`}>{l}</small><b data-stat={i}>—</b></div>)}</div>
+      <span class="shero-note" style={`color:${t.sub}`} data-note></span>
+    </div>
+  </section>
+
+  <div class="sgrid">
+    <div class="scol">
+      <div>
+        <h2 class="scol-h">Próximos partidos</h2>
+        <div class="slist" data-next style={`--acc:${accDark ? t.bg : t.accent};--acc-fg:${accDark ? '#fff' : t.accentFg}`}><p class="snote">Cargando…</p></div>
+        <p class="snote">Hora de Monterrey.</p>
+      </div>
+      <div>
+        <h2 class="scol-h">Resultados</h2>
+        <div data-results><p class="snote">Cargando…</p></div>
+      </div>
+    </div>
+    <div>
+      <h2 class="scol-h" data-table-title>{t.tableTitle}</h2>
+      <div class="stable" data-table style={`--me:${t.bg}`}><p class="snote" style="padding:12px 16px">Cargando…</p></div>
+      <p class="snote">{t.tableNote}</p>
+      <a class="snote-link" href={t.calUrl} target="_blank" rel="noopener">Ver más en ESPN ↗</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { resolveTeam, schedule, standingsGroup, groupName, standing, sv, nv, fDay, fShort, fHour, esc } from '../lib/sports';
+
+  const root = document.querySelector<HTMLElement>('[data-sport]');
+  if (root) run(root);
+
+  async function run(root: HTMLElement) {
+    const { path, espn, abbr, name } = root.dataset as Record<string, string>;
+    const soccer = !!root.dataset.soccer;
+    const cutAt = Number(root.dataset.cut || 0);
+    const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
+    const setStat = (i: number, v: string) => { const el = root.querySelector<HTMLElement>(`[data-stat="${i}"]`); if (el && v) el.textContent = v; };
+    const res = (r: string) => `<span class="rb ${r}">${r}</span>`;
+    try {
+      const id = await resolveTeam(path, espn, abbr, name);
+      const { team: t, games } = await schedule(path, id, soccer);
+      const past = games.filter((g) => g.done);
+      const next = games.filter((g) => !g.done).slice(0, 4);
+
+      $('[data-next]').innerHTML = next.length ? next.map((g, i) => `
+        <div class="snext ${i === 0 ? 'first' : ''}">
+          <div><small>${!soccer && g.week ? 'SEM ' + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
+          <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}</span>
+          <em>${g.tbd ? 'Hora por<br>confirmar' : esc(fHour(g.date))}<br>${esc(g.tv || g.venue)}</em>
+        </div>`).join('') : '<p class="snote">No hay partidos programados por ahora.</p>';
+
+      $('[data-results]').innerHTML = past.length ? past.slice().reverse().map((g) => `
+        <div class="sres"><small>${!soccer && g.week ? 'S' + g.week : fShort(g.date)}</small>
+        <span>${g.home ? 'vs' : 'en'} ${esc(g.opp)}</span><b>${esc(g.us)}-${esc(g.them)}</b>${res(g.res)}</div>`).join('') : '<p class="snote">Aún no hay partidos jugados.</p>';
+
+      const streak = past.slice(-5).reverse().map((g) => g.res).join(' ');
+      if (!soccer) {
+        setStat(0, t.recordSummary || '');
+        setStat(1, standing(t.standingSummary || ''));
+        $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';
+      } else {
+        $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';
+      }
+
+      const grp = await standingsGroup(path, t.id);
+      if (!grp) throw new Error('standings');
+      let entries = grp.standings.entries.slice();
+      if (soccer) entries.sort((a, b) => (nv(a, 'rank') || 99) - (nv(b, 'rank') || 99) || nv(b, 'points') - nv(a, 'points'));
+      else entries.sort((a, b) => nv(b, 'winPercent') - nv(a, 'winPercent'));
+      if (!soccer) $('[data-table-title]').textContent = groupName(grp.name) || 'Tabla de división';
+
+      const me = entries.find((e) => e.team?.id === t.id);
+      if (soccer && me) {
+        setStat(0, sv(me, 'rank') + '°'); setStat(1, sv(me, 'points')); setStat(2, sv(me, 'gamesPlayed'));
+        setStat(3, `${sv(me, 'wins')}-${sv(me, 'ties')}-${sv(me, 'losses')}`); setStat(4, sv(me, 'pointDifferential'));
+      }
+      if (!soccer && me) { setStat(2, sv(me, 'pointsFor')); setStat(3, sv(me, 'pointsAgainst')); }
+
+      const cols = soccer ? ['PJ', 'DG', 'Pts'] : ['G', 'P', '%'];
+      const vals = (e: any) => soccer ? [sv(e, 'gamesPlayed'), sv(e, 'pointDifferential'), sv(e, 'points')] : [sv(e, 'wins'), sv(e, 'losses'), sv(e, 'winPercent')];
+      $('[data-table]').innerHTML = `<div class="strow head"><span>#</span><span>Equipo</span>${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
+        entries.map((e, i) => {
+          const mine = e.team?.id === t.id;
+          const cut = cutAt && i === cutAt ? ' cut' : '';
+          const zone = cutAt && i < cutAt ? ' zone' : '';
+          return `<div class="strow${mine ? ' me' : ''}${cut}${zone}"><span>${i + 1}</span><span>${esc(e.team?.shortDisplayName || e.team?.displayName)}${mine ? ' <i>Mi equipo</i>' : ''}</span>${vals(e).map((v) => `<span>${esc(v)}</span>`).join('')}</div>`;
+        }).join('');
+    } catch {
+      $('[data-table]').innerHTML = '<p class="snote" style="padding:12px 16px">No se pudieron cargar los datos ahora. Intenta más tarde.</p>';
+      const r = $('[data-results]'); if (r.textContent?.includes('Cargando')) r.innerHTML = '';
+      const n = $('[data-next]'); if (n.textContent?.includes('Cargando')) n.innerHTML = '';
+    }
+  }
+</script>

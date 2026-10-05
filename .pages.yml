@@ -24,7 +24,7 @@ content:
         options: { values: [Mi fé, IA, NFL, Flag football, Fútbol] }
       - { name: tags, label: Etiquetas, type: string, list: true }
       - { name: date, label: Fecha, type: date, required: true }
-      - { name: cover, label: Imagen de portada, type: image }
+      - { name: cover, label: Imagen de portada, type: image, description: "WebP, 1600 px de ancho máximo" }
       - { name: featured, label: Destacado, type: boolean, default: false }
       - { name: draft, label: Borrador (no se publica), type: boolean, default: true }
       - { name: body, label: Contenido, type: rich-text }
@@ -46,7 +46,7 @@ content:
         required: true
         options: { values: [En vivo, Recién lanzado, Prototipo, Idea] }
       - { name: url, label: Enlace, type: string, description: "Vacío si aún no está en línea" }
-      - { name: image, label: Imagen o logo, type: image }
+      - { name: image, label: Imagen o logo, type: image, description: "Logo en SVG; capturas en WebP" }
       - { name: image_bg, label: Color de fondo del logo, type: string, description: "Opcional, ej. #eef6f3" }
       - { name: featured, label: Mostrar en Inicio, type: boolean, default: true }
       - { name: order, label: Orden, type: number }
@@ -66,11 +66,11 @@ content:
         type: object
         list: { min: 1, max: 6 }
         fields:
-          - { name: image, label: Foto, type: image }
+          - { name: image, label: Foto, type: image, description: "WebP, máximo 1200 px de ancho" }
           - { name: position, label: Encuadre, type: string, description: "Ej. 50% 30% (horizontal vertical)" }
           - { name: title, label: Etiqueta grande, type: string }
           - { name: caption, label: Pie de foto, type: string }
-      - { name: show_nfl, label: Mostrar sección de los Broncos, type: boolean }
+      - { name: show_sports, label: Mostrar sección "Mis equipos" (se edita en Mis equipos), type: boolean }
 
   - name: sobre-mi
     label: Sobre mí
@@ -92,6 +92,34 @@ content:
           - { name: position, label: Encuadre, type: string }
           - { name: big, label: Tarjeta alta, type: boolean }
 
+  - name: equipos
+    label: Mis equipos
+    type: file
+    path: src/data/equipos.json
+    format: json
+    fields:
+      - name: teams
+        label: Equipos
+        type: object
+        list: true
+        fields:
+          - name: league
+            label: Liga
+            type: select
+            required: true
+            options: { values: [NFL, Liga MX] }
+          - { name: name, label: Nombre, type: string, required: true, description: "Se lee como Mis {nombre}, ej. Rayados" }
+          - { name: abbr, label: Abreviatura, type: string, required: true, description: "Ej. DEN, MTY. Se muestra si no hay escudo y sirve para encontrar al equipo en ESPN" }
+          - { name: espn_id, label: ID en ESPN (opcional), type: string, description: "NFL: abreviatura en minúsculas (den). Liga MX: vacío = se busca solo por la abreviatura" }
+          - { name: crest, label: Escudo, type: image, description: "SVG o WebP cuadrado, idealmente menos de 50 KB" }
+          - { name: color, label: Color de fondo (hex), type: string, description: "Ej. #0b2c5f" }
+          - { name: accent, label: Color de acento (hex), type: string, description: "Ej. #FB4F14" }
+          - name: pattern
+            label: Diseño de la franja
+            type: select
+            options: { values: [rayas, diagonal, liso] }
+          - { name: slug, label: Dirección de su página, type: string, required: true, description: "Ej. liga-mx → charlymx.com/liga-mx/" }
+
   - name: ajustes
     label: Ajustes del sitio
     type: file
@@ -107,4 +135,3 @@ content:
       - { name: instagram, label: Instagram (URL), type: string }
       - { name: x, label: X (URL), type: string }
       - { name: linkedin, label: LinkedIn (URL), type: string }
-      - { name: nfl_team, label: Equipo NFL (abreviatura ESPN), type: string, description: "den = Broncos" }

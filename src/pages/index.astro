@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import PhotoDeck from '../components/PhotoDeck.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostCard from '../components/PostCard.astro';
-import Broncos from '../components/Broncos.astro';
+import MyTeams from '../components/MyTeams.astro';
 import inicio from '../data/inicio.json';
 import { getPosts, getProjects } from '../lib/site';
 
@@ -48,5 +48,5 @@ const hl = inicio.highlight && inicio.headline.includes(inicio.highlight) ? inic
     </div>
   </section>
 
-  {inicio.show_nfl && <div class="wrap"><Broncos /></div>}
+  {inicio.show_sports !== false && <div class="wrap"><MyTeams /></div>}
 </Base>
