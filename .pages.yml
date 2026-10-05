@@ -21,7 +21,7 @@ content:
         label: Categoría
         type: select
         required: true
-        options: { values: [Mi fé, IA, NFL, Flag football, Fútbol] }
+        options: { values: [Mi fé, IA, Tecnología, Vida, Flag football] }
       - { name: tags, label: Etiquetas, type: string, list: true }
       - { name: date, label: Fecha, type: date, required: true }
       - { name: cover, label: Imagen de portada, type: image, description: "WebP, 1600 px de ancho máximo" }

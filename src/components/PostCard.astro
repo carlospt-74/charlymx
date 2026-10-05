@@ -5,8 +5,8 @@ const d = post.data;
 const href = `/blog/${post.id}/`;
 const mins = readingTime(post.body);
 // Sin portada: se genera una según la categoría (color + letras grandes)
-const GEN: Record<string, string> = { 'IA': 'IA', 'Mi fé': 'Fe', 'NFL': 'NFL', 'Flag football': 'Flag', 'Fútbol': 'Fút' };
-const CAT: Record<string, string> = { 'IA': 'ia', 'Mi fé': 'fe', 'NFL': 'nfl', 'Flag football': 'flag', 'Fútbol': 'futbol' };
+const GEN: Record<string, string> = { 'IA': 'IA', 'Mi fé': 'Fe', 'Tecnología': 'Tec', 'Vida': 'Vida', 'Flag football': 'Flag' };
+const CAT: Record<string, string> = { 'IA': 'ia', 'Mi fé': 'fe', 'Tecnología': 'tec', 'Vida': 'vida', 'Flag football': 'flag' };
 const genClass = `cover gen gen-${CAT[d.category] || 'ia'}`;
 ---
 {variant === 'row' ? (

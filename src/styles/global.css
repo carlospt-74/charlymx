@@ -97,7 +97,7 @@ p{margin:0;text-wrap:pretty}
 .cover img{width:100%;height:100%;object-fit:cover}
 [hidden]{display:none!important}
 .cover.gen{position:relative;background:linear-gradient(135deg,#2456e3,#7c3aed)}
-.gen-ia{background:linear-gradient(135deg,#2456e3,#7c3aed)}.gen-fe{background:linear-gradient(135deg,#b45309,#f59e0b)}.gen-nfl{background:linear-gradient(135deg,#166534,#22c55e)}.gen-flag{background:linear-gradient(135deg,#c2410c,#fb923c)}.gen-futbol{background:linear-gradient(135deg,#0f766e,#34d399)}
+.gen-ia{background:linear-gradient(135deg,#2456e3,#7c3aed)}.gen-fe{background:linear-gradient(135deg,#b45309,#f59e0b)}.gen-tec{background:linear-gradient(135deg,#0e7490,#38bdf8)}.gen-vida{background:linear-gradient(135deg,#be185d,#f472b6)}.gen-flag{background:linear-gradient(135deg,#c2410c,#fb923c)}
 .gen-big{position:absolute;left:20px;bottom:12px;font:800 clamp(48px,7vw,72px)/1 var(--fh);letter-spacing:-.04em;color:rgba(255,255,255,.92)}
 .gen-tag{position:absolute;right:14px;top:12px;background:rgba(255,255,255,.22);color:#fff;font:700 12px var(--fb);padding:4px 10px;border-radius:99px}
 .postc .meta{font:600 13px var(--fb);color:var(--blue)}
