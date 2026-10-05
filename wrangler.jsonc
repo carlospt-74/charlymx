@@ -6,6 +6,7 @@
     "not_found_handling": "single-page-application"
   },
   "routes": [
-    { "pattern": "charlymx.com", "custom_domain": true }
+    { "pattern": "charlymx.com", "custom_domain": true },
+    { "pattern": "www.charlymx.com", "custom_domain": true }
   ]
 }
