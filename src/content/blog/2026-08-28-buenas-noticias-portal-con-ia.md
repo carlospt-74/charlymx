@@ -4,7 +4,8 @@ summary: "Armé un portal solo de buenas noticias, reales y verificadas, que se 
 category: IA
 tags: [buenas noticias, inteligencia artificial, claude, proyectos]
 date: 2026-08-28
-featured: false
+featured: true
+cover: /images/buenas-noticias.webp
 draft: false
 ---
 

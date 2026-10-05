@@ -4,12 +4,16 @@ const { post, variant = 'card' } = Astro.props;
 const d = post.data;
 const href = `/blog/${post.id}/`;
 const mins = readingTime(post.body);
+// Sin portada: se genera una según la categoría (color + letras grandes)
+const GEN: Record<string, string> = { 'IA': 'IA', 'Mi fé': 'Fe', 'NFL': 'NFL', 'Flag football': 'Flag', 'Fútbol': 'Fút' };
+const CAT: Record<string, string> = { 'IA': 'ia', 'Mi fé': 'fe', 'NFL': 'nfl', 'Flag football': 'flag', 'Fútbol': 'futbol' };
+const genClass = `cover gen gen-${CAT[d.category] || 'ia'}`;
 ---
 {variant === 'row' ? (
   <a class="prow" href={href}><b>{d.category}</b><span>{d.title}</span><small>{mins} min</small></a>
 ) : variant === 'featured' ? (
   <a class="featured" href={href} data-category={d.category}>
-    <div class="cover">{d.cover && <img src={d.cover} alt="" />}</div>
+    {d.cover ? <div class="cover"><img src={d.cover} alt="" /></div> : <div class={genClass}><span class="gen-tag">{d.category}</span><span class="gen-big">{GEN[d.category] || d.category}</span></div>}
     <div class="featured-body">
       <span class="pill pill-blue">Destacado</span>
       <span class="kicker" style="font-size:13px">{d.category} · {mins} min</span>
@@ -20,7 +24,7 @@ const mins = readingTime(post.body);
   </a>
 ) : (
   <a class="postc" href={href} data-category={d.category}>
-    <div class="cover">{d.cover && <img src={d.cover} alt="" loading="lazy" />}</div>
+    {d.cover ? <div class="cover"><img src={d.cover} alt="" loading="lazy" /></div> : <div class={genClass}><span class="gen-tag">{d.category}</span><span class="gen-big">{GEN[d.category] || d.category}</span></div>}
     <span class="meta">{d.category} · {mins} min</span>
     <h3>{d.title}</h3>
     {d.summary && <p>{d.summary}</p>}
