@@ -4,6 +4,7 @@ summary: "Estudié un año en la Universidad de Houston. Lo que hice bien, lo qu
 category: Vida
 tags: [inglés, estudios, viajes, experiencias]
 date: 2018-05-09
+cover: /images/keep-calm-learn-english.webp
 featured: false
 draft: false
 ---
@@ -11,6 +12,10 @@ draft: false
 Muchas personas hemos tenido la oportunidad de viajar a Estados Unidos a un curso o programa de idiomas para aprender o perfeccionar el inglés, sin embargo no todos lo hemos aprovechado al máximo.
 
 En lo personal, gracias a Dios y a mis padres, tuve la oportunidad de estudiar en el Language & Culture Center de la Universidad de Houston (UH-LCC) de 1997 a 1998 y, haciendo un análisis de lo que hice bien y mal en aquella época, creo conveniente compartir un poco de las experiencias para que, aquellos que tienen planeado estudiar en EEUU o tal vez vayan a mandar a uno de sus hijos a un programa similar, tomen lo que crean conveniente de mi experiencia.
+
+<img src="/images/houston-companeros.webp" alt="Grupo de compañeros de distintos países sentados y de pie en un jardín de la universidad" style="max-width:520px;width:100%;border-radius:16px;display:block;margin:28px 0 8px" />
+
+*Mis compañeros de aquella época.*
 
 ## Lo que considero que hice bien
 

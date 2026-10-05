@@ -25,6 +25,7 @@ content:
       - { name: tags, label: Etiquetas, type: string, list: true }
       - { name: date, label: Fecha, type: date, required: true }
       - { name: cover, label: Imagen de portada, type: image, description: "WebP, 1600 px de ancho máximo" }
+      - { name: cover_position, label: Encuadre de la portada, type: string, description: "Opcional. Ej. 50% 80% (horizontal vertical) para mover el recorte" }
       - { name: featured, label: Destacado, type: boolean, default: false }
       - { name: draft, label: Borrador (no se publica), type: boolean, default: true }
       - { name: body, label: Contenido, type: rich-text }

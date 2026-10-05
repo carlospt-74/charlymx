@@ -4,6 +4,8 @@ summary: "Resumen de mi conferencia en la ExpoPYME 2023: para qué sirve la IA e
 category: IA
 tags: [inteligencia artificial, PYMEs, conferencia, CAINTRA]
 date: 2023-08-29
+cover: /images/expo-pyme-2023.webp
+cover_position: 50% 85%
 featured: false
 draft: false
 ---

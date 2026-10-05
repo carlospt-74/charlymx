@@ -13,7 +13,7 @@ const genClass = `cover gen gen-${CAT[d.category] || 'ia'}`;
   <a class="prow" href={href}><b>{d.category}</b><span>{d.title}</span><small>{mins} min</small></a>
 ) : variant === 'featured' ? (
   <a class="featured" href={href} data-category={d.category}>
-    {d.cover ? <div class="cover"><img src={d.cover} alt="" /></div> : <div class={genClass}><span class="gen-tag">{d.category}</span><span class="gen-big">{GEN[d.category] || d.category}</span></div>}
+    {d.cover ? <div class="cover"><img src={d.cover} alt="" style={d.cover_position ? `object-position:${d.cover_position}` : undefined} /></div> : <div class={genClass}><span class="gen-tag">{d.category}</span><span class="gen-big">{GEN[d.category] || d.category}</span></div>}
     <div class="featured-body">
       <span class="pill pill-blue">Destacado</span>
       <span class="kicker" style="font-size:13px">{d.category} · {mins} min</span>
@@ -24,7 +24,7 @@ const genClass = `cover gen gen-${CAT[d.category] || 'ia'}`;
   </a>
 ) : (
   <a class="postc" href={href} data-category={d.category}>
-    {d.cover ? <div class="cover"><img src={d.cover} alt="" loading="lazy" /></div> : <div class={genClass}><span class="gen-tag">{d.category}</span><span class="gen-big">{GEN[d.category] || d.category}</span></div>}
+    {d.cover ? <div class="cover"><img src={d.cover} alt="" loading="lazy" style={d.cover_position ? `object-position:${d.cover_position}` : undefined} /></div> : <div class={genClass}><span class="gen-tag">{d.category}</span><span class="gen-big">{GEN[d.category] || d.category}</span></div>}
     <span class="meta">{d.category} · {mins} min</span>
     <h3>{d.title}</h3>
     {d.summary && <p>{d.summary}</p>}

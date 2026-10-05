@@ -4,6 +4,7 @@ summary: "\"Free\" viene de libre, no de gratis. Seis recomendaciones para elegi
 category: Tecnología
 tags: [software libre, tecnología, recomendaciones]
 date: 2018-04-19
+cover: /images/free-software-tacos.webp
 featured: false
 draft: false
 ---
