@@ -48,6 +48,7 @@ p{margin:0;text-wrap:pretty}
 .chip{padding:9px 16px;border-radius:999px;font:600 14px var(--fb);background:#fff;border:1px solid rgba(20,23,31,.12);color:var(--ink);cursor:pointer}
 .chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
 .socials{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.socials.icons a{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border-radius:10px}.socials.icons a:hover{color:var(--blue);border-color:var(--blue)}
 .socials a{padding:7px 12px;border-radius:8px;background:#fff;border:1px solid var(--line);color:var(--ink);font:500 13px var(--fb)}
 
 /* hero */
