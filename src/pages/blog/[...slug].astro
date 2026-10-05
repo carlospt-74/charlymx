@@ -25,7 +25,7 @@ const share = [
       <a class="kicker" href="/blog/">← Blog · {d.category}</a>
       <h1>{d.title}</h1>
       {d.summary && <p class="sub">{d.summary}</p>}
-      <div class="byline"><img src="/images/dominio-kefas.png" alt="" /><strong>Charly</strong><span>· {fmtDate(d.date)} · {readingTime(post.body)} min de lectura</span></div>
+      <div class="byline"><img src="/images/dominio-kefas.webp" alt="" /><strong>Charly</strong><span>· {fmtDate(d.date)} · {readingTime(post.body)} min de lectura</span></div>
     </header>
     {d.cover && <div class="article-cover"><img src={d.cover} alt="" /></div>}
     <article class="prose"><Content /></article>

@@ -1,12 +1,12 @@
 {
   "headline": "Hola, soy Charly.",
   "bio": "<p>Soy regio, vivo en Monterrey y llevo 28 años trabajando en tecnología. Me encanta ordenar las cosas para que funcionen mejor, y eso se me nota hasta fuera de la oficina.</p><p>Los fines de semana me encuentras en la cancha con el #14, viendo a mis Broncos o buscando la siguiente aventura. Este sitio es mi espacio para compartir lo que hago y lo que pienso.</p>",
-  "photos": ["/images/rappel.png", "/images/dominio-kefas.png"],
+  "photos": ["/images/rappel.webp", "/images/dominio-kefas.webp"],
   "passions": [
-    { "title": "Flag football", "text": "Juego con el #14 y hemos levantado algunos trofeos.", "image": "/images/flag-football.png", "position": "0% 30%", "big": true },
-    { "title": "Aventura", "text": "Rappel, cañones y todo lo que tenga altura.", "image": "/images/rappel.png", "position": "50% 25%", "big": false },
+    { "title": "Flag football", "text": "Juego con el #14 y hemos levantado algunos trofeos.", "image": "/images/flag-football.webp", "position": "0% 30%", "big": true },
+    { "title": "Aventura", "text": "Rappel, cañones y todo lo que tenga altura.", "image": "/images/rappel.webp", "position": "50% 25%", "big": false },
     { "title": "NFL y soccer", "text": "Fan de los Broncos de Denver, y del buen fútbol.", "image": "", "position": "", "big": false },
-    { "title": "Dominó", "text": "Campeones invictos en pareja, 2do Torneo de Dominó Kefas 2026.", "image": "/images/dominio-kefas.png", "position": "75% 30%", "big": true },
+    { "title": "Dominó", "text": "Campeones invictos en pareja, 2do Torneo de Dominó Kefas 2026.", "image": "/images/dominio-kefas.webp", "position": "75% 30%", "big": true },
     { "title": "Fe", "text": "Me gusta estudiar y platicar sobre el Catecismo de la Iglesia Católica.", "image": "", "position": "", "big": false },
     { "title": "IA y tecnología", "text": "Siempre probando lo nuevo y pensando cómo usarlo para bien.", "image": "", "position": "", "big": false }
   ]
