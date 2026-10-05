@@ -5,6 +5,12 @@ import data from '../data/sobre-mi.json';
 const [back, front] = [data.photos?.[0], data.photos?.[1] ?? data.photos?.[0]];
 const name = 'Charly';
 const parts = data.headline.includes(name) ? data.headline.split(name) : null;
+// La biografía llega del CMS como texto con líneas en blanco entre párrafos.
+// Si todavía trae HTML (<p>), se respeta tal cual.
+const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const bioHtml = /<p[\s>]/i.test(data.bio)
+  ? data.bio
+  : data.bio.trim().split(/\n{2,}/).map((para) => `<p>${esc(para.trim()).replace(/\n/g, '<br>')}</p>`).join('');
 ---
 <Base title="Sobre mí" active="Sobre mí" description="Quién es Charly: tecnología, flag football, aventura, dominó y fe.">
   <div class="wrap">
@@ -12,7 +18,7 @@ const parts = data.headline.includes(name) ? data.headline.split(name) : null;
       <div class="about-text">
         <span class="kicker">Sobre mí</span>
         <h1>{parts ? <>{parts[0]}<span class="hl">{name}</span>{parts.slice(1).join(name)}</> : data.headline}</h1>
-        <div class="bio" set:html={data.bio} />
+        <div class="bio" set:html={bioHtml} />
         <div><WhatsAppButton /></div>
       </div>
       {front && (

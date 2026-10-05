@@ -79,7 +79,7 @@ content:
     format: json
     fields:
       - { name: headline, label: Titular, type: string }
-      - { name: bio, label: Biografía, type: rich-text }
+      - { name: bio, label: Biografía, type: text, description: "Separa los párrafos con una línea en blanco" }
       - { name: photos, label: Fotos del encabezado, type: image, list: { max: 2 } }
       - name: passions
         label: Lo que me mueve
