@@ -58,7 +58,8 @@
       "accent": "#d62828",
       "pattern": "diagonal",
       "slug": "tocho",
-      "url": ""
+      "url": "",
+      "featured": true
     }
   ]
 }

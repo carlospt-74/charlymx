@@ -27,6 +27,8 @@ const hl = inicio.highlight && inicio.headline.includes(inicio.highlight) ? inic
     </section>
   </div>
 
+  {inicio.show_sports !== false && <div class="wrap featured-wrap"><MyTeams featured={true} /></div>}
+
   <section class="band section">
     <div class="wrap">
       <div class="sec-head"><h2>Mis proyectos</h2><a class="more" href="/proyectos/">Ver todos →</a></div>

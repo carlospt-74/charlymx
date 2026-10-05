@@ -1,11 +1,12 @@
 ---
 import { getTeams } from '../lib/teams';
-const teams = getTeams();
+const { featured = false } = Astro.props;
+const teams = getTeams().filter((t) => t.featured === featured);
 ---
 {teams.length > 0 && (
-<section class="teams">
-  <div class="sec-head"><h2>Mis equipos</h2><span class="sub-note">Se actualiza solo · hora de Monterrey</span></div>
-  <div class="teams-grid">
+<section class={`teams${featured ? ' teams-featured' : ''}`}>
+  <div class="sec-head"><h2>{featured ? 'En la cancha' : 'Mis equipos'}</h2><span class="sub-note">Se actualiza solo · hora de Monterrey</span></div>
+  <div class={`teams-grid${featured && teams.length === 1 ? ' solo' : ''}`}>
     {teams.map((t) => (
       <a class="tcard" href={t.href} target={t.external ? '_blank' : undefined} rel={t.external ? 'noopener' : undefined} {...(t.live ? { 'data-tcard': '' } : {})} data-soccer={t.soccer ? '1' : ''} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name} data-provider={t.provider} data-sport={t.sportId} data-leagueid={t.leagueId}
          style={`--tc-bg:${t.bg};--tc-accent:${t.accent};--tc-accent-fg:${t.accentFg};--tc-sub:${t.sub};--tc-link:${t.link};--tc-strip:${t.strip}`}>

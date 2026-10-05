@@ -119,6 +119,7 @@ content:
             type: select
             options: { values: [rayas, diagonal, liso] }
           - { name: url, label: Enlace oficial (opcional), type: string, description: "Solo para ligas sin datos en vivo; hoy ninguna lo necesita" }
+          - { name: featured, label: Destacar en una sección propia arriba (entre la portada y Mis proyectos), type: boolean }
           - { name: slug, label: Dirección de su página, type: string, required: true, description: "Ej. liga-mx → charlymx.com/liga-mx/" }
 
   - name: ajustes

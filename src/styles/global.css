@@ -178,6 +178,7 @@ p{margin:0;text-wrap:pretty}
 
 /* mis equipos (inicio) */
 .teams{margin:0 0 72px}
+.teams-featured{margin:0}.featured-wrap:not(:empty){padding-bottom:64px}.teams-grid.solo{grid-template-columns:1fr}
 .sub-note{font-size:14px;color:var(--muted)}
 .teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .tcard{border-radius:26px;overflow:hidden;background:var(--tc-bg);color:#fff;display:flex;flex-direction:column;transition:transform .2s}

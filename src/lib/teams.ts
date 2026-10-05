@@ -58,7 +58,7 @@ const onColor = (hex: string) => (lum(hex) > 0.45 ? '#14171f' : '#ffffff');
 export interface Team {
   key: string; league: string; name: string; abbr: string; espn: string; crest: string; slug: string; href: string;
   path: string; soccer: boolean; cut: number; tableTitle: string; tableNote: string; calUrl: string;
-  live: boolean; maxResults: number; statLabels: string[]; external: boolean;
+  live: boolean; maxResults: number; statLabels: string[]; external: boolean; featured: boolean;
   provider: string; sportId: number; leagueId: number;
   bg: string; accent: string; accentFg: string; sub: string; link: string; strip: string; pattern: string;
 }
@@ -81,7 +81,7 @@ export function getTeams(): Team[] {
       return {
         key: `${slug}-${i}`, league: t.league, name: t.name, abbr: (t.abbr || '').toUpperCase(),
         espn: (t.espn_id || (L.soccer || L.provider ? '' : t.abbr) || '').toString().toLowerCase(),
-        crest: t.crest || '', slug, href: L.live ? `/${slug}/` : (t.url || L.calUrl), external: !L.live,
+        crest: t.crest || '', slug, href: L.live ? `/${slug}/` : (t.url || L.calUrl), external: !L.live, featured: t.featured === true,
         path: L.path, soccer: L.soccer, cut: L.cut, tableTitle: L.tableTitle, tableNote: L.tableNote, calUrl: L.calUrl,
         live: L.live, maxResults: L.maxResults, statLabels: L.statLabels,
         provider: L.provider || 'espn', sportId: L.sportId || 0, leagueId: L.leagueId || 0,
