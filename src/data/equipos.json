@@ -65,6 +65,32 @@
       "url": "",
       "featured": true,
       "visible": true
+    },
+    {
+      "league": "NBA",
+      "name": "Lakers",
+      "abbr": "LAL",
+      "espn_id": "lal",
+      "crest": "",
+      "color": "#552583",
+      "accent": "#fdb927",
+      "pattern": "diagonal",
+      "slug": "nba",
+      "url": "",
+      "visible": true
+    },
+    {
+      "league": "La Liga",
+      "name": "Barcelona",
+      "abbr": "BAR",
+      "espn_id": "",
+      "crest": "",
+      "color": "#004d98",
+      "accent": "#a50044",
+      "pattern": "rayas",
+      "slug": "la-liga",
+      "url": "",
+      "visible": true
     }
   ]
 }
