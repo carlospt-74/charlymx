@@ -244,7 +244,8 @@ export async function sportweyTeam(tournamentId: string, name: string) {
   // la API numera por semana del torneo (5 a 10); la jornada cuenta desde la primera semana con partidos (1 a 6)
   const weeks = [...new Set(all.map((x) => Number(x.g.week)).filter(Boolean))].sort((p, q) => p - q);
   const jornada = (w: any) => (weeks.indexOf(Number(w)) >= 0 ? weeks.indexOf(Number(w)) + 1 : undefined);
-  const mine = (n: string) => plain(n).includes(key);
+  // el nombre de la tarjeta puede ser más largo que el de Sportwey (p. ej. "Búfalos Flag" vs "Bufalos"): se acepta en cualquier sentido
+  const mine = (n: string) => { const a = plain(n); return !!a && (a.includes(key) || key.includes(a)); };
   const games: Game[] = all.filter((x) => mine(x.g.local_name) || mine(x.g.visit_name)).map((x) => {
     const home = mine(x.g.local_name);
     const us = home ? x.a : x.b, them = home ? x.b : x.a;
