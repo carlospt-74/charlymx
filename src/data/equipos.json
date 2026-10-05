@@ -37,16 +37,16 @@
       "url": ""
     },
     {
-      "league": "LMB",
-      "name": "Sultanes",
-      "abbr": "SUL",
-      "espn_id": "562",
+      "league": "LMP",
+      "name": "Naranjeros",
+      "abbr": "HER",
+      "espn_id": "",
       "crest": "",
-      "color": "#0c1f3f",
-      "accent": "#b4b7c0",
-      "pattern": "liso",
-      "slug": "lmb",
-      "url": "https://www.sultanes.com.mx/"
+      "color": "#111111",
+      "accent": "#ff7a00",
+      "pattern": "diagonal",
+      "slug": "lmp",
+      "url": "https://www.naranjeros.com.mx/"
     }
   ]
 }

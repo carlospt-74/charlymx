@@ -49,7 +49,7 @@ export async function resolveTeam(path: string, espn: string, abbr: string, name
   const d = await getJSON(`${SITE}/${path}/teams`);
   const list = d.sports?.[0]?.leagues?.[0]?.teams?.map((x: any) => x.team) || [];
   const norm = (s = '') => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const hit = list.find((t: any) => norm(t.abbreviation) === norm(abbr)) || list.find((t: any) => [t.shortDisplayName, t.displayName, t.name, t.nickname].some((n: string) => norm(n).includes(norm(name))));
+  const hit = list.find((t: any) => [t.shortDisplayName, t.displayName, t.name, t.nickname].some((n: string) => n && norm(n).includes(norm(name)))) || list.find((t: any) => t.abbreviation && norm(t.abbreviation) === norm(abbr));
   if (!hit) throw new Error('team not found');
   return String(hit.id);
 }
