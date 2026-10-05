@@ -101,7 +101,10 @@ content:
       - name: teams
         label: Equipos
         type: object
-        list: true
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{fields.name} · {fields.league}"
         fields:
           - { name: visible, label: Mostrar en el sitio (apágalo fuera de temporada y enciéndelo cuando regrese), type: boolean, default: true }
           - name: league
