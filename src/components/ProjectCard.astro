@@ -1,0 +1,41 @@
+---
+import { LIVE } from '../lib/constants';
+const { p, big = false } = Astro.props;
+const d = p.data;
+const live = LIVE.includes(d.status);
+const isLogo = d.image?.endsWith('.svg');
+const host = d.url ? d.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : '';
+const Tag = d.url && !big ? 'a' : 'div';
+---
+{big ? (
+  <article class="pbig" data-status={live ? 'live' : 'lab'}>
+    <div class:list={['pcard-img', isLogo && 'logo']} style={d.image_bg ? `background:${d.image_bg}` : undefined}>
+      {d.image && <img src={d.image} alt={d.name} />}
+    </div>
+    <div class="pbig-body">
+      <span class:list={['pill', live ? 'pill-live' : 'pill-lab']}>{d.status}</span>
+      <h2>{d.name}</h2>
+      <p>{d.description}</p>
+      {d.url && (
+        <div class="btns" style="margin-top:8px">
+          <a class="btn btn-blue" href={d.url} target="_blank" rel="noopener">Visitar ↗</a>
+          <a class="btn btn-line" href={d.url} target="_blank" rel="noopener">{host}</a>
+        </div>
+      )}
+    </div>
+  </article>
+) : (
+  <Tag class:list={['pcard', !live && !d.image && 'lab']} href={d.url || undefined} target={d.url ? '_blank' : undefined} rel={d.url ? 'noopener' : undefined} data-status={live ? 'live' : 'lab'}>
+    {d.image && (
+      <div class:list={['pcard-img', isLogo && 'logo']} style={d.image_bg ? `background:${d.image_bg}` : undefined}>
+        <img src={d.image} alt={d.name} loading="lazy" />
+      </div>
+    )}
+    <div class="pcard-body">
+      <span class:list={['pill', live ? 'pill-live' : 'pill-lab']}>{live ? d.status : 'En el laboratorio'}</span>
+      <h3>{d.name}</h3>
+      <p>{d.description}</p>
+      {host && <span class="url">{host} ↗</span>}
+    </div>
+  </Tag>
+)}

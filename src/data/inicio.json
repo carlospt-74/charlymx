@@ -1,0 +1,13 @@
+{
+  "tag": "Charly · Monterrey, NL",
+  "headline": "Aquí junto mis proyectos, ideas y pasiones.",
+  "highlight": "proyectos",
+  "intro": "Llevo 28 años en tecnología. En mis ratos libres construyo cosas como Buenas Noticias y Assista, juego flag football y escribo sobre IA, deportes y fe.",
+  "photos": [
+    { "image": "/images/flag-football.png", "position": "0% 50%", "title": "#14", "caption": "Campeón de flag football" },
+    { "image": "/images/rappel.png", "position": "50% 30%", "title": "Aventura", "caption": "Rappel y cañonismo" },
+    { "image": "/images/buenas-noticias.png", "position": "78% 50%", "title": "Siempre positivo", "caption": "Creador de Buenas Noticias" },
+    { "image": "/images/dominio-kefas.png", "position": "75% 30%", "title": "Campeones invictos", "caption": "En pareja · 2do Torneo de Dominó Kefas 2026" }
+  ],
+  "show_nfl": true
+}

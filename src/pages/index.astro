@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import PhotoDeck from '../components/PhotoDeck.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostCard from '../components/PostCard.astro';
+import Broncos from '../components/Broncos.astro';
+import inicio from '../data/inicio.json';
+import { getPosts, getProjects } from '../lib/site';
+
+const projects = (await getProjects()).filter((p) => p.data.featured).slice(0, 3);
+const posts = (await getPosts()).slice(0, 3);
+const hl = inicio.highlight && inicio.headline.includes(inicio.highlight) ? inicio.headline.split(inicio.highlight) : null;
+---
+<Base active="Inicio">
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-text">
+        {inicio.tag && <span class="tag">{inicio.tag}</span>}
+        <h1>{hl ? <>{hl[0]}<span class="hl">{inicio.highlight}</span>{hl.slice(1).join(inicio.highlight)}</> : inicio.headline}</h1>
+        <p class="lead" style="max-width:500px">{inicio.intro}</p>
+        <div class="btns">
+          <a href="/proyectos/" class="btn btn-blue">Ver proyectos →</a>
+          <a href="/blog/" class="btn btn-line">Leer el blog</a>
+        </div>
+      </div>
+      <PhotoDeck photos={inicio.photos} />
+    </section>
+  </div>
+
+  <section class="band section">
+    <div class="wrap">
+      <div class="sec-head"><h2>Mis proyectos</h2><a class="more" href="/proyectos/">Ver todos →</a></div>
+      <div class="grid3">{projects.map((p) => <ProjectCard p={p} />)}</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap blog-split">
+      <div>
+        <h2 style="font-size:40px;margin-bottom:12px">Del blog</h2>
+        <p class="lead" style="font-size:17px">Mi fe, deportes, tecnología y lo que se me ocurra.</p>
+      </div>
+      {posts.length ? (
+        <div>{posts.map((post) => <PostCard post={post} variant="row" />)}</div>
+      ) : (
+        <div class="empty"><h3>Muy pronto, las primeras entradas</h3><p>Estoy preparando los primeros artículos.</p></div>
+      )}
+    </div>
+  </section>
+
+  {inicio.show_nfl && <div class="wrap"><Broncos /></div>}
+</Base>

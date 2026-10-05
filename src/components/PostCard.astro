@@ -1,0 +1,29 @@
+---
+import { fmtDate, readingTime } from '../lib/site';
+const { post, variant = 'card' } = Astro.props;
+const d = post.data;
+const href = `/blog/${post.id}/`;
+const mins = readingTime(post.body);
+---
+{variant === 'row' ? (
+  <a class="prow" href={href}><b>{d.category}</b><span>{d.title}</span><small>{mins} min</small></a>
+) : variant === 'featured' ? (
+  <a class="featured" href={href} data-category={d.category}>
+    <div class="cover">{d.cover && <img src={d.cover} alt="" />}</div>
+    <div class="featured-body">
+      <span class="pill pill-blue">Destacado</span>
+      <span class="kicker" style="font-size:13px">{d.category} · {mins} min</span>
+      <h2>{d.title}</h2>
+      {d.summary && <p style="color:var(--muted);font-size:17px">{d.summary}</p>}
+      <span class="more">Leer artículo →</span>
+    </div>
+  </a>
+) : (
+  <a class="postc" href={href} data-category={d.category}>
+    <div class="cover">{d.cover && <img src={d.cover} alt="" loading="lazy" />}</div>
+    <span class="meta">{d.category} · {mins} min</span>
+    <h3>{d.title}</h3>
+    {d.summary && <p>{d.summary}</p>}
+    <time datetime={d.date.toISOString()}>{fmtDate(d.date)}</time>
+  </a>
+)}

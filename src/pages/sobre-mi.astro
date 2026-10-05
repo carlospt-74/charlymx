@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import data from '../data/sobre-mi.json';
+const [back, front] = [data.photos?.[0], data.photos?.[1] ?? data.photos?.[0]];
+const name = 'Charly';
+const parts = data.headline.includes(name) ? data.headline.split(name) : null;
+---
+<Base title="Sobre mí" active="Sobre mí" description="Quién es Charly: tecnología, flag football, aventura, dominó y fe.">
+  <div class="wrap">
+    <section class="about-hero">
+      <div class="about-text">
+        <span class="kicker">Sobre mí</span>
+        <h1>{parts ? <>{parts[0]}<span class="hl">{name}</span>{parts.slice(1).join(name)}</> : data.headline}</h1>
+        <div class="bio" set:html={data.bio} />
+        <div><WhatsAppButton /></div>
+      </div>
+      {front && (
+        <div class="duo">
+          {back && back !== front && <div class="deck-card" style="transform:rotate(-4deg) translate(-20px,10px);z-index:1"><img src={back} alt="" /></div>}
+          <div class="deck-card" style="transform:rotate(3deg);z-index:2"><img src={front} alt="Charly" style="object-position:75% 30%" /></div>
+        </div>
+      )}
+    </section>
+  </div>
+  <section class="band section">
+    <div class="wrap">
+      <div class="sec-head"><h2>Lo que me mueve</h2></div>
+      <div class="passions">
+        {data.passions.map((p) => (
+          <div class:list={['passion', p.big && 'big']}>
+            <div class="ph">{p.image ? <img src={p.image} alt="" loading="lazy" style={`object-position:${p.position || '50% 50%'}`} /> : p.title.slice(0, 1)}</div>
+            <div><h3>{p.title}</h3><p>{p.text}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <div class="wrap">
+    <div class="cta">
+      <div><h2>¿Quieres platicar?</h2><p>Mándame un mensaje, siempre contesto.</p></div>
+      <WhatsAppButton />
+    </div>
+  </div>
+</Base>

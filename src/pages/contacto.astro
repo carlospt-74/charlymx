@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import ajustes from '../data/ajustes.json';
+import { socials } from '../lib/site';
+---
+<Base title="Contacto" active="Contacto" description="Escríbele a Charly por WhatsApp o en redes.">
+  <div class="wrap">
+    <section class="contact">
+      <div class="contact-text">
+        <span class="kicker">Contacto</span>
+        <h1>¿Platicamos?</h1>
+        <p class="lead" style="max-width:480px">La forma más rápida de encontrarme es por WhatsApp. También ando en redes.</p>
+        <div><WhatsAppButton size="lg" /></div>
+        <span style="font-size:15px;color:var(--muted)">{ajustes.whatsapp_display} · Monterrey, Nuevo León, México</span>
+      </div>
+      <div class="soc-list">
+        {socials().map((s) => <a href={s.url} target="_blank" rel="noopener"><span><b>{s.name}</b><small>{s.handle}</small></span><i>↗</i></a>)}
+      </div>
+    </section>
+  </div>
+</Base>

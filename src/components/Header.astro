@@ -1,0 +1,36 @@
+---
+import { socials, waLink } from '../lib/site';
+const { active } = Astro.props;
+const links = [
+  { href: '/', label: 'Inicio' },
+  { href: '/proyectos/', label: 'Proyectos' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/sobre-mi/', label: 'Sobre mí' },
+  { href: '/contacto/', label: 'Contacto' },
+];
+---
+<header class="site-header">
+  <div class="wrap">
+    <a href="/" class="logo">charly<span>.</span></a>
+    <nav class="nav" aria-label="Principal">
+      {links.map((l) => <a href={l.href} aria-current={active === l.label ? 'page' : undefined}>{l.label}</a>)}
+    </nav>
+    <a href="/contacto/" class="btn btn-dark header-cta">Escríbeme</a>
+    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false" data-menu-btn><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="mobile-menu" data-menu>
+  <nav aria-label="Menú móvil">
+    {links.map((l) => <a href={l.href} aria-current={active === l.label ? 'page' : undefined}>{l.label}</a>)}
+  </nav>
+  <a href={waLink()} target="_blank" rel="noopener" class="btn btn-wa"><i>W</i>Escríbeme por WhatsApp</a>
+  <div class="socials">{socials().map((s) => <a href={s.url} target="_blank" rel="noopener">{s.name}</a>)}</div>
+</div>
+<script>
+  const btn = document.querySelector('[data-menu-btn]');
+  btn?.addEventListener('click', () => {
+    const open = document.body.classList.toggle('menu-open');
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  });
+</script>

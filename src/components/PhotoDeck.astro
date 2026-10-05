@@ -1,0 +1,48 @@
+---
+interface Photo { image: string; position?: string; title?: string; caption?: string }
+const { photos = [] as Photo[] } = Astro.props;
+const poses = ['translate(0,0) rotate(0deg)', 'translate(26px,10px) rotate(5deg)', 'translate(-22px,14px) rotate(-6deg)', 'translate(34px,22px) rotate(9deg)', 'translate(-30px,20px) rotate(-9deg)', 'translate(12px,26px) rotate(3deg)'];
+const first = photos[0] ?? {};
+---
+<div class="deck" data-deck>
+  {photos.map((p, n) => (
+    <button class="deck-card" data-title={p.title} data-caption={p.caption} aria-label="Siguiente foto" style={`transform:${poses[n % poses.length]};z-index:${photos.length - n}`}>
+      <img src={p.image} alt={p.caption || p.title || 'Foto de Charly'} style={`object-position:${p.position || '50% 50%'}`} loading={n === 0 ? 'eager' : 'lazy'} />
+    </button>
+  ))}
+  {(first.title || first.caption) && (
+    <div class="deck-sticker" aria-live="polite"><b data-t>{first.title}</b><small data-c>{first.caption}</small></div>
+  )}
+  {photos.length > 1 && (
+    <div class="deck-dots">{photos.map((_, n) => <button aria-label={`Foto ${n + 1}`} aria-current={n === 0 ? 'true' : undefined} data-dot={n}></button>)}</div>
+  )}
+</div>
+<script>
+  const deck = document.querySelector<HTMLElement>('[data-deck]');
+  if (deck) {
+    const cards = [...deck.querySelectorAll<HTMLElement>('.deck-card')];
+    const dots = [...deck.querySelectorAll<HTMLElement>('[data-dot]')];
+    const t = deck.querySelector('[data-t]'), c = deck.querySelector('[data-c]');
+    const poses = ['translate(0,0) rotate(0deg)', 'translate(26px,10px) rotate(5deg)', 'translate(-22px,14px) rotate(-6deg)', 'translate(34px,22px) rotate(9deg)', 'translate(-30px,20px) rotate(-9deg)', 'translate(12px,26px) rotate(3deg)'];
+    const N = cards.length;
+    let i = 0, timer: number | undefined;
+    const render = () => {
+      cards.forEach((card, n) => {
+        const k = (n - i + N) % N;
+        card.style.transform = poses[k % poses.length];
+        card.style.zIndex = String(N - k);
+      });
+      dots.forEach((d, n) => (n === i ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
+      if (t) t.textContent = cards[i].dataset.title || '';
+      if (c) c.textContent = cards[i].dataset.caption || '';
+    };
+    const go = (n: number) => { i = (n + N) % N; render(); restart(); };
+    const restart = () => {
+      clearInterval(timer);
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) timer = window.setInterval(() => { i = (i + 1) % N; render(); }, 4000);
+    };
+    cards.forEach((card) => card.addEventListener('click', () => go(i + 1)));
+    dots.forEach((d, n) => d.addEventListener('click', () => go(n)));
+    if (N > 1) restart();
+  }
+</script>

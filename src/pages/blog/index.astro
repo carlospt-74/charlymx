@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts } from '../../lib/site';
+import { CATEGORIES } from '../../lib/constants';
+
+const posts = await getPosts();
+const featured = posts.find((p) => p.data.featured);
+const rest = posts.filter((p) => p !== featured);
+---
+<Base title="Blog" active="Blog" description="Mi fe, deportes, tecnología y lo que se me ocurra.">
+  <div class="wrap">
+    <div style="padding:40px 0 32px;display:flex;flex-direction:column;gap:16px">
+      <span class="kicker">Blog</span>
+      <h1 style="font-size:clamp(40px,6vw,72px);line-height:1;letter-spacing:-.035em">Mi fe, deportes, tecnología y lo que se me ocurra</h1>
+    </div>
+    {posts.length ? (
+      <>
+        <div class="chips" style="margin-bottom:32px" data-filter>
+          <button class="chip" aria-pressed="true" data-f="all">Todos</button>
+          {CATEGORIES.map((c) => <button class="chip" aria-pressed="false" data-f={c}>{c}</button>)}
+        </div>
+        {featured && <PostCard post={featured} variant="featured" />}
+        <div class="posts-grid" style="padding:56px 0 72px">{rest.map((p) => <PostCard post={p} />)}</div>
+        <p class="empty" hidden data-none style="margin-bottom:72px">Todavía no hay artículos en esta categoría.</p>
+      </>
+    ) : (
+      <div class="empty" style="margin-bottom:72px"><h3>Muy pronto, las primeras entradas</h3><p>Estoy preparando los primeros artículos sobre fe, deportes y tecnología.</p></div>
+    )}
+  </div>
+</Base>
+<script>
+  const chips = [...document.querySelectorAll<HTMLElement>('[data-filter] .chip')];
+  const items = [...document.querySelectorAll<HTMLElement>('[data-category]')];
+  const none = document.querySelector<HTMLElement>('[data-none]');
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+    let shown = 0;
+    items.forEach((it) => { const ok = c.dataset.f === 'all' || it.dataset.category === c.dataset.f; it.hidden = !ok; if (ok) shown++; });
+    if (none) none.hidden = shown > 0;
+  }));
+</script>

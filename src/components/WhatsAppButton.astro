@@ -1,0 +1,5 @@
+---
+import { waLink } from '../lib/site';
+const { label = 'Escríbeme por WhatsApp', size } = Astro.props;
+---
+<a href={waLink()} target="_blank" rel="noopener" class:list={['btn', 'btn-wa', size === 'lg' && 'btn-lg']}><i>W</i>{label}</a>

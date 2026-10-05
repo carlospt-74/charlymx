@@ -1,0 +1,10 @@
+---
+import { socials } from '../lib/site';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© {year} Charly · Monterrey, NL</span>
+    <div class="socials">{socials().map((s) => <a href={s.url} target="_blank" rel="noopener">{s.name}</a>)}</div>
+  </div>
+</footer>

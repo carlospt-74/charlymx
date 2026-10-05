@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { render } from 'astro:content';
+import { getPosts, fmtDate, readingTime } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, posts } }));
+}
+const { post, posts } = Astro.props;
+const d = post.data;
+const { Content } = await render(post);
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const related = [...posts.filter((p) => p.id !== post.id && p.data.category === d.category), ...posts.filter((p) => p.id !== post.id && p.data.category !== d.category)].slice(0, 3);
+const share = [
+  { n: 'WhatsApp', u: `https://wa.me/?text=${encodeURIComponent(d.title + ' ' + url)}` },
+  { n: 'Facebook', u: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
+  { n: 'X', u: `https://x.com/intent/post?text=${encodeURIComponent(d.title)}&url=${encodeURIComponent(url)}` },
+];
+---
+<Base title={d.title} description={d.summary ?? undefined} active="Blog" image={d.cover ?? undefined}>
+  <div class="wrap">
+    <header class="article-head">
+      <a class="kicker" href="/blog/">← Blog · {d.category}</a>
+      <h1>{d.title}</h1>
+      {d.summary && <p class="sub">{d.summary}</p>}
+      <div class="byline"><img src="/images/dominio-kefas.png" alt="" /><strong>Charly</strong><span>· {fmtDate(d.date)} · {readingTime(post.body)} min de lectura</span></div>
+    </header>
+    {d.cover && <div class="article-cover"><img src={d.cover} alt="" /></div>}
+    <article class="prose"><Content /></article>
+    <div class="share">
+      <div class="chips">{d.tags.map((t) => <span class="chip">#{t}</span>)}</div>
+      <div class="chips">Compartir {share.map((s) => <a class="chip" href={s.u} target="_blank" rel="noopener">{s.n}</a>)}</div>
+    </div>
+  </div>
+  {related.length > 0 && (
+    <section class="band section">
+      <div class="wrap">
+        <h2 style="font-size:32px;margin-bottom:28px">Sigue leyendo</h2>
+        <div class="posts-grid">{related.map((p) => <PostCard post={p} />)}</div>
+      </div>
+    </section>
+  )}
+</Base>

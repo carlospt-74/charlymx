@@ -1,0 +1,67 @@
+---
+import ajustes from '../data/ajustes.json';
+const team = (ajustes.nfl_team || 'den').toLowerCase();
+---
+<section class="nfl" data-nfl={team} hidden>
+  <div class="nfl-col">
+    <div class="nfl-head">
+      <div class="nfl-team">
+        <div class="nfl-badge" data-abbr>{team.toUpperCase()}</div>
+        <div><h2 data-name>Mis Broncos</h2><div class="sub" data-record></div></div>
+      </div>
+      <span class="nfl-live">Se actualiza solo</span>
+    </div>
+    <div class="nfl-last" data-last></div>
+    <div data-results></div>
+  </div>
+  <div class="nfl-col" style="gap:10px">
+    <div class="nfl-head" style="margin-bottom:6px"><h2 style="font-size:20px">Próximos partidos</h2><span class="sub">Hora de Monterrey</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px" data-next></div>
+    <a href={`https://www.espn.com.mx/futbol-americano/nfl/equipo/calendario/_/nombre/${team}`} target="_blank" rel="noopener" style="margin-top:6px">Ver calendario completo →</a>
+  </div>
+</section>
+<script>
+  const el = document.querySelector<HTMLElement>('[data-nfl]');
+  const TZ = 'America/Monterrey';
+  const score = (s: any) => (s && typeof s === 'object' ? s.displayValue : s) ?? '';
+  const day = (d: Date) => new Intl.DateTimeFormat('es-MX', { timeZone: TZ, weekday: 'short', day: 'numeric', month: 'short' }).format(d).replace('.', '').replace(/^./, (c) => c.toUpperCase());
+  const short = (d: Date) => new Intl.DateTimeFormat('es-MX', { timeZone: TZ, day: 'numeric', month: 'short' }).format(d).replace('.', '');
+  const hour = (d: Date) => new Intl.DateTimeFormat('es-MX', { timeZone: TZ, hour: 'numeric', minute: '2-digit', hour12: true }).format(d).toUpperCase().replace(/\s?P\.?\s?M\.?/, ' PM').replace(/\s?A\.?\s?M\.?/, ' AM');
+  const standing = (s = '') => s.replace(/(\d+)(st|nd|rd|th) in AFC West/, '$1° AFC Oeste').replace(/(\d+)(st|nd|rd|th) in (.*)/, '$1° $3');
+
+  async function load(team: string) {
+    const r = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${team}/schedule`);
+    if (!r.ok) throw new Error('nfl');
+    const data = await r.json();
+    const t = data.team || {};
+    const games = (data.events || []).map((e: any) => {
+      const comp = e.competitions?.[0] || {};
+      const us = comp.competitors?.find((c: any) => c.team?.abbreviation?.toLowerCase() === team || c.id === t.id);
+      const them = comp.competitors?.find((c: any) => c !== us);
+      return {
+        date: new Date(e.date), week: e.week?.number, done: comp.status?.type?.completed,
+        home: us?.homeAway === 'home', opp: them?.team?.shortDisplayName || them?.team?.displayName || '',
+        us: score(us?.score), them: score(them?.score), win: us?.winner, tv: comp.broadcasts?.[0]?.media?.shortName || '',
+      };
+    });
+    const past = games.filter((g: any) => g.done);
+    const next = games.filter((g: any) => !g.done).slice(0, 4);
+    const q = (s: string) => el!.querySelector<HTMLElement>(s)!;
+    q('[data-name]').textContent = `Mis ${t.shortDisplayName || t.name || 'Broncos'}`;
+    q('[data-record]').textContent = ['NFL ' + (data.season?.year || ''), t.recordSummary && `Récord ${t.recordSummary}`, standing(t.standingSummary)].filter(Boolean).join(' · ');
+    const last = past[past.length - 1];
+    if (last) {
+      q('[data-last]').innerHTML = `<div class="nfl-cap">Última jornada · Semana ${last.week} · Final</div>
+        <div class="nfl-score"><div class="us"><small>${t.shortDisplayName || 'Broncos'}</small><b>${last.us}</b></div>
+        <em>${last.home ? 'vs' : 'en'} ${last.opp}</em><div class="them"><small>${last.opp}</small><b>${last.them}</b></div></div>`;
+    } else q('[data-last]').remove();
+    q('[data-results]').innerHTML = past.slice(-4, -1).reverse().map((g: any) => {
+      const res = g.win ? ['G', 'g'] : g.us === g.them ? ['E', 'e'] : ['P', 'p'];
+      return `<div class="nfl-row"><span class="wk">S${g.week}</span><span>${g.home ? 'vs' : 'en'} ${g.opp} <span class="d">· ${short(g.date)}</span></span><span class="sc">${g.us}-${g.them}</span><span class="r ${res[1]}">${res[0]}</span></div>`;
+    }).join('');
+    q('[data-next]').innerHTML = next.length ? next.map((g: any) => `<div class="nfl-next"><div><span class="wk">SEM ${g.week}</span><span class="dt">${day(g.date)}</span></div><span class="op">${g.home ? 'vs' : 'en'} ${g.opp}</span><span class="tm">${hour(g.date)}<br>${g.tv}</span></div>`).join('')
+      : '<p class="sub">No hay partidos programados por ahora.</p>';
+    el!.hidden = false;
+  }
+  if (el) load(el.dataset.nfl!).catch(() => el.remove());
+</script>

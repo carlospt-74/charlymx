@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getProjects } from '../lib/site';
+import { LIVE } from '../lib/constants';
+
+const all = await getProjects();
+const live = all.filter((p) => LIVE.includes(p.data.status));
+const lab = all.filter((p) => !LIVE.includes(p.data.status));
+---
+<Base title="Proyectos" active="Proyectos" description="Proyectos de Charly: Buenas Noticias, Assista y más.">
+  <div class="wrap">
+    <div style="padding:40px 0 32px;display:flex;flex-direction:column;gap:16px">
+      <span class="kicker">Proyectos</span>
+      <h1 style="font-size:clamp(40px,6vw,72px);line-height:1;letter-spacing:-.035em">Lo que construyo en mis ratos libres</h1>
+      <p class="lead">Proyectos que ya están en línea e ideas que todavía estoy cocinando.</p>
+    </div>
+    <div class="chips" style="margin-bottom:32px" data-filter>
+      <button class="chip" aria-pressed="true" data-f="all">Todos</button>
+      <button class="chip" aria-pressed="false" data-f="live">En vivo</button>
+      <button class="chip" aria-pressed="false" data-f="lab">En el laboratorio</button>
+    </div>
+    <div class="stack" style="padding-bottom:72px" data-group="live">
+      {live.map((p) => <ProjectCard p={p} big />)}
+    </div>
+  </div>
+  {lab.length > 0 && (
+    <section class="band section" data-group="lab">
+      <div class="wrap">
+        <div class="sec-head"><div><h2>En el laboratorio</h2><p class="lead" style="font-size:17px;margin-top:8px">Ideas de apps móviles en desarrollo.</p></div></div>
+        <div class="grid3">{lab.map((p) => <ProjectCard p={p} />)}</div>
+      </div>
+    </section>
+  )}
+</Base>
+<script>
+  const chips = [...document.querySelectorAll<HTMLElement>('[data-filter] .chip')];
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-group]')];
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+    groups.forEach((g) => (g.hidden = c.dataset.f !== 'all' && g.dataset.group !== c.dataset.f));
+  }));
+</script>
