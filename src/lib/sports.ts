@@ -97,6 +97,9 @@ export const nv = (e: any, ...names: string[]) => Number(stat(e, ...names)?.valu
 export const groupName = (s = '') =>
   s.replace(/AFC West/, 'AFC Oeste').replace(/AFC East/, 'AFC Este').replace(/AFC North/, 'AFC Norte').replace(/AFC South/, 'AFC Sur')
    .replace(/NFC West/, 'NFC Oeste').replace(/NFC East/, 'NFC Este').replace(/NFC North/, 'NFC Norte').replace(/NFC South/, 'NFC Sur')
+   .replace(/Eastern Conference/, 'Conferencia Este').replace(/Western Conference/, 'Conferencia Oeste')
+   .replace(/Atlantic Division/, 'División Atlántico').replace(/Central Division/, 'División Central').replace(/Southeast Division/, 'División Sureste')
+   .replace(/Northwest Division/, 'División Noroeste').replace(/Pacific Division/, 'División Pacífico').replace(/Southwest Division/, 'División Suroeste')
    .replace(/(?:National League|NL) East/, 'LN Este').replace(/(?:National League|NL) Central/, 'LN Central').replace(/(?:National League|NL) West/, 'LN Oeste')
    .replace(/(?:American League|AL) East/, 'LA Este').replace(/(?:American League|AL) Central/, 'LA Central').replace(/(?:American League|AL) West/, 'LA Oeste');
 

@@ -32,7 +32,7 @@ El archivo `src/content/blog/2026-10-05-ejemplo-borrador.md` es un borrador de e
 Paleta "Tinta cálida": negro cálido y fotos con marco crema. La primera vez sigue la preferencia del celular o la computadora. El botón redondo del encabezado lo cambia, y la elección se recuerda. Los colores están en `src/styles/global.css`, en el bloque `html[data-theme=dark]`.
 
 ## Mis equipos (Broncos, Rayados y los que agregues)
-- Se editan en Pages CMS → **Mis equipos**. Cada equipo tiene liga (NFL, Liga MX, MLB, LMB, LMP o Tocho), nombre, abreviatura, ID de ESPN (opcional), escudo, colores, diseño de la franja y dirección de su página.
+- Se editan en Pages CMS → **Mis equipos**. Cada equipo tiene liga (NFL, NBA, MLB, Liga MX, La Liga, LMB, LMP o Tocho). Cada equipo tiene un interruptor "Mostrar en el sitio" para ocultarlo fuera de temporada, nombre, abreviatura, ID de ESPN (opcional), escudo, colores, diseño de la franja y dirección de su página.
 - En el Inicio aparece una tarjeta por equipo, y cada uno tiene su página: `/nfl/` y `/liga-mx/`, o la dirección que le pongas.
 - Si agregas o cambias un equipo, Cloudflare vuelve a publicar el sitio y se crea su página.
 

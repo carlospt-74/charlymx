@@ -10,7 +10,8 @@
       "accent": "#FB4F14",
       "pattern": "diagonal",
       "slug": "nfl",
-      "url": ""
+      "url": "",
+      "visible": true
     },
     {
       "league": "Liga MX",
@@ -22,7 +23,8 @@
       "accent": "#ffffff",
       "pattern": "rayas",
       "slug": "liga-mx",
-      "url": ""
+      "url": "",
+      "visible": true
     },
     {
       "league": "MLB",
@@ -34,7 +36,8 @@
       "accent": "#ffffff",
       "pattern": "diagonal",
       "slug": "mlb",
-      "url": ""
+      "url": "",
+      "visible": true
     },
     {
       "league": "LMB",
@@ -46,7 +49,8 @@
       "accent": "#b4b7c0",
       "pattern": "liso",
       "slug": "lmb",
-      "url": "https://www.sultanes.com.mx/"
+      "url": "https://www.sultanes.com.mx/",
+      "visible": false
     },
     {
       "league": "Tocho",
@@ -59,7 +63,8 @@
       "pattern": "diagonal",
       "slug": "tocho",
       "url": "",
-      "featured": true
+      "featured": true,
+      "visible": true
     }
   ]
 }

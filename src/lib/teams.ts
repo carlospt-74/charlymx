@@ -27,6 +27,16 @@ export const LEAGUES: Record<string, League> = {
     tableNote: 'Los líderes de división y los comodines avanzan a playoffs.', calUrl: 'https://www.espn.com/mlb/standings',
     live: true, maxResults: 10, statLabels: ['Récord', 'División', 'Carreras a favor', 'En contra'],
   },
+  'NBA': {
+    path: 'basketball/nba', soccer: false, cut: 0, tableTitle: 'Tabla de conferencia',
+    tableNote: 'Los 6 mejores de cada conferencia avanzan directo a playoffs; del 7° al 10° juegan el Play-In.', calUrl: 'https://www.espn.com/nba/standings',
+    live: true, maxResults: 10, statLabels: ['Récord', 'División', 'Puntos a favor', 'En contra'],
+  },
+  'La Liga': {
+    path: 'soccer/esp.1', soccer: true, cut: 4, tableTitle: 'Tabla general',
+    tableNote: 'Los primeros 4 clasifican a la Champions League (línea punteada).', calUrl: 'https://www.espn.com/soccer/standings/_/league/esp.1',
+    live: true, maxResults: 0, statLabels: ['Lugar', 'Puntos', 'PJ', 'G-E-P', 'DG'],
+  },
   'LMB': {
     path: '', soccer: false, cut: 0, tableTitle: 'Tabla de posiciones',
     tableNote: 'Los mejores de cada zona avanzan a playoffs.', calUrl: 'https://lmb.com.mx/posiciones',
@@ -67,7 +77,7 @@ export interface Team {
 
 export function getTeams(): Team[] {
   return (equipos.teams || [])
-    .filter((t: any) => t?.name && LEAGUES[t.league])
+    .filter((t: any) => t?.name && LEAGUES[t.league] && t.visible !== false)
     .map((t: any, i: number) => {
       const L = LEAGUES[t.league];
       const bg = t.color || '#0b1f3a';

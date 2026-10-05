@@ -103,11 +103,12 @@ content:
         type: object
         list: true
         fields:
+          - { name: visible, label: Mostrar en el sitio (apágalo fuera de temporada y enciéndelo cuando regrese), type: boolean, default: true }
           - name: league
             label: Liga
             type: select
             required: true
-            options: { values: [NFL, Liga MX, MLB, LMB, LMP, Tocho] }
+            options: { values: [NFL, NBA, MLB, Liga MX, La Liga, LMB, LMP, Tocho] }
           - { name: name, label: Nombre, type: string, required: true, description: "Se lee como Mis {nombre}, ej. Rayados" }
           - { name: abbr, label: Abreviatura, type: string, required: true, description: "Ej. DEN, MTY. Se muestra si no hay escudo y sirve para encontrar al equipo en ESPN" }
           - { name: espn_id, label: ID del equipo (ESPN o MLB), type: string, description: "NFL y MLB: abreviatura en minúsculas (den, atl). Liga MX: número del equipo en ESPN (Rayados = 220). LMB: número del equipo en la API de MLB (Sultanes = 562). LMP: déjalo vacío (se busca por nombre). Tocho (Sportwey): el ID del torneo (el código largo de la dirección app.sportwey.com/tournament/…)" }
