@@ -73,8 +73,8 @@
       "name": " Lakers",
       "abbr": "LAL",
       "espn_id": "lal",
-      "color": "#552583",
-      "accent": "#fdb927",
+      "color": "#fdb927",
+      "accent": "#552583",
       "pattern": "diagonal",
       "featured": false,
       "slug": "nba"
