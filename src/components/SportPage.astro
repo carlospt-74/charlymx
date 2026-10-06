@@ -16,7 +16,7 @@ const statsLabels = t.statLabels;
     </div>
   </section>
 
-  <div class="sgrid">
+  <div class={`sgrid${t.provider === 'sportwey' ? ' sgrid-wide' : ''}`}>
     <div class="scol">
       <div>
         <h2 class="scol-h">Próximos partidos</h2>
@@ -71,11 +71,13 @@ const statsLabels = t.statLabels;
       $('[data-note]').textContent = streak ? `Racha reciente: ${streak}` : '';
     };
     const paintTable = (cols: string[], rows: Row[]) => {
-      $('[data-table]').innerHTML = `<div class="strow head c${cols.length}"><span>#</span><span>Equipo</span>${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
+      const wide = rows.some((r) => r.form);
+      const dots = (r: Row) => `<span class="forma">${(r.form || []).map((f) => `<b class="fd ${f}" title="${f === 'G' ? 'Ganó' : f === 'P' ? 'Perdió' : 'Empató'}"></b>`).join('')}</span>`;
+      $('[data-table]').innerHTML = `<div class="strow head c${cols.length}${wide ? ' wide' : ''}"><span>#</span><span>Equipo</span>${wide ? '<span>Forma</span>' : ''}${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
         rows.map((r, i) => {
           const cut = cutAt && i === cutAt ? ' cut' : '';
           const zone = cutAt && i < cutAt ? ' zone' : '';
-          return `<div class="strow c${cols.length}${r.mine ? ' me' : ''}${cut}${zone}"><span>${i + 1}</span><span>${esc(r.name)}${r.mine ? ' <i>Mi equipo</i>' : ''}</span>${r.cells.map((v) => `<span>${esc(v)}</span>`).join('')}</div>`;
+          return `<div class="strow c${cols.length}${wide ? ' wide' : ''}${r.mine ? ' me' : ''}${cut}${zone}"><span>${i + 1}</span><span>${esc(r.name)}${r.mine ? ' <i>Mi equipo</i>' : ''}</span>${wide ? dots(r) : ''}${r.cells.map((v) => `<span>${esc(v)}</span>`).join('')}</div>`;
         }).join('');
     };
 
@@ -87,7 +89,7 @@ const statsLabels = t.statLabels;
         d.stats.forEach((v, i) => setStat(i, v));
         $('[data-table-title]').textContent = d.groupName;
         if (!d.rows.length) throw new Error('standings');
-        paintTable(provider === 'jolpica' ? ['Vic', 'Pts'] : provider === 'sportwey' ? ['G', 'E', 'P', 'Pts'] : ['G', 'P', '%'], d.rows);
+        paintTable(provider === 'jolpica' ? ['Vic', 'Pts'] : provider === 'sportwey' ? ['Pts', 'G', 'E', 'P', 'PF', 'PC', 'DP'] : ['G', 'P', '%'], d.rows);
         return;
       }
 

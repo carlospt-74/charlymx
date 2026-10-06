@@ -112,7 +112,7 @@ export const esc = (s: any) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&':
 const MLBSTATS = 'https://statsapi.mlb.com/api/v1';
 const ZONES: Record<string, string> = { '222': 'Zona Norte', '223': 'Zona Sur' };
 
-export interface Row { mine: boolean; name: string; cells: string[] }
+export interface Row { mine: boolean; name: string; cells: string[]; form?: string[] }
 
 /** Convierte el calendario de statsapi en la misma lista de partidos que usa ESPN. */
 export function parseMlbSchedule(d: any, teamId: string): Game[] {
@@ -282,7 +282,15 @@ export async function sportweyTeam(tournamentId: string, name: string) {
   // desempate: puntos, % de victorias, enfrentamiento directo y diferencial
   const sorted = [...t.values()].sort((p, q) =>
     pts(q) - pts(p) || pct(q) - pct(p) || (q.beat.get(p.n) || 0) - (p.beat.get(q.n) || 0) || (q.pf - q.pa) - (p.pf - p.pa));
-  const rows: Row[] = sorted.map((r) => ({ mine: mine(r.n), name: r.n, cells: [String(r.w), String(r.e), String(r.l), String(pts(r))] }));
+  // forma: últimos 5 resultados de cada equipo, del más viejo al más reciente
+  const formOf = (n: string) => all.filter((x) => x.played && (x.g.local_name === n || x.g.visit_name === n))
+    .sort((p, q) => p.date!.getTime() - q.date!.getTime()).slice(-5)
+    .map((x) => { const f = x.g.local_name === n ? x.a : x.b, a = x.g.local_name === n ? x.b : x.a; return f > a ? 'G' : f < a ? 'P' : 'E'; });
+  const sgn = (n: number) => (n > 0 ? '+' : '') + n;
+  const rows: Row[] = sorted.map((r) => ({
+    mine: mine(r.n), name: r.n, form: formOf(r.n),
+    cells: [String(pts(r)), String(r.w), String(r.e), String(r.l), String(r.pf), String(r.pa), sgn(r.pf - r.pa)],
+  }));
   const idx = sorted.findIndex((r) => mine(r.n));
   const me = sorted[idx];
   const stats = me ? [`${me.w}-${me.l}${me.e ? '-' + me.e : ''}`, `${idx + 1}° lugar`, String(me.pf), String(me.pa)] : ['', '', '', ''];
