@@ -225,8 +225,9 @@ p{margin:0;text-wrap:pretty}
 .sstats b{display:block;font:800 26px var(--fh)}
 .shero-note{font-size:14px;font-weight:500}
 .sgrid{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;padding:48px 0 72px}
-.sgrid-wide{grid-template-columns:1fr}.sgrid-wide .scol{display:contents}
-.sgrid-wide .scol>div:first-child{order:1}.sgrid-wide>div:last-child{order:2}.sgrid-wide .scol>div:nth-child(2){order:3}
+.sgrid-wide{grid-template-columns:1fr}.sgrid-wide .scol{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;order:1}
+.sgrid-wide>div:last-child{order:2}
+.sgrid-wide .snext{grid-template-columns:max-content max-content max-content;justify-content:start;gap:26px;max-width:560px;width:fit-content}.sgrid-wide .snext b{white-space:nowrap}.sgrid-wide .snext em{text-align:left;font:700 15px var(--fb);opacity:1}
 .strow.wide span:nth-child(4){font-weight:700;color:var(--ink)}.strow.wide span:last-child{font-weight:500;color:var(--muted)}
 .strow.wide{grid-template-columns:30px minmax(80px,1fr) 92px 38px 34px 38px 46px 46px 52px 46px}
 .strow.wide span:nth-child(3){text-align:left}
@@ -322,6 +323,7 @@ html[data-theme=dark] .mobile-menu nav a{color:var(--ink)}html[data-theme=dark] 
   .teams{margin-bottom:44px}.teams-grid{grid-template-columns:1fr;gap:16px}.tcard-body{padding:22px 20px}.tscore b{font-size:38px}
   .shero-body{padding:28px 22px}.shero h1{font-size:38px}.shero-pattern{width:70px}.tbadge.lg{width:48px;height:48px;font-size:16px}
   .sstats div{min-width:0;flex:1 1 40%;padding:10px 14px}.sstats b{font-size:21px}
+.sgrid-wide .scol{display:contents}.sgrid-wide .scol>div:first-child{order:1}.sgrid-wide>div:last-child{order:2}.sgrid-wide .scol>div:nth-child(2){order:3}.sgrid-wide .snext{width:auto;max-width:none;grid-template-columns:max-content 1fr auto}.sgrid-wide .snext em{text-align:right}
 .strow.wide{grid-template-columns:18px minmax(56px,1fr) 50px 18px 14px 18px 26px 26px 30px 24px;gap:3px;padding:9px 6px;font-size:11px}.strow.wide i{display:none}.strow.wide.head{font-size:9px;letter-spacing:0}.strow.wide .forma{gap:2px;padding-left:2px}.strow.wide .fd{width:8px;height:8px}
   .sgrid{grid-template-columns:1fr;gap:36px;padding:32px 0 48px}.scol-h{font-size:24px}
   .snext{grid-template-columns:72px 1fr auto;padding:14px}
