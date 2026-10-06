@@ -13,6 +13,7 @@ export interface Game {
   res: 'G' | 'P' | 'E' | ''; tv: string; venue: string; week?: number; tbd: boolean;
   stage?: string;   // fase (solo MLB Stats API), p. ej. "Serie de Campeonato"
   season?: string;
+  lat?: number; lng?: number; team?: string;   // cancha y nombre de nuestro equipo (Sportwey)
   unit?: 'Jornada' | 'Carrera'; race?: boolean;  // por defecto la jornada se llama "Semana" (NFL, MLB); en ligas amateur es "Jornada"
 }
 
@@ -259,6 +260,7 @@ export async function sportweyTeam(tournamentId: string, name: string) {
       us: x.played ? String(us) : '', them: x.played ? String(them) : '',
       res: !x.played ? '' : us > them ? 'G' : us < them ? 'P' : 'E',
       tv: '', venue: x.g.field || '', tbd: false, unit: 'Jornada',
+      lat: Number(x.g.latitude) || undefined, lng: Number(x.g.longitude) || undefined, team: home ? x.g.local_name : x.g.visit_name,
     } as Game;
   }).sort((p, q) => p.date.getTime() - q.date.getTime());
   // la jornada es el número de partido del equipo (J1, J2, ...) en orden de fecha
@@ -294,7 +296,30 @@ export async function sportweyTeam(tournamentId: string, name: string) {
   const idx = sorted.findIndex((r) => mine(r.n));
   const me = sorted[idx];
   const stats = me ? [`${me.w}-${me.l}${me.e ? '-' + me.e : ''}`, `${idx + 1}° lugar`, String(me.pf), String(me.pa)] : ['', '', '', ''];
-  return { past, next, meta: me ? `Récord ${stats[0]} · ${stats[1]}` : '', groupName: 'Tabla de posiciones', rows, stats };
+  // información extra para la página: tus números, el rival del próximo partido y líderes del torneo
+  const nums = me && past.length ? (() => {
+    const n = gp(me);
+    let w = 0, l = 0;
+    for (const g of past) if (Math.abs(Number(g.us) - Number(g.them)) <= 8) { if (g.res === 'G') w++; else if (g.res === 'P') l++; }
+    const best = past.reduce((b, g) => (Number(g.us) > Number(b.us) ? g : b), past[0]);
+    return { avgPf: me.pf / n, avgPa: me.pa / n, closedW: w, closedL: l, bestPts: Number(best.us), bestOpp: best.opp };
+  })() : null;
+  const rival = (() => {
+    const g = next[0];
+    const i = g ? sorted.findIndex((r) => r.n === g.opp) : -1;
+    if (i < 0) return null;
+    const r = sorted[i];
+    const met = all.some((x) => x.played && ((mine(x.g.local_name) && x.g.visit_name === r.n) || (mine(x.g.visit_name) && x.g.local_name === r.n)));
+    return { name: r.n, rank: i + 1, w: r.w, e: r.e, l: r.l, pts: pts(r), form: formOf(r.n), pf: r.pf, pa: r.pa, met };
+  })();
+  const played = sorted.filter((r) => gp(r) > 0);
+  const leaders = played.length ? {
+    first: { name: sorted[0].n, pts: pts(sorted[0]) },
+    scorer: played.reduce((b, r) => (r.pf > b.pf ? r : b), played[0]),
+    defense: played.reduce((b, r) => (r.pa < b.pa ? r : b), played[0]),
+  } : null;
+  const info = { nums, rival, leaders: leaders && { first: leaders.first, scorer: { name: leaders.scorer.n, pf: leaders.scorer.pf }, defense: { name: leaders.defense.n, pa: leaders.defense.pa } } };
+  return { past, next, meta: me ? `Récord ${stats[0]} · ${stats[1]}` : '', groupName: 'Tabla de posiciones', rows, stats, info };
 }
 
 // ───────── Fórmula 1 (Jolpica, sucesora de Ergast): api.jolpi.ca ─────────

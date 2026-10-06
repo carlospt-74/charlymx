@@ -22,11 +22,19 @@ const statsLabels = t.statLabels;
         <h2 class="scol-h">Próximos partidos</h2>
         <div class="slist" data-next style={`--acc:${accDark ? t.bg : t.accent};--acc-fg:${accDark ? '#fff' : t.accentFg}`}><p class="snote">Cargando…</p></div>
         <p class="snote">Hora de Monterrey.</p>
+        {t.provider === 'sportwey' && <div class="icards" data-numbers></div>}
       </div>
       <div>
         <h2 class="scol-h">Resultados</h2>
         <div data-results><p class="snote">Cargando…</p></div>
       </div>
+      {t.provider === 'sportwey' && (
+        <div data-side hidden>
+          <h2 class="scol-h" data-side-title>Rival y números</h2>
+          <div class="icards" data-rival></div>
+          <div class="icards" data-leaders></div>
+        </div>
+      )}
     </div>
     <div>
       <h2 class="scol-h" data-table-title>{t.tableTitle}</h2>
@@ -54,13 +62,41 @@ const statsLabels = t.statLabels;
     const res = (r: string) => `<span class="rb ${r}">${r}</span>`;
 
     // Pintado compartido: sirve igual para ESPN y para la API de MLB
+    const mapUrl = (g: Game) => (g.lat && g.lng ? `https://www.google.com/maps/search/?api=1&query=${g.lat},${g.lng}` : '');
+    const pin = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
     const paintNext = (next: Game[]) => {
-      $('[data-next]').innerHTML = next.length ? next.map((g, i) => `
+      $('[data-next]').innerHTML = next.length ? next.map((g, i) => g.unit === 'Jornada' ? `
+        <div class="snext sn-j ${i === 0 ? 'first' : ''}">
+          <div class="sn-top"><small>JORNADA ${g.week}</small><b>${esc(fDay(g.date))} · ${g.tbd ? 'Hora por confirmar' : esc(fHour(g.date))}</b></div>
+          <div class="sn-vs">${esc(g.team || name)} ${g.home ? 'vs' : 'en'} ${esc(g.opp)}</div>
+          ${g.venue ? `<div class="sn-venue">${pin}<div><small>Cancha</small><br>${esc(g.venue)}</div>${mapUrl(g) ? `<a class="sn-map" href="${mapUrl(g)}" target="_blank" rel="noopener">Cómo llegar ↗</a>` : ''}</div>` : ''}
+        </div>` : `
         <div class="snext ${i === 0 ? 'first' : ''}">
           <div><small>${!soccer && g.week ? (g.unit === 'Carrera' ? 'CARRERA ' : g.unit ? 'JORNADA ' : 'SEM ') + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
           <span>${g.race ? '' : g.home ? 'vs ' : 'en '}${esc(g.opp)}</span>
           <em>${g.tbd ? 'Hora por<br>confirmar' : esc(fHour(g.date))}<br>${esc(g.tv || g.venue)}</em>
         </div>`).join('') : '<p class="snote">No hay partidos programados por ahora.</p>';
+    };
+    // tarjetas extra (solo Sportwey): tus números, rival y líderes del torneo
+    const dots = (f: string[]) => `<div class="ic-dots">${f.map((x) => `<b class="fd ${x}" title="${x === 'G' ? 'Ganó' : x === 'P' ? 'Perdió' : 'Empató'}"></b>`).join('')}</div>`;
+    const paintInfo = (info: any) => {
+      const n = info?.nums, r = info?.rival, l = info?.leaders;
+      const f1 = (v: number) => v.toFixed(1);
+      $('[data-numbers]').innerHTML = n ? `<div class="icard"><small>Tus números</small>
+        <div class="ic-kv"><div><b>${f1(n.avgPf)}</b><span>pts a favor por juego</span></div><div><b>${f1(n.avgPa)}</b><span>pts en contra por juego</span></div><div><b>${n.closedW}-${n.closedL}</b><span>juegos cerrados</span></div></div>
+        <div class="ic-line"><span>Mejor anotación</span><b>${n.bestPts} · vs ${esc(n.bestOpp)}</b></div></div>` : '';
+      $('[data-rival]').innerHTML = r ? `<div class="icard"><small>El rival</small><h3>${esc(r.name)}</h3>
+        <div class="ic-kv"><div><b>${r.rank}°</b><span>lugar</span></div><div><b>${r.w}-${r.e}-${r.l}</b><span>récord</span></div><div><b>${r.pts}</b><span>puntos</span></div></div>
+        <div><span class="ic-note">Últimos 5 juegos</span>${dots(r.form)}</div>
+        <div class="ic-line"><span>Puntos a favor / en contra</span><b>${r.pf} / ${r.pa}</b></div>
+        <div class="ic-line"><span>Diferencial</span><b>${r.pf - r.pa > 0 ? '+' : ''}${r.pf - r.pa}</b></div>
+        ${r.met ? '' : '<div class="ic-note">Aún no se enfrentan en este torneo.</div>'}</div>` : '';
+      $('[data-leaders]').innerHTML = l ? `<div class="icard"><small>Líderes del torneo</small>
+        <div class="ic-line first"><span>Primer lugar</span><b>${esc(l.first.name)} · ${l.first.pts} pts</b></div>
+        <div class="ic-line"><span>Más anotador</span><b>${esc(l.scorer.name)} · ${l.scorer.pf}</b></div>
+        <div class="ic-line"><span>Mejor defensa</span><b>${esc(l.defense.name)} · ${l.defense.pa} en contra</b></div></div>` : '';
+      const side = document.querySelector<HTMLElement>('[data-side]');
+      if (side) { side.hidden = !(r || l); $('[data-side-title]').textContent = r ? 'Rival y números' : 'Líderes del torneo'; }
     };
     const paintResults = (past: Game[]) => {
       const list = past.slice().reverse().slice(0, maxRes || undefined);
@@ -73,7 +109,7 @@ const statsLabels = t.statLabels;
     const paintTable = (cols: string[], rows: Row[]) => {
       const wide = rows.some((r) => r.form);
       const dots = (r: Row) => `<span class="forma">${(r.form || []).map((f) => `<b class="fd ${f}" title="${f === 'G' ? 'Ganó' : f === 'P' ? 'Perdió' : 'Empató'}"></b>`).join('')}</span>`;
-      $('[data-table]').innerHTML = `<div class="strow head c${cols.length}${wide ? ' wide' : ''}"><span>#</span><span>Equipo</span>${wide ? '<span>Forma</span>' : ''}${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
+      $('[data-table]').innerHTML = `<div class="strow head c${cols.length}${wide ? ' wide' : ''}"><span>#</span><span>Equipo</span>${wide ? '<span><b class="hl">Últimos 5</b><b class="hs">Últ. 5</b></span>' : ''}${cols.map((c) => `<span>${c}</span>`).join('')}</div>` +
         rows.map((r, i) => {
           const cut = cutAt && i === cutAt ? ' cut' : '';
           const zone = cutAt && i < cutAt ? ' zone' : '';
@@ -85,6 +121,7 @@ const statsLabels = t.statLabels;
       if (provider === 'mlbstats' || provider === 'sportwey' || provider === 'jolpica') {
         const d = (provider === 'jolpica' ? await f1Driver(espn) : provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
         paintNext(d.next.slice(0, 4));
+        if ((d as any).info) paintInfo((d as any).info);
         paintResults(d.past);
         d.stats.forEach((v, i) => setStat(i, v));
         $('[data-table-title]').textContent = d.groupName;
