@@ -315,7 +315,8 @@ export async function sportweyTeam(tournamentId: string, name: string, nextOpp =
     let w = 0, l = 0;
     for (const g of past) if (Math.abs(Number(g.us) - Number(g.them)) <= 8) { if (g.res === 'G') w++; else if (g.res === 'P') l++; }
     const best = past.reduce((b, g) => (Number(g.us) > Number(b.us) ? g : b), past[0]);
-    return { avgPf: me.pf / n, avgPa: me.pa / n, closedW: w, closedL: l, bestPts: Number(best.us), bestOpp: best.opp };
+    return { avgPf: me.pf / n, avgPa: me.pa / n, closedW: w, closedL: l, bestPts: Number(best.us), bestOpp: best.opp,
+      rank: idx + 1, w: me.w, e: me.e, l: me.l, pts: pts(me), form: formOf(me.n), pf: me.pf, pa: me.pa };
   })() : null;
   const rival = (() => {
     const g = next[0];

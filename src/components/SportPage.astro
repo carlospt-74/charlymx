@@ -95,8 +95,13 @@ const statsLabels = t.statLabels;
         }
       }
       const f1 = (v: number) => v.toFixed(1);
-      $('[data-numbers]').innerHTML = n ? `<div class="icard"><small>Tus números</small>
-        <div class="ic-kv"><div><b>${f1(n.avgPf)}</b><span>pts a favor por juego</span></div><div><b>${f1(n.avgPa)}</b><span>pts en contra por juego</span></div><div><b>${n.closedW}-${n.closedL}</b><span>juegos cerrados</span></div></div>
+      $('[data-numbers]').innerHTML = n ? `<div class="icard"><small>Tus números</small><h3>${esc(name.trim())}</h3>
+        <div class="ic-kv"><div><b>${n.rank}°</b><span>lugar</span></div><div><b>${n.w}-${n.e}-${n.l}</b><span>récord</span></div><div><b>${n.pts}</b><span>puntos</span></div></div>
+        <div><span class="ic-note">Últimos 5 juegos</span>${dots(n.form)}</div>
+        <div class="ic-line"><span>Puntos a favor / en contra</span><b>${n.pf} / ${n.pa}</b></div>
+        <div class="ic-line"><span>Diferencial</span><b>${n.pf - n.pa > 0 ? '+' : ''}${n.pf - n.pa}</b></div>
+        <div class="ic-line"><span>Promedio a favor / en contra</span><b>${f1(n.avgPf)} / ${f1(n.avgPa)}</b></div>
+        <div class="ic-line"><span>Juegos cerrados (≤ 8 pts)</span><b>${n.closedW}-${n.closedL}</b></div>
         <div class="ic-line"><span>Mejor anotación</span><b>${n.bestPts} · vs ${esc(n.bestOpp)}</b></div></div>` : '';
       $('[data-rival]').innerHTML = r ? `<div class="icard"><small>El rival</small><h3>${esc(r.name)}</h3>
         <div class="ic-kv"><div><b>${r.rank}°</b><span>lugar</span></div><div><b>${r.w}-${r.e}-${r.l}</b><span>récord</span></div><div><b>${r.pts}</b><span>puntos</span></div></div>
