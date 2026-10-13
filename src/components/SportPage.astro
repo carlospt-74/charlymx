@@ -20,7 +20,7 @@ const statsLabels = t.statLabels;
     {t.provider === 'sportwey' && <div class="lj" data-lastround hidden></div>}
     <div class="scol">
       <div>
-        <h2 class="scol-h">Próximos partidos</h2>
+        <h2 class="scol-h">{t.provider === 'sportwey' ? `Próximo partido de ${t.name}` : 'Próximos partidos'}</h2>
         <div class="slist" data-next style={`--acc:${accDark ? t.bg : t.accent};--acc-fg:${accDark ? '#fff' : t.accentFg}`}><p class="snote">Cargando…</p></div>
         <p class="snote">Hora de Monterrey.</p>
         {t.provider === 'sportwey' && <div class="icards" data-numbers></div>}
@@ -76,7 +76,7 @@ const statsLabels = t.statLabels;
           <div><small>${!soccer && g.week ? (g.unit === 'Carrera' ? 'CARRERA ' : g.unit ? 'JORNADA ' : 'SEM ') + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
           <span>${g.race ? '' : g.home ? 'vs ' : 'en '}${esc(g.opp)}</span>
           <em>${g.tbd ? 'Hora por<br>confirmar' : esc(fHour(g.date))}<br>${esc(g.tv || g.venue)}</em>
-        </div>`).join('') : '<p class="snote">No hay partidos programados por ahora.</p>';
+        </div>`).join('') : `<p class="snote">${provider === 'sportwey' ? 'No hay partido programado por ahora.' : 'No hay partidos programados por ahora.'}</p>`;
     };
     // tarjetas extra (solo Sportwey): tus números, rival y líderes del torneo
     const dots = (f: string[]) => `<div class="ic-dots">${f.map((x) => `<b class="fd ${x}" title="${x === 'G' ? 'Ganó' : x === 'P' ? 'Perdió' : 'Empató'}"></b>`).join('')}</div>`;
@@ -133,7 +133,7 @@ const statsLabels = t.statLabels;
     try {
       if (provider === 'mlbstats' || provider === 'sportwey' || provider === 'jolpica') {
         const d = (provider === 'jolpica' ? await f1Driver(espn) : provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
-        paintNext(d.next.slice(0, 4));
+        paintNext(d.next.slice(0, provider === 'sportwey' ? 1 : 4));
         if ((d as any).info) paintInfo((d as any).info);
         paintResults(d.past);
         d.stats.forEach((v, i) => setStat(i, v));
