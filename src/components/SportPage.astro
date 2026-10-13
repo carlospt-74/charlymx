@@ -17,6 +17,7 @@ const statsLabels = t.statLabels;
   </section>
 
   <div class={`sgrid${t.provider === 'sportwey' ? ' sgrid-wide' : ''}`}>
+    {t.provider === 'sportwey' && <div class="lj" data-lastround hidden></div>}
     <div class="scol">
       <div>
         <h2 class="scol-h">Próximos partidos</h2>
@@ -81,6 +82,18 @@ const statsLabels = t.statLabels;
     const dots = (f: string[]) => `<div class="ic-dots">${f.map((x) => `<b class="fd ${x}" title="${x === 'G' ? 'Ganó' : x === 'P' ? 'Perdió' : 'Empató'}"></b>`).join('')}</div>`;
     const paintInfo = (info: any) => {
       const n = info?.nums, r = info?.rival, l = info?.leaders;
+      const lr: any[] = info?.lastRound || [];
+      const lj = document.querySelector<HTMLElement>('[data-lastround]');
+      if (lj) {
+        lj.hidden = !lr.length;
+        if (lr.length) {
+          const day = new Intl.DateTimeFormat('es-MX', { timeZone: 'America/Monterrey', weekday: 'long', day: 'numeric', month: 'long' }).format(lr[0].date).replace(',', '');
+          lj.innerHTML = `<div class="lj-h"><h2>Última jornada de la liga</h2><span>${esc(day.charAt(0).toUpperCase() + day.slice(1))}</span></div>
+            <div class="lj-grid">${lr.map((g) => `<div class="lj-card${g.mine ? ' mine' : ''}"><small>${esc(fDay(g.date))} · ${esc(fHour(g.date))}</small>
+              <div class="lj-row${g.as > g.bs ? ' w' : ''}"><span>${esc(g.a)}</span><b>${g.as}</b></div>
+              <div class="lj-row${g.bs > g.as ? ' w' : ''}"><span>${esc(g.b)}</span><b>${g.bs}</b></div></div>`).join('')}</div>`;
+        }
+      }
       const f1 = (v: number) => v.toFixed(1);
       $('[data-numbers]').innerHTML = n ? `<div class="icard"><small>Tus números</small>
         <div class="ic-kv"><div><b>${f1(n.avgPf)}</b><span>pts a favor por juego</span></div><div><b>${f1(n.avgPa)}</b><span>pts en contra por juego</span></div><div><b>${n.closedW}-${n.closedL}</b><span>juegos cerrados</span></div></div>

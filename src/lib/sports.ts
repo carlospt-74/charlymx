@@ -318,7 +318,14 @@ export async function sportweyTeam(tournamentId: string, name: string) {
     scorer: played.reduce((b, r) => (r.pf > b.pf ? r : b), played[0]),
     defense: played.reduce((b, r) => (r.pa < b.pa ? r : b), played[0]),
   } : null;
-  const info = { nums, rival, leaders: leaders && { first: leaders.first, scorer: { name: leaders.scorer.n, pf: leaders.scorer.pf }, defense: { name: leaders.defense.n, pa: leaders.defense.pa } } };
+  // última jornada de la liga: todos los partidos del día más reciente con resultados (de cualquier equipo)
+  const dayKey = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(d);
+  const playedAll = all.filter((x) => x.played);
+  const lastKey = playedAll.length ? dayKey(playedAll.reduce((b, x) => (x.date!.getTime() > b.date!.getTime() ? x : b), playedAll[0]).date!) : '';
+  const lastRound = lastKey ? playedAll.filter((x) => dayKey(x.date!) === lastKey)
+    .sort((p, q) => q.date!.getTime() - p.date!.getTime())
+    .map((x) => ({ date: x.date!, a: x.g.local_name as string, as: x.a, b: x.g.visit_name as string, bs: x.b, mine: mine(x.g.local_name) || mine(x.g.visit_name) })) : [];
+  const info = { lastRound, nums, rival, leaders: leaders && { first: leaders.first, scorer: { name: leaders.scorer.n, pf: leaders.scorer.pf }, defense: { name: leaders.defense.n, pa: leaders.defense.pa } } };
   return { past, next, meta: me ? `Récord ${stats[0]} · ${stats[1]}` : '', groupName: 'Tabla de posiciones', rows, stats, info };
 }
 
