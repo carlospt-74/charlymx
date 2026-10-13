@@ -26,7 +26,7 @@ const statsLabels = t.statLabels;
         {t.provider === 'sportwey' && <div class="icards" data-numbers></div>}
       </div>
       <div>
-        <h2 class="scol-h">Resultados</h2>
+        <h2 class="scol-h">{t.provider === 'sportwey' ? `Resultados de ${t.name.trim().split(/\s+/)[0]}` : 'Resultados'}</h2>
         <div data-results><p class="snote">Cargando…</p></div>
       </div>
       {t.provider === 'sportwey' && (
@@ -95,7 +95,7 @@ const statsLabels = t.statLabels;
         }
       }
       const f1 = (v: number) => v.toFixed(1);
-      $('[data-numbers]').innerHTML = n ? `<div class="icard"><small>Tus números</small><h3>${esc(name.trim())}</h3>
+      $('[data-numbers]').innerHTML = n ? `<div class="icard"><small>${esc(name.trim().split(/\s+/)[0])} en números</small><h3>${esc(name.trim())}</h3>
         <div class="ic-kv"><div><b>${n.rank}°</b><span>lugar</span></div><div><b>${n.w}-${n.e}-${n.l}</b><span>récord</span></div><div><b>${n.pts}</b><span>puntos</span></div></div>
         <div><span class="ic-note">Últimos 5 juegos</span>${dots(n.form)}</div>
         <div class="ic-line"><span>Puntos a favor / en contra</span><b>${n.pf} / ${n.pa}</b></div>
