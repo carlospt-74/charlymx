@@ -227,6 +227,8 @@ p{margin:0;text-wrap:pretty}
 .sgrid{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;padding:48px 0 72px}
 .sgrid-wide{grid-template-columns:1fr}.sgrid-wide .scol{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;order:1}.sgrid-wide .scol:has([data-side]:not([hidden])){grid-template-columns:repeat(3,minmax(0,1fr))}
 .sgrid-wide>div:last-child{order:2}
+/* laptop: Próximo partido | Rival y números | Resultados */
+.sgrid-wide .scol>div:nth-child(3){order:2}.sgrid-wide .scol>div:nth-child(2){order:3}
 .snext.sn-j{display:block;padding:16px 18px}
 .sn-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 10px}.sn-top small{letter-spacing:.07em;font-weight:700;white-space:nowrap}.sn-top b{font:700 15px var(--fh)}
 .sn-vs{font:800 22px var(--fh);margin:6px 0 12px}
