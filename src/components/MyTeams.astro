@@ -8,7 +8,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
   <div class="sec-head"><h2>{featured ? 'En la cancha' : 'Mis equipos'}</h2><span class="sub-note">Se actualiza solo · hora de Monterrey</span></div>
   <div class={`teams-grid${featured && teams.length === 1 ? ' solo' : ''}`}>
     {teams.map((t) => (
-      <a class="tcard" href={t.href} target={t.external ? '_blank' : undefined} rel={t.external ? 'noopener' : undefined} {...(t.live ? { 'data-tcard': '' } : {})} data-soccer={t.soccer ? '1' : ''} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name} data-provider={t.provider} data-sport={t.sportId} data-leagueid={t.leagueId}
+      <a class="tcard" href={t.href} target={t.external ? '_blank' : undefined} rel={t.external ? 'noopener' : undefined} {...(t.live ? { 'data-tcard': '' } : {})} data-soccer={t.soccer ? '1' : ''} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name} data-nextopp={t.nextOpponent} data-provider={t.provider} data-sport={t.sportId} data-leagueid={t.leagueId}
          style={`--tc-bg:${t.bg};--tc-accent:${t.accent};--tc-accent-fg:${t.accentFg};--tc-sub:${t.sub};--tc-link:${t.link};--tc-strip:${t.strip}`}>
         <div class="tcard-strip"></div>
         <div class="tcard-body">
@@ -33,7 +33,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
   import type { Game } from '../lib/sports';
 
   document.querySelectorAll<HTMLElement>('[data-tcard]').forEach(async (card) => {
-    const { path, espn, abbr, name, provider, sport, leagueid } = card.dataset as Record<string, string>;
+    const { path, espn, abbr, name, provider, sport, leagueid, nextopp } = card.dataset as Record<string, string>;
     const soccer = !!card.dataset.soccer;
     const q = (s: string) => card.querySelector<HTMLElement>(s)!;
     try {
@@ -41,7 +41,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
       let last: Game | undefined;
       let next: Game | undefined;
       if (provider === 'mlbstats' || provider === 'sportwey' || provider === 'jolpica') {
-        const d = (provider === 'jolpica' ? await f1Driver(espn) : provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
+        const d = (provider === 'jolpica' ? await f1Driver(espn) : provider === 'sportwey' ? await sportweyTeam(espn, name, nextopp || '') : await mlbTeam(espn, Number(sport), Number(leagueid), name));
         meta = d.meta; last = d.past[d.past.length - 1]; next = d.next[0];
       } else {
         const id = await resolveTeam(path, espn, abbr, name);
@@ -73,7 +73,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
       } else q('[data-last]').innerHTML = '<div class="tcap">Aún no hay partidos jugados</div>';
       if (next) {
         const nx = q('[data-next]');
-        nx.innerHTML = `<div><div class="tcap2">PRÓXIMO${next.week && !soccer ? (next.unit === 'Carrera' ? ' · CARRERA ' : next.unit ? ' · JORNADA ' : ' · SEM ') + next.week : ''}</div><div class="ttxt">${esc(fDay(next.date))} · ${next.race ? '' : next.home ? 'vs ' : 'en '}${esc(next.opp)}</div></div>
+        nx.innerHTML = `<div><div class="tcap2">PRÓXIMO${next.week && !soccer ? (next.unit === 'Carrera' ? ' · CARRERA ' : next.unit ? ' · JORNADA ' : ' · SEM ') + next.week : ''}</div><div class="ttxt">${next.pending ? '' : esc(fDay(next.date)) + ' · '}${next.race ? '' : next.home ? 'vs ' : 'en '}${esc(next.opp)}</div></div>
           <div class="ttime">${next.tbd ? 'Por confirmar' : esc(fHour(next.date))}<br>${esc(next.tv || next.venue)}</div>`;
         nx.hidden = false;
       }

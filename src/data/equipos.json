@@ -64,7 +64,8 @@
       "accent": "#d62828",
       "pattern": "diagonal",
       "featured": true,
-      "slug": "tocho"
+      "slug": "tocho",
+      "next_opponent": "Piratas"
     },
     {
       "visible": true,

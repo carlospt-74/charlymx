@@ -6,7 +6,7 @@ const accDark = t.accentFg === '#14171f';
 const statsLabels = t.statLabels;
 ---
 <div class="wrap">
-  <section class="shero" style={`background:${t.bg}`} data-sport data-soccer={soccer ? '1' : ''} data-cut={t.cut} data-max={t.maxResults} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name} data-provider={t.provider} data-sport={t.sportId} data-leagueid={t.leagueId}>
+  <section class="shero" style={`background:${t.bg}`} data-sport data-soccer={soccer ? '1' : ''} data-cut={t.cut} data-max={t.maxResults} data-path={t.path} data-espn={t.espn} data-abbr={t.abbr} data-name={t.name} data-nextopp={t.nextOpponent} data-provider={t.provider} data-sport={t.sportId} data-leagueid={t.leagueId}>
     <div class="shero-pattern" style={`background:${t.pattern}`}></div>
     <div class="shero-body">
       <a href="/" class="shero-back" style={`color:${t.sub}`}>← Inicio · {t.league}</a>
@@ -54,7 +54,7 @@ const statsLabels = t.statLabels;
   if (root) run(root);
 
   async function run(root: HTMLElement) {
-    const { path, espn, abbr, name, provider, sport, leagueid } = root.dataset as Record<string, string>;
+    const { path, espn, abbr, name, provider, sport, leagueid, nextopp } = root.dataset as Record<string, string>;
     const soccer = !!root.dataset.soccer;
     const cutAt = Number(root.dataset.cut || 0);
     const maxRes = Number(root.dataset.max || 0);
@@ -68,9 +68,9 @@ const statsLabels = t.statLabels;
     const paintNext = (next: Game[]) => {
       $('[data-next]').innerHTML = next.length ? next.map((g, i) => g.unit === 'Jornada' ? `
         <div class="snext sn-j ${i === 0 ? 'first' : ''}">
-          <div class="sn-top"><small>JORNADA ${g.week}</small><b>${esc(fDay(g.date))} · ${g.tbd ? 'Hora por confirmar' : esc(fHour(g.date))}</b></div>
+          <div class="sn-top"><small>JORNADA ${g.week}</small><b>${g.pending ? 'Fecha y hora por confirmar' : `${esc(fDay(g.date))} · ${g.tbd ? 'Hora por confirmar' : esc(fHour(g.date))}`}</b></div>
           <div class="sn-vs">${esc(g.team || name)} ${g.home ? 'vs' : 'en'} ${esc(g.opp)}</div>
-          ${g.venue ? `<div class="sn-venue">${pin}<div><small>Cancha</small><br>${esc(g.venue)}</div>${mapUrl(g) ? `<a class="sn-map" href="${mapUrl(g)}" target="_blank" rel="noopener">Cómo llegar ↗</a>` : ''}</div>` : ''}
+          ${g.venue || g.pending ? `<div class="sn-venue">${pin}<div><small>Cancha</small><br>${g.pending ? 'Por confirmar' : esc(g.venue)}</div>${mapUrl(g) ? `<a class="sn-map" href="${mapUrl(g)}" target="_blank" rel="noopener">Cómo llegar ↗</a>` : ''}</div>` : ''}
         </div>` : `
         <div class="snext ${i === 0 ? 'first' : ''}">
           <div><small>${!soccer && g.week ? (g.unit === 'Carrera' ? 'CARRERA ' : g.unit ? 'JORNADA ' : 'SEM ') + g.week : fShort(g.date)}</small><b>${esc(fDay(g.date))}</b></div>
@@ -132,7 +132,7 @@ const statsLabels = t.statLabels;
 
     try {
       if (provider === 'mlbstats' || provider === 'sportwey' || provider === 'jolpica') {
-        const d = (provider === 'jolpica' ? await f1Driver(espn) : provider === 'sportwey' ? await sportweyTeam(espn, name) : await mlbTeam(espn, Number(sport), Number(leagueid), name));
+        const d = (provider === 'jolpica' ? await f1Driver(espn) : provider === 'sportwey' ? await sportweyTeam(espn, name, nextopp || '') : await mlbTeam(espn, Number(sport), Number(leagueid), name));
         paintNext(d.next.slice(0, provider === 'sportwey' ? 1 : 4));
         if ((d as any).info) paintInfo((d as any).info);
         paintResults(d.past);

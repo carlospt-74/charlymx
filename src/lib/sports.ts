@@ -13,6 +13,7 @@ export interface Game {
   res: 'G' | 'P' | 'E' | ''; tv: string; venue: string; week?: number; tbd: boolean;
   stage?: string;   // fase (solo MLB Stats API), p. ej. "Serie de Campeonato"
   season?: string;
+  pending?: boolean;   // partido sin fecha ni cancha todavía (rival capturado a mano en el panel)
   lat?: number; lng?: number; team?: string;   // cancha y nombre de nuestro equipo (Sportwey)
   unit?: 'Jornada' | 'Carrera'; race?: boolean;  // por defecto la jornada se llama "Semana" (NFL, MLB); en ligas amateur es "Jornada"
 }
@@ -216,7 +217,7 @@ function sportweyDate(date = '', time = ''): Date | null {
 }
 
 /** Resultados, próximos partidos y tabla (calculada con los resultados) de un equipo en un torneo de Sportwey. */
-export async function sportweyTeam(tournamentId: string, name: string) {
+export async function sportweyTeam(tournamentId: string, name: string, nextOpp = '') {
   // la lista de partidos viene paginada (20 por página): se piden páginas hasta que ya no traigan partidos nuevos
   // los partidos se buscan en cualquier parte de la respuesta (arreglos con local_name y visit_name)
   const collect = (d: any): any[] => {
@@ -278,6 +279,11 @@ export async function sportweyTeam(tournamentId: string, name: string) {
     t.set(n, r);
   };
   for (const x of all) if (x.played) { add(x.g.local_name, x.g.visit_name, x.a, x.b); add(x.g.visit_name, x.g.local_name, x.b, x.a); }
+  // si Sportwey todavía no publica el próximo partido, se usa el rival capturado a mano (sin fecha ni cancha)
+  if (!next.length && nextOpp) {
+    const opp = [...t.keys()].find((n) => plain(n) === plain(nextOpp)) || [...t.keys()].find((n) => plain(n).includes(plain(nextOpp))) || nextOpp;
+    next.push({ date: new Date(8.64e15), done: false, home: true, opp, us: '', them: '', res: '', tv: '', venue: '', tbd: true, unit: 'Jornada', week: games.length + 1, team: games[0]?.team || name, pending: true } as Game);
+  }
   const gp = (r: T) => r.w + r.l + r.e;
   const pts = (r: T) => r.w * 2;
   const pct = (r: T) => (gp(r) ? r.w / gp(r) : 0);
