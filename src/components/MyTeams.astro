@@ -73,7 +73,7 @@ const teams = getTeams().filter((t) => t.featured === featured);
       } else q('[data-last]').innerHTML = '<div class="tcap">Aún no hay partidos jugados</div>';
       if (next) {
         const nx = q('[data-next]');
-        nx.innerHTML = `<div><div class="tcap2">PRÓXIMO${next.week && !soccer ? (next.unit === 'Carrera' ? ' · CARRERA ' : next.unit ? ' · JORNADA ' : ' · SEM ') + next.week : ''}</div><div class="ttxt">${next.pending ? '' : esc(fDay(next.date)) + ' · '}${next.race ? '' : next.home ? 'vs ' : 'en '}${esc(next.opp)}</div></div>
+        nx.innerHTML = `<div><div class="tcap2">PRÓXIMO${next.week && !soccer ? (next.unit === 'Carrera' ? ' · CARRERA ' : next.unit ? ' · JORNADA ' : ' · SEM ') + next.week : ''}</div><div class="ttxt">${esc(fDay(next.date))} · ${next.race ? '' : next.home ? 'vs ' : 'en '}${esc(next.opp)}</div></div>
           <div class="ttime">${next.tbd ? 'Por confirmar' : esc(fHour(next.date))}<br>${esc(next.tv || next.venue)}</div>`;
         nx.hidden = false;
       }

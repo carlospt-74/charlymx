@@ -216,6 +216,13 @@ function sportweyDate(date = '', time = ''): Date | null {
   return d;
 }
 
+/** Próximo domingo (hoy, si es domingo) a las 12:00, hora de Monterrey: los juegos de la liga son en domingo. */
+function nextSunday(): Date {
+  const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date()).split('-').map(Number);
+  const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  return new Date(Date.UTC(y, m - 1, d + ((7 - dow) % 7), 18, 0, 0));
+}
+
 /** Resultados, próximos partidos y tabla (calculada con los resultados) de un equipo en un torneo de Sportwey. */
 export async function sportweyTeam(tournamentId: string, name: string, nextOpp = '') {
   // la lista de partidos viene paginada (20 por página): se piden páginas hasta que ya no traigan partidos nuevos
@@ -282,7 +289,7 @@ export async function sportweyTeam(tournamentId: string, name: string, nextOpp =
   // si Sportwey todavía no publica el próximo partido, se usa el rival capturado a mano (sin fecha ni cancha)
   if (!next.length && nextOpp) {
     const opp = [...t.keys()].find((n) => plain(n) === plain(nextOpp)) || [...t.keys()].find((n) => plain(n).includes(plain(nextOpp))) || nextOpp;
-    next.push({ date: new Date(8.64e15), done: false, home: true, opp, us: '', them: '', res: '', tv: '', venue: '', tbd: true, unit: 'Jornada', week: games.length + 1, team: games[0]?.team || name, pending: true } as Game);
+    next.push({ date: nextSunday(), done: false, home: true, opp, us: '', them: '', res: '', tv: '', venue: '', tbd: true, unit: 'Jornada', week: games.length + 1, team: games[0]?.team || name, pending: true } as Game);
   }
   const gp = (r: T) => r.w + r.l + r.e;
   const pts = (r: T) => r.w * 2;

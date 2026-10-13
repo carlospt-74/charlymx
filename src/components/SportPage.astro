@@ -68,7 +68,7 @@ const statsLabels = t.statLabels;
     const paintNext = (next: Game[]) => {
       $('[data-next]').innerHTML = next.length ? next.map((g, i) => g.unit === 'Jornada' ? `
         <div class="snext sn-j ${i === 0 ? 'first' : ''}">
-          <div class="sn-top"><small>JORNADA ${g.week}</small><b>${g.pending ? 'Fecha y hora por confirmar' : `${esc(fDay(g.date))} · ${g.tbd ? 'Hora por confirmar' : esc(fHour(g.date))}`}</b></div>
+          <div class="sn-top"><small>JORNADA ${g.week}</small><b>${esc(fDay(g.date))} · ${g.tbd ? 'Hora por confirmar' : esc(fHour(g.date))}</b></div>
           <div class="sn-vs">${esc(g.team || name)} ${g.home ? 'vs' : 'en'} ${esc(g.opp)}</div>
           ${g.venue || g.pending ? `<div class="sn-venue">${pin}<div><small>Cancha</small><br>${g.pending ? 'Por confirmar' : esc(g.venue)}</div>${mapUrl(g) ? `<a class="sn-map" href="${mapUrl(g)}" target="_blank" rel="noopener">Cómo llegar ↗</a>` : ''}</div>` : ''}
         </div>` : `
