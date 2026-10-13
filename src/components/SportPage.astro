@@ -20,7 +20,7 @@ const statsLabels = t.statLabels;
     {t.provider === 'sportwey' && <div class="lj" data-lastround hidden></div>}
     <div class="scol">
       <div>
-        <h2 class="scol-h">{t.provider === 'sportwey' ? `Próximo partido de ${t.name}` : 'Próximos partidos'}</h2>
+        <h2 class="scol-h">{t.provider === 'sportwey' ? `Próximo partido de ${t.name.split(' ')[0]}` : 'Próximos partidos'}</h2>
         <div class="slist" data-next style={`--acc:${accDark ? t.bg : t.accent};--acc-fg:${accDark ? '#fff' : t.accentFg}`}><p class="snote">Cargando…</p></div>
         <p class="snote">Hora de Monterrey.</p>
         {t.provider === 'sportwey' && <div class="icards" data-numbers></div>}
